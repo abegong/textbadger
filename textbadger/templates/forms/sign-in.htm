@@ -1,0 +1,32 @@
+<div class="modal" id="sign-in-modal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3>Sign in</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal" tb-href="/ajax/sign-in/" tb-redirect="/my-account/"><fieldset>
+      {% csrf_token %}
+      <div class="control-group">
+        <label class="control-label" for="username">Username</label>
+        <div class="controls">
+          <input name="username" required type="text" class="input" placeholder="username">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="project-name">Password</label>
+        <div class="controls">
+          <input name="password" required type="password" class="input" placeholder="Password">
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <a href="#">Forgot your login info?</a>
+        </div>
+      </div>
+
+      <br/>
+      <button type="submit" class="btn btn-primary rightside">Sign in &raquo;</button>
+      <button type="cancel" class="btn rightside">Cancel &times;</button>
+    </fieldset></form>
+  </div>
+</div>

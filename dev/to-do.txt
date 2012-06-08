@@ -1,0 +1,42 @@
+=== On deck ===
+
+=== To do ===
+* Get fixtures working
+
+* Add "administrators" mixin
+
+* Add csrf token to all forms
+* Add trailing slash to all form arguments
+* Enforce unique index on User.username
+* Suppress ?next= part of login_required decorator
+
+=== Punt ===
+
+=== Done ===
+* Get the welcome page up and running again
+    * Set up directory structure
+    * Set up static files
+    * Get templates working
+* Get login working
+    * Re-up page
+    * Set up virtual environment
+    * Install django-mongodb and dependencies
+    * Configure database with mongolab endpoints
+    * Configure tb_app models.py
+    * Retrieve some data -- any data -- from mongolab
+    * Align User and Project models with django-mongodb models
+    * Include auth apps in settings
+    * Enable POST debugging middleware
+    * Build login routes
+    * Fix sign-in template to conform to django specs
+    * Add csrf token to ajax call
+* Re-up the user page
+    * Add route
+    * Add model
+    * Add and fix template
+*** Backbone pages working well! Next up: object view pages ***
+* Get local DB working
+* Clean up and spin off as a separate repo.
+
+
+

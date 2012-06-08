@@ -1,0 +1,75 @@
+{% extends "single.html" %}
+
+{% block content %}
+<!-- User activity --------------------->
+<h3>User activity</h3>
+  <table class="well wide">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Total</th>
+      <th>Most recent</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in users %}
+    <tr>
+      <td>{{user.username}}</td>
+      <td></td>
+      <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+<br/><br/>
+
+
+
+<!-- Users and permissions --------------------->
+<a class="btn btn-primary open-modal rightside">Create new account</a>
+{% include "forms/create-account.htm" %}
+
+<h3>User permissions</h3>
+  <table class="well wide">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Permissions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in users %}
+    <tr>
+      <td>{{user.username}}</td>
+      <td>{{user.first_name}} {{user.last_name}}</td>
+      <td>{{user.email}}</td>
+      <td>
+      {% if user.is_active %}
+        <span class="badge badge-success">active</span>
+      {% else %}
+        <span class="badge">active</span>
+      {% endif %}
+    
+      {% if user.is_superuser %}
+        <span class="badge badge-success">admin</span>
+      {% else %}
+        <span class="badge">admin</span>
+      {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+To reset a user's password, please de-activate and re-activate the account.<br/>
+The new password will be the same as the username.
+<br/><br/>
+
+
+<!-- Application Settings --------------------->
+<h3>Application settings</h3>
+
+{% endblock %}
+
+

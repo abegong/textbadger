@@ -1,0 +1,71 @@
+footer{
+    text-align:center;
+}
+
+div.nav-collapse{
+/*    float:right; */
+/*    display:hidden; */
+}
+
+/*** Interactive stuff *******************************************************/
+
+div.faq-q{
+    margin:10px;
+    margin-left:40px;
+    cursor:pointer;
+    font-size:18px;
+    line-height:26px;
+}
+
+.rightside{
+    margin-left:5px;
+    float:right;
+}
+
+ul.big-list li{
+    font-size:18px;
+    margin-top:10px;
+}
+
+div#faq p strong{
+    cursor:pointer;
+}
+
+#sign-in-btn{
+    cursor:pointer;
+}
+/*** table.wide formatting ***************************************************/
+table.wide{
+    width:100%;
+}
+
+table.wide th{
+    text-align:left;
+    padding:5px 10px 5px 10px;
+}
+
+table.wide td{
+    padding:5px 10px 5px 10px;
+}
+
+
+/*** Misc ***/
+
+div.shaded{
+    background-color: #888;
+}
+
+div.border{
+    border: 2px solid #bbb;
+}
+
+
+/*** modal fomatting *********************************************************/
+.modal{
+    display:none;
+}
+
+@import "bootstrap";
+.modal-backdrop {
+  opacity:0.4;
+}

@@ -1,0 +1,38 @@
+[{
+    "_id" : {
+        "$oid" : "4fd203192fa6cd4032000010"
+    },
+    "username" : "agong",
+    "first_name" : "Abe",
+    "last_name" : "Gong",
+    "is_active" : true,
+    "email" : "agong@umich.edu",
+    "is_superuser" : true,
+    "is_staff" : true,
+    "last_login" : {
+        "$date" : 1339145446521
+    },
+    "password" : "sha1$8a04d$6d7f58ac23433e421e732437617626f48f238afb",
+    "date_joined" : {
+        "$date" : 1339145417745
+    }
+},
+{
+    "_id" : {
+        "$oid" : "4fd2033e2fa6cd403f000000"
+    },
+    "username" : "lcata",
+    "first_name" : "A. Little",
+    "last_name" : "Cat",
+    "is_active" : true,
+    "is_superuser" : false,
+    "is_staff" : false,
+    "last_login" : {
+        "$date" : 1339145454071
+    },
+    "password" : "sha1$59171$09e95d29d64a65452a1e743ee4abb81c0bf3d26a",
+    "email" : "",
+    "date_joined" : {
+        "$date" : 1339145454071
+    }
+}]

@@ -1,0 +1,48 @@
+{% extends "single.html" %}
+
+{% block content %}
+<!-- Assignments --------------------->
+<h3>My Assignments</h3>
+  <table class="well wide">
+  {% if codebooks %}
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Recent activity</th>
+      <th>Batch progress</th>
+      <th>Assigned tasks</th>
+    </tr>
+  </thead>
+  {% endif %}
+  <tbody>
+  {% for p in batches %}
+    <tr>
+      <td><a href="/codebook/{{ p.id }}">{{ p.profile.name }}</a></td>
+      <td>[...]</td>
+      <td>[...]</td>
+      <td>[...]</td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan=4><br/>You don't have any coding assignments yet.<br/><br/>
+        <a href="/assignment/">temp-link: "/assignment/"</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+<br/><br/>
+
+
+<!-- Account Settings --------------------->
+<h3>Account settings</h3>
+<dl class="dl-horizontal">
+    <dt>username</dt><dd>{{user.username}}&nbsp;</dd>
+    <dt>first name</dt><dd>{{user.first_name}}&nbsp;</dd>
+    <dt>last name</dt><dd>{{user.last_name}}&nbsp;</dd>
+    <dt>email</dt><dd>{{user.email}}&nbsp;</dd>
+</dl>
+{% endblock %}
+
+{% block footer_columns %}{% endblock %}
+

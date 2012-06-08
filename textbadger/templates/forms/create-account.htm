@@ -1,0 +1,43 @@
+<div class="modal" id="myModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3>Create new account</h3>
+  </div>
+  <div class="modal-body">
+    <form id="create-account-form" class="form-horizontal" tb-href="/ajax/create-account/" tb-redirect="/administration/"><fieldset>
+      {% csrf_token %}
+      <div class="control-group">
+        <label class="control-label" for="username">Username</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="username">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="project-name">Name</label>
+        <div class="controls">
+          <input type="text" class="input" name="first_name" placeholder="First">
+          <input type="text" class="input" name="last_name" placeholder="Last">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="email">Email</label>
+        <div class="controls">
+          <input type="email" class="input-xlarge" name="email">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="optionsCheckbox">Administrator</label>
+        <div class="controls">
+          <label class="checkbox">
+            <input type="checkbox" id="optionsCheckbox" value="option1">
+            Check the box to make this user a site administrator.
+          </label>
+        </div>
+      </div>
+
+      <br/>
+      <button type="submit" class="btn btn-primary rightside">Create &raquo;</button>
+      <button type="cancel" class="btn rightside">Cancel &times;</button>
+    </fieldset></form>
+  </div>
+</div>

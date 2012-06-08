@@ -1,0 +1,121 @@
+{% extends "single.html" %}
+
+{% block start_scripts %}
+<script type="text/javascript">
+$(function(){});
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Codebooks --------------------->
+<a class="btn btn-primary open-modal rightside">Create codebook</a>
+{% include "forms/create-codebook.htm" %}
+
+<h3>Codebooks</h3>
+  <table class="well wide">
+  {% if codebooks %}
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Recent activity</th>
+      <th>Batch progress</th>
+      <th>Assigned tasks</th>
+    </tr>
+  </thead>
+  {% endif %}
+  <tbody>
+  {% for p in codebooks %}
+    <tr>
+      <td><a href="/codebook/{{ p }}">{{ p }}</a></td>
+      <td>[...]</td>
+      <td>[...]</td>
+      <td>[...]</td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan=4><br/>You need to create a codebook to get started.<br/><br/>
+        <a href="/codebook/">temp-link: "/codebook/"</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+<br/><br/>
+
+
+<!-- Collections --------------------->
+<a class="btn btn-primary open-modal rightside">Create sub-collection</a>
+{% include "forms/sample-collection.htm" %}
+<a class="btn btn-primary open-modal rightside">Upload collection</a>
+{% include "forms/upload-collection.htm" %}
+
+<h3>Collections</h3>
+  <table class="well wide">
+  {% if codebooks %}
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Recent activity</th>
+      <th>Batch progress</th>
+      <th>Assigned tasks</th>
+    </tr>
+  </thead>Assign
+  {% endif %}
+  <tbody>
+  {% for p in codebooks %}
+    <tr>
+      <td><a href="/codebook/{{ p.id }}">{{ p.profile.name }}</a></td>
+      <td>[...]</td>
+      <td>[...]</td>
+      <td>[...]</td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan=4><br/>Next, you need to upload a collection of documents.<br/><br/>
+        <a href="/collection/">temp-link: "/collection/"</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+<br/><br/>
+
+<!-- Batches ------------------------->
+<a class="btn btn-primary open-modal rightside">Start a batch</a>
+{% include "forms/start-batch.htm" %}
+
+<h3>Batches</h3>
+  <table class="well wide">
+  {% if batches %}
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Recent activity</th>
+      <th>Batch progress</th>
+      <th>Assigned tasks</th>
+    </tr>
+  </thead>
+  {% endif %}
+  <tbody>
+  {% for p in batches %}
+    <tr>
+      <td><a href="/codebook/{{ p.id }}">{{ p.profile.name }}</a></td>
+      <td>[...]</td>
+      <td>[...]</td>
+      <td>[...]</td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan=4><br/>Once you have at least one codebook and one collection, you can launch a batch.<br/><br/>
+        <a href="/batch/">temp-link: "/batch/"</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+
+<br/><br/>
+
+
+{% endblock %}
+
