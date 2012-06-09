@@ -39,16 +39,17 @@ def my_account(request):
 def shared_resources(request):
     conn = connections["default"]
 
+    print list(conn.get_collection("tb_app_collection").find(fields={"name":1, "description":1}))
     result = {
         'codebooks' : jsonifyRecords(Codebook.objects.all(), ['username', 'first_name', 'last_name', 'email']),
-        'collections' : conn.get_collection("tb_app_collection").find(fields={"name":1, "description":1}),
+        'collections' : list(conn.get_collection("tb_app_collection").find(fields={"id":1, "name":1, "description":1})),
         'batches' : jsonifyRecords(PrivateBatch.objects.all(), ['username', 'first_name', 'last_name', 'email']),
         'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
 
     return render_to_response('shared-resources.html', result, context_instance=RequestContext(request))
 
-@login_required()#login_url='/')
+@login_required(login_url='/')
 def administration(request):
     result = {
         'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
@@ -64,6 +65,15 @@ def codebook(request, id_):
     }
 
     return render_to_response('codebook.html', result, context_instance=RequestContext(request))
+
+@login_required(login_url='/')
+def collection(request, id_):
+    #4fd2b3572fa6cd14b100002d
+    result = {
+        'collection' : {}#!jsonifyRecord(Codebook.objects.get(pk=id_), ['username', 'first_name', 'last_name', 'email']),
+    }
+
+    return render_to_response('collection.html', result, context_instance=RequestContext(request))
 
 ### Ajax calls ###############################################################
 

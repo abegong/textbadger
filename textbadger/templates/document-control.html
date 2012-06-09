@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block main_container %}
+<div class="row">
+  <div class="span9 shaded">
+    {% block document %}
+    --- Document ---
+    {% endblock %}
+  </div>
+  <div class="span3 shaded">
+    {% block control %}
+    --- Control ---
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}
