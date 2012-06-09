@@ -9,6 +9,7 @@ import json, re
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import connections
+from bson.objectid import ObjectId
 from tb_app.models import Codebook, Collection, PrivateBatch, convert_csv_to_bson
 
 def jsonifyRecord( obj, fields ):
@@ -38,8 +39,6 @@ def my_account(request):
 @login_required(login_url='/')
 def shared_resources(request):
     conn = connections["default"]
-
-    print list(conn.get_collection("tb_app_collection").find(fields={"name":1, "description":1}))
     result = {
         'codebooks' : jsonifyRecords(Codebook.objects.all(), ['username', 'first_name', 'last_name', 'email']),
         'collections' : list(conn.get_collection("tb_app_collection").find(fields={"id":1, "name":1, "description":1})),
@@ -69,10 +68,12 @@ def codebook(request, id_):
 @login_required(login_url='/')
 def collection(request, id_):
     #4fd2b3572fa6cd14b100002d
-    result = {
-        'collection' : {}#!jsonifyRecord(Codebook.objects.get(pk=id_), ['username', 'first_name', 'last_name', 'email']),
-    }
-
+    conn = connections["default"] 
+    result = conn.get_collection("tb_app_collection").find_one(
+            {"_id":ObjectId("4fd2b3572fa6cd14b100002d")},
+            {"name":1, "description": 1}
+        )
+    print result
     return render_to_response('collection.html', result, context_instance=RequestContext(request))
 
 ### Ajax calls ###############################################################
@@ -169,5 +170,17 @@ def upload_collection(request):
     result = conn.get_collection("tb_app_collection").insert(J)
 
     return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
+
+@login_required(login_url='/')
+def get_collection_docs(request):
+    id_ = request.POST["id"]
+    conn = connections["default"]
+    collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId("4fd2b3572fa6cd14b100002d")})
+
+    return gen_json_response({
+            "status": "success",
+            "msg": "Everything all good AFAICT.",
+            "documents" : collection["documents"]
+            })
 
 

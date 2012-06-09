@@ -1,7 +1,33 @@
 {% extends "base/document-control.html" %}
 
+{% block start_scripts %}
+<script type="text/javascript">
+var collection_id = {{7}};
+var doc_list = [];
+var doc_index = 0;
+
+function show_doc(index){
+    $("#doc-box").html(doc_list[index].content);
+}
+
+$(function(){
+    $.post(
+        '/ajax/get-collection-docs/',
+        {'id': collection_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        function(data){
+            doc_list = data.documents;
+            show_doc(2);
+//            $("#doc-box").html(JSON.stringify(data))
+        },
+        'json'
+    )
+});
+</script>
+{% endblock %}
+
 {% block document %}
 --- Document ---
+{{documents}}
 {% endblock %}
 
 {% block control %}
