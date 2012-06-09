@@ -51,23 +51,19 @@ $(function(){});
 
 <h3>Collections</h3>
   <table class="well wide">
-  {% if codebooks %}
+  {% if collections %}
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Recent activity</th>
-      <th>Batch progress</th>
-      <th>Assigned tasks</th>
+      <th>Name</th>
+      <th>Documents</th>
     </tr>
   </thead>Assign
   {% endif %}
   <tbody>
-  {% for p in codebooks %}
+  {% for p in collections %}
     <tr>
-      <td><a href="/codebook/{{ p.id }}">{{ p.profile.name }}</a></td>
-      <td>[...]</td>
-      <td>[...]</td>
-      <td>[...]</td>
+      <td><a href="/collection/{{ p.id }}">{{ p.name }}</a></td>
+      <td>{{ p.id }}</td>
     </tr>
   {% empty %}
     <tr>

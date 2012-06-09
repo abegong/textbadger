@@ -4,10 +4,12 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-import json
+import json, re
 
 from django.contrib.auth.models import User
-from tb_app.models import Codebook, Collection, PrivateBatch
+from django.conf import settings
+from django.db import connections
+from tb_app.models import Codebook, Collection, PrivateBatch, convert_csv_to_bson
 
 def jsonifyRecord( obj, fields ):
     j = {}
@@ -35,9 +37,11 @@ def my_account(request):
 
 @login_required(login_url='/')
 def shared_resources(request):
+    conn = connections["default"]
+
     result = {
         'codebooks' : jsonifyRecords(Codebook.objects.all(), ['username', 'first_name', 'last_name', 'email']),
-        'collections' : jsonifyRecords(Collection.objects.all(), ['username', 'first_name', 'last_name', 'email']),
+        'collections' : conn.get_collection("tb_app_collection").find(fields={"name":1, "description":1}),
         'batches' : jsonifyRecords(PrivateBatch.objects.all(), ['username', 'first_name', 'last_name', 'email']),
         'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
@@ -99,7 +103,7 @@ def create_account(request):
         return gen_json_response({"status": "failed", "msg": "You must be an administrator to create new accounts."})
 
     print request.POST
-    if 1:
+    try:
         new_user = User.objects.create_user(
                 request.POST["username"],
                 request.POST["email"],
@@ -109,14 +113,51 @@ def create_account(request):
         new_user.last_name = request.POST["last_name"]
         new_user.is_staff = "admin" in request.POST
         new_user.is_superuser = "admin" in request.POST
-
-    try:
-        pass
     except MultiValueDictKeyError as e:
         print e.args
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
     return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
 
+@login_required(login_url='/')
+def upload_collection(request):
+#    print request.POST
+#    print request._files
+#    print request._raw_post_data
+#    print '\n'.join(request.__dict__.keys())
+
+    #Get name and description
+    try:
+        name = request.POST["name"]
+
+        #! This isn't quite right.  Description shouldn't be required.
+        #description = get_argument(request,"description", "")
+        description = request.POST["description"]
+
+        print name, description
+    except MultiValueDictKeyError as e:
+        print e.args
+        return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    #! Get the filename from the request object.
+    #! Need to mess with jquery to get this to work.
+    filename = settings.PROJECT_PATH+'/../dev/scrap/dummy-collections/collection-2959.csv'
+
+    #Detect filetype
+    if re.search('\.csv$', filename.lower()):
+        csv_text = file(filename, 'r').read()
+        J = convert_csv_to_bson(csv_text)
+
+    elif re.search('\.json$', filename.lower()):
+        J = json.load(file(filename, 'r'))
+        #! Validate json object here
+
+    J['name'] = name
+    J['description'] = description
+
+    conn = connections["default"]
+    result = conn.get_collection("tb_app_collection").insert(J)
+
+    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
 
 

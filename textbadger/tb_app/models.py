@@ -19,8 +19,10 @@ class Codebook(Model):
     questions = ListField()
 
 class Collection(Model):
-    profile = EmbeddedModelField(ObjectProfile)
-    doc_list = ListField()
+#    profile = EmbeddedModelField(ObjectProfile)
+    name = TextField()
+    description = TextField()
+    documents = ListField()
 
 class PrivateBatch(Model):
     profile = EmbeddedModelField(ObjectProfile)
@@ -35,10 +37,11 @@ import csv, re, json
 
 def convert_csv_to_bson(csv_text):
     C = csv.reader(csv.StringIO(csv_text))
-    H = C.next()
-    print H
 
-    
+    #Parse the header row
+    H = C.next()
+
+    #Capture the url/content column index
     url_index, content_index = None, None
     if 'url' in H:
         url_index = H.index('url')
@@ -46,8 +49,9 @@ def convert_csv_to_bson(csv_text):
         content_index = H.index('content')
 
     if url_index==None and content_index==None:
-        raise Exception('You must specify either a "url" column or a "content" column')
+        raise Exception('You must specify either a "url" column or a "content" column in the .csv header.')
 
+    #Identify metadata_fields
     meta_fields = {}
     for h in H:
         if re.match('META_', h):
@@ -65,62 +69,34 @@ def convert_csv_to_bson(csv_text):
         'documents' : []
     }
 
+    #For each row in the collection
     for row in C:
         j = {}
 
+        #Grab the content or url
+        #If both are present, url gets precedence
         if url_index != None:
             j['url'] = row[url_index]
         elif content_index != None:
             j['content'] = row[content_index]
 
+        #Grab metadata fields
         m = {}
         for f in meta_fields:
+            #Don't include missing values
             #! Maybe include other missing values here
             if meta_fields[f] != '':
                 m[f] = row[meta_fields[f]]
+
+        #Don't include empty metadata objects
         if m != {}:
             j["metadata"] = m
 
         J['documents'].append(j)
 
-    print json.dumps(J, indent=2)
+#    print json.dumps(J, indent=2)
     return J
 
-
-
-"""
-class Label(Model):
-    user_id = TextField()
-#! All these fields need to be set to optional
-    batch_id = TextField()
-    doc_id = TextField() #! Integer?
-    value = DictField()
-#!    timestamp = #Timestamp field....?
-"""
-
-"""
-        "sharing": "",
-    },
-    "results": [{
-        "user_id":,
-        "doc_id":,
-        "value": {}
-        "timestamp"
-    }],
-    "reports": {}
-}
-"""
-
-"""
-class Project(Model):
-    profile = EmbeddedModelField('ObjectProfile')
-    permissions = DictField() #e.g. {"agong" : ["codebooks", "collections", "batches"]}
-    collections = ListField()
-    codebooks = ListField()
-    batches = ListField()
-"""
-
-#UserWrapper.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
 
 """
 Codebook:{
