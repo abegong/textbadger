@@ -29,6 +29,65 @@ class PrivateBatch(Model):
     assignments = DictField() #e.g. {'agong': [1,2,3,4,5], 'mrchampe': [3,4,5,6,7]}
     reports = DictField()
 
+##############################################################################
+
+import csv, re, json
+
+def convert_csv_to_bson(csv_text):
+    C = csv.reader(csv.StringIO(csv_text))
+    H = C.next()
+    print H
+
+    
+    url_index, content_index = None, None
+    if 'url' in H:
+        url_index = H.index('url')
+    if 'content' in H:
+        content_index = H.index('content')
+
+    if url_index==None and content_index==None:
+        raise Exception('You must specify either a "url" column or a "content" column')
+
+    meta_fields = {}
+    for h in H:
+        if re.match('META_', h):
+            name = re.sub('^META_', '', h)
+            index = H.index(h)
+            if name in meta_fields:
+                raise Exception('Duplicate META_ name : '+name)
+            meta_fields[name] = index
+
+#    print json.dumps(meta_fields, indent=2)
+
+    J = {
+#        'name' : None,
+#        'description': None,
+        'documents' : []
+    }
+
+    for row in C:
+        j = {}
+
+        if url_index != None:
+            j['url'] = row[url_index]
+        elif content_index != None:
+            j['content'] = row[content_index]
+
+        m = {}
+        for f in meta_fields:
+            #! Maybe include other missing values here
+            if meta_fields[f] != '':
+                m[f] = row[meta_fields[f]]
+        if m != {}:
+            j["metadata"] = m
+
+        J['documents'].append(j)
+
+    print json.dumps(J, indent=2)
+    return J
+
+
+
 """
 class Label(Model):
     user_id = TextField()
