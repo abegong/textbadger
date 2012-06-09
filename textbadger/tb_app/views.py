@@ -67,8 +67,9 @@ def codebook(request, id_):
 
 @login_required(login_url='/')
 def collection(request, id_):
-    #4fd2b3572fa6cd14b100002d
     conn = connections["default"] 
+    #!! Hardcoded object id
+    #! Also, we need to do something to let django's templates see the "_id" field
     result = conn.get_collection("tb_app_collection").find_one(
             {"_id":ObjectId("4fd2b3572fa6cd14b100002d")},
             {"name":1, "description": 1}
@@ -175,7 +176,11 @@ def upload_collection(request):
 def get_collection_docs(request):
     id_ = request.POST["id"]
     conn = connections["default"]
+
+    #! Hardcoded ObjectId here:
     collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId("4fd2b3572fa6cd14b100002d")})
+
+    #! Need error checking for invalid Ids
 
     return gen_json_response({
             "status": "success",
