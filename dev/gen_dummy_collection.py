@@ -11,7 +11,7 @@ C = csv.writer(file(path+filename+".csv", 'w'))
 C.writerow(('content', 'META_sentences', 'META_words'))
 
 J = {
-    "name": LI.generate_sentence()[2].split()[:3],
+    "name": " ".join(LI.generate_sentence()[2].split()[:3]),
     "description": LI.generate_sentence()[2],
     "documents": []
 }
