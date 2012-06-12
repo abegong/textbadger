@@ -64,7 +64,8 @@ $(function(){});
   <tbody>
   {% for p in collections %}
     <tr>
-      <td><a href="/collection/{{ p.id }}">{{ p.name }}</a></td>
+      {% load tb_app_tags %}
+      <td><a href="/collection/{{ p|mongo_id }}">{{ p.name }}</a></td>
       <td>{{ p.id }}</td>
     </tr>
   {% empty %}
