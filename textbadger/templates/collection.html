@@ -1,9 +1,11 @@
 {% extends "base/document-control.html" %}
+{% load tb_app_tags %}
+
 
 {% block start_scripts %}
 <script type="text/javascript">
 //!This is wrong:
-var collection_id = {{7}};
+var collection_id = "{{collection|mongo_id}}";
 var doc_list = [];
 var doc_index = 0;
 

@@ -70,10 +70,11 @@ def collection(request, id_):
     conn = connections["default"] 
     #!! Hardcoded object id
     #! Also, we need to do something to let django's templates see the "_id" field
-    result = conn.get_collection("tb_app_collection").find_one(
-            {"_id":ObjectId("4fd2b3572fa6cd14b100002d")},
+    result = {
+        "collection": conn.get_collection("tb_app_collection").find_one(
+            {"_id":ObjectId(id_)},
             {"name":1, "description": 1}
-        )
+        )}
     print result
     return render_to_response('collection.html', result, context_instance=RequestContext(request))
 
@@ -176,7 +177,7 @@ def get_collection_docs(request):
     conn = connections["default"]
 
     #! Hardcoded ObjectId here:
-    collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId("4fd2b3572fa6cd14b100002d")})
+    collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId(id_)})
 
     #! Need error checking for invalid Ids
 
