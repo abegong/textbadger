@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^administration/$', 'textbadger.tb_app.views.administration' ),
 
     #Object view pages
-    #url(r'^codebook/(.*)/$', 'textbadger.tb_app.views.codebook' ),
+    url(r'^codebook/(.*)/$', 'textbadger.tb_app.views.codebook' ),
     url(r'^collection/(.*)/$', 'textbadger.tb_app.views.collection' ),
     #url(r'^batch/(.*)/$', 'textbadger.tb_app.views.batch' ),
 

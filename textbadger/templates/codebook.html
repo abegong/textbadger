@@ -1,0 +1,35 @@
+{% extends "base/document-control.html" %}
+{% load tb_app_tags %}
+
+{% block start_scripts %}
+<script type="text/javascript">
+$(function(){
+});
+</script>
+{% endblock %}
+
+{% block document %}
+--- Codebook ---
+{{documents}}
+{% endblock %}
+
+{% block control %}
+--- Control ---
+
+<div id="controlBoxMain">
+	<div id="impexpControls">
+		<input type="button" id="loadJsonButton" value="Load form from JSON"></input>
+		<input type="button" id="exportJsonButton" value="Export form to JSON"></input>
+		<input type="button" id="exportSelfCButton" value="Export self-contained form"></input>
+	</div>
+	<hr/>
+	<div id="sequenceControls" style="text-align:center">
+		<a id="add_control" class="control icon-plus"></img></a>
+		<a id="del_control" class="control icon-minus"></img></a>
+		<a id="up_control" class="control icon-arrow-up"></img></a>
+		<a id="down_control" class="control icon-arrow-down"></img></a>
+	</div>
+	<div id="questionControls"></div>
+</div>
+{% endblock %}
+
