@@ -59,23 +59,21 @@ def administration(request):
 
 @login_required(login_url='/')
 def codebook(request, id_):
+    conn = connections["default"] 
     result = {
-        'codebook' : {}#!jsonifyRecord(Codebook.objects.get(pk=id_), ['username', 'first_name', 'last_name', 'email']),
-    }
-
+        "codebook": conn.get_collection("tb_app_codebook").find_one(
+            {"_id":ObjectId(id_)}
+        )}
     return render_to_response('codebook.html', result, context_instance=RequestContext(request))
 
 @login_required(login_url='/')
 def collection(request, id_):
     conn = connections["default"] 
-    #!! Hardcoded object id
-    #! Also, we need to do something to let django's templates see the "_id" field
     result = {
         "collection": conn.get_collection("tb_app_collection").find_one(
             {"_id":ObjectId(id_)},
             {"name":1, "description": 1}
         )}
-    print result
     return render_to_response('collection.html', result, context_instance=RequestContext(request))
 
 ### Ajax calls ###############################################################
