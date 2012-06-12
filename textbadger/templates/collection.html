@@ -1,29 +1,63 @@
 {% extends "base/document-control.html" %}
 {% load tb_app_tags %}
 
-
 {% block start_scripts %}
 <script type="text/javascript">
-//!This is wrong:
-var collection_id = "{{collection|mongo_id}}";
-var doc_list = [];
-var doc_index = 0;
 
-function show_doc(index){
-    $("#doc-box").html(doc_list[index].content);
-}
-
-$(function(){
+function loadDocList( collection_id ){
     $.post(
         '/ajax/get-collection-docs/',
         {'id': collection_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(data){
             doc_list = data.documents;
-            show_doc(2);
+            showDocument(0);
+            $("#doc_count").html(doc_list.length);
 //            $("#doc-box").html(JSON.stringify(data))
         },
         'json'
     )
+}
+
+function loadPrevDoc(){
+	if( doc_index > 0 ){
+		doc_index -= 1;
+
+		showDocument( doc_index );
+		if( doc_index == 0 ){ $("#prevButton").addClass("ui-state-disabled"); }
+		$("#nextButton").removeClass("ui-state-disabled");
+	}
+	return( false );
+};
+
+function loadNextDoc(){
+	if( doc_index < doc_list.length-1 ){
+		doc_index += 1;
+
+		showDocument( doc_index );
+		if( doc_index == doc_list.length-1 ){ $("#nextButton").addClass("ui-state-disabled"); }
+		$("#prevButton").removeClass("ui-state-disabled");
+	}
+	return( false );
+};
+
+function initialize(){
+    $("#prevButton").click( loadPrevDoc );
+    $("#nextButton").click( loadNextDoc );
+}
+
+//!This is wrong:
+var collection_id = "{{collection|mongo_id}}";
+var doc_list = [];
+var doc_index = 0;
+
+function showDocument(index){
+    $("#doc-box").html(doc_list[index].content);
+    $("#doc_index").html(index+1);
+}
+
+$(function(){
+    initialize();
+    loadDocList(collection_id);
 });
 </script>
 {% endblock %}
@@ -35,5 +69,11 @@ $(function(){
 
 {% block control %}
 --- Control ---
+<div style="text-align:center">
+	<button id="prevButton"><span class="icon-arrow-left ui-icon-triangle-1-w"></span></button>
+<!--	<button id="checkAnswers"><span class="ui-icon ui-icon-circle-check"></span></button> -->
+    <span id="doc_index">0</span> of <span id="doc_count">0</span>
+	<button id="nextButton"><span class="icon-arrow-right ui-icon-triangle-1-e"></span></button>
+</div>
 {% endblock %}
 
