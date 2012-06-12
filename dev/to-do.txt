@@ -1,16 +1,14 @@
 === On deck ===
 
 === To do ===
-* Get fixtures working
 
 * Add "administrators" mixin
-
-* Add csrf token to all forms
-* Add trailing slash to all form arguments
-* Enforce unique index on User.username
-* Suppress ?next= part of login_required decorator
+* Hilight current location in menu
+* Add page header to collection page
+* Set off batches visually on shared-rez page
 
 === Punt ===
+* Suppress ?next= part of login_required decorator
 
 === Done ===
 * Get the welcome page up and running again
@@ -37,6 +35,10 @@
 *** Backbone pages working well! Next up: object view pages ***
 * Get local DB working
 * Clean up and spin off as a separate repo.
+* Get fixtures working
+* Add csrf token to all forms
+* Add trailing slash to all form arguments
+* Enforce unique index on User.username
 
 
 
