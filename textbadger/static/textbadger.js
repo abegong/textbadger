@@ -33,7 +33,8 @@ $(function(){
       return false;
     });
 
-    $('form').submit(function() {
+    $('form:not(.tb-basic)').submit(function() {
+        alert("hi");
         //event.preventDefault();
         var form = $(this);
         //console.log(form.serializeArray());

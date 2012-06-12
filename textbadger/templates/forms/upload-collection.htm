@@ -4,7 +4,8 @@
     <h3>Upload new collection</h3>
   </div>
   <div class="modal-body">
-    <form id="create-project-form" class="form-horizontal" tb-href="/ajax/upload-collection/"><fieldset>
+<!--    <form id="create-project-form" class="form-horizontal" tb-href="/ajax/upload-collection/"><fieldset> -->
+    <form method="POST" enctype="multipart/form-data" class="form-horizontal tb-basic" action="/ajax/upload-collection/"><fieldset>
       {% csrf_token %}
       <div class="control-group">
         <label class="control-label" for="project-name">Name</label>
@@ -21,7 +22,7 @@
       <div class="control-group">
         <label class="control-label" for="fileInput">File</label>
         <div class="controls">
-          <input class="input-file" id="fileInput" type="file">
+          <input class="input-file" name="fileInput" type="file">
           <br/>
           Your file must be in a <a href="#">recognized format</a> to upload successfully.
         </div>

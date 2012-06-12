@@ -141,6 +141,8 @@ def upload_collection(request):
     #Get name and description
     try:
         name = request.POST["name"]
+        csv_file = request.FILES["fileInput"]
+        filename = unicode(csv_file)
 
         #! This isn't quite right.  Description shouldn't be required.
         #description = get_argument(request,"description", "")
@@ -151,13 +153,9 @@ def upload_collection(request):
         print e.args
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
-    #! Get the filename from the request object.
-    #! Need to mess with jquery to get this to work.
-    filename = settings.PROJECT_PATH+'/../dev/scrap/dummy-collections/collection-2959.csv'
-
     #Detect filetype
     if re.search('\.csv$', filename.lower()):
-        csv_text = file(filename, 'r').read()
+        csv_text = csv_file.read()
         J = convert_csv_to_bson(csv_text)
 
     elif re.search('\.json$', filename.lower()):
