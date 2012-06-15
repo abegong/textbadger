@@ -20,9 +20,10 @@ function loadDocList( collection_id ){
 }
 
 function showDocument(index){
-    $("#doc-box").html(doc_list[index].content);
     $("#doc_index").val(index+1);
-    console.log(doc_list[index]);
+//    console.log(doc_list[index]);
+
+    $("#doc-box").html(doc_list[index].content);
 
     var M = doc_list[index].metadata;
     $("#meta-data").html("");
@@ -57,6 +58,13 @@ function loadNextDoc(){
 function initialize(){
     $("#prevButton").click( loadPrevDoc );
     $("#nextButton").click( loadNextDoc );
+    $("#doc_index").change(function(){
+        var x = $(this).val();
+
+        //! Need to add validation to this function
+        doc_index = x;
+        showDocument(x)
+    });
 }
 
 //!This is wrong:
@@ -111,7 +119,7 @@ $(function(){
   <form>
 	<button id="prevButton"><span class="icon-arrow-left ui-icon-triangle-1-w"></span></button>
     &nbsp;&nbsp;
-    <input id="doc_index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"/>
+    <input id="doc_index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"></input>
     of <span id="doc_count">0</span>
     &nbsp;&nbsp;
 	<button id="nextButton"><span class="icon-arrow-right ui-icon-triangle-1-e"></span></button>
