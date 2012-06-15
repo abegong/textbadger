@@ -4,7 +4,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-import json, re
+import json, re, datetime
 
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -40,7 +40,7 @@ def my_account(request):
 def shared_resources(request):
     conn = connections["default"]
     result = {
-        'codebooks' : jsonifyRecords(Codebook.objects.all(), ['username', 'first_name', 'last_name', 'email']),
+        'codebooks' : list(conn.get_collection("tb_app_codebook").find(fields={"id":1, "name":1, "description":1})),
         'collections' : list(conn.get_collection("tb_app_collection").find(fields={"id":1, "name":1, "description":1})),
         'batches' : jsonifyRecords(PrivateBatch.objects.all(), ['username', 'first_name', 'last_name', 'email']),
         'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
@@ -62,7 +62,8 @@ def codebook(request, id_):
     conn = connections["default"] 
     result = {
         "codebook": conn.get_collection("tb_app_codebook").find_one(
-            {"_id":ObjectId(id_)}
+            {"_id":ObjectId(id_)},
+            {"name":1, "description": 1}
         )}
     return render_to_response('codebook.html', result, context_instance=RequestContext(request))
 
@@ -132,11 +133,6 @@ def create_account(request):
 
 @login_required(login_url='/')
 def upload_collection(request):
-#    print request.POST
-#    print request._files
-#    print request._raw_post_data
-#    print '\n'.join(request.__dict__.keys())
-
     #Get name and description
     try:
         name = request.POST["name"]
@@ -183,5 +179,31 @@ def get_collection_docs(request):
             "documents" : collection["documents"]
             })
 
+@login_required(login_url='/')
+def create_codebook(request):
+    #Get name and description
+    try:
+        name = request.POST["name"]
+
+        #! This isn't quite right.  Description shouldn't be required.
+        #description = get_argument(request,"description", "")
+        description = request.POST["description"]
+
+        print name, description
+    except MultiValueDictKeyError as e:
+        print e.args
+        return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    #Construct object
+    J = {}
+    J['name'] = name
+    J['description'] = description
+    J['create-time'] = datetime.datetime.utcnow()
+    J['questions'] = []
+
+    conn = connections["default"]
+    result = conn.get_collection("tb_app_codebook").insert(J)
+
+    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
 
 

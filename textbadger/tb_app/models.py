@@ -9,13 +9,14 @@ from django.contrib.auth.models import User
 ##    account = EmbeddedModelField('Account')
 #    permissions = ListField()
 
-class ObjectProfile(Model):
-    owner = TextField()
-    name = TextField()
-    description = TextField()
+#class ObjectProfile(Model):
+#    owner = TextField()
+#    name = TextField()
+#    description = TextField()
 
 class Codebook(Model):
-    profile = EmbeddedModelField(ObjectProfile)
+    name = TextField()
+    description = TextField()
     questions = ListField()
 
 class Collection(Model):
@@ -25,7 +26,6 @@ class Collection(Model):
     documents = ListField()
 
 class PrivateBatch(Model):
-    profile = EmbeddedModelField(ObjectProfile)
     codebook = TextField()
     collection = TextField()
     assignments = DictField() #e.g. {'agong': [1,2,3,4,5], 'mrchampe': [3,4,5,6,7]}
