@@ -88,7 +88,7 @@ $(function(){
 {% endblock %}
 
 {% block control %}
-<div class="tabbable"> <!-- Only required for left/right tabs -->
+<div class="tabbable">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#tab1" data-toggle="tab">Collection</a></li>
     <li><a href="#tab2" data-toggle="tab">Document</a></li>
@@ -117,12 +117,12 @@ $(function(){
 <div style="text-align:center">
 <!--    --- Control ---<br/> -->
   <form>
-	<button id="prevButton"><span class="icon-arrow-left ui-icon-triangle-1-w"></span></button>
+	<button id="prevButton"><span class="icon-arrow-left"></span></button>
     &nbsp;&nbsp;
     <input id="doc_index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"></input>
     of <span id="doc_count">0</span>
     &nbsp;&nbsp;
-	<button id="nextButton"><span class="icon-arrow-right ui-icon-triangle-1-e"></span></button>
+	<button id="nextButton"><span class="icon-arrow-right"></span></button>
   </form>
 </div>
 

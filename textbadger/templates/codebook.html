@@ -18,22 +18,37 @@ $(function(){
 {% endblock %}
 
 {% block control %}
---- Control ---
+<div class="tabbable">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">Codebook</a></li>
+    <li><a href="#tab2" data-toggle="tab">Question</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+      <strong>Name</strong>
+      <p>{{ codebook.name }}</p>
 
-<div id="controlBoxMain">
-	<div id="impexpControls">
-		<input type="button" id="loadJsonButton" value="Load form from JSON"></input>
-		<input type="button" id="exportJsonButton" value="Export form to JSON"></input>
-		<input type="button" id="exportSelfCButton" value="Export self-contained form"></input>
-	</div>
-	<hr/>
-	<div id="sequenceControls" style="text-align:center">
-		<a id="add_control" class="control icon-plus"></img></a>
-		<a id="del_control" class="control icon-minus"></img></a>
-		<a id="up_control" class="control icon-arrow-up"></img></a>
-		<a id="down_control" class="control icon-arrow-down"></img></a>
-	</div>
-	<div id="questionControls"></div>
+      <strong>Description</strong>
+      <p>{{ codebook.description }}</p>
+
+      <hr/>
+      <div id="impexpControls">
+          <a class="btn" id="exportJsonButton">Export json</a>
+          <a class="btn" id="exportSelfCButton">Export HTML</a>
+          <a class="btn" id="loadJsonButton">Import json</a>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab2">
+        <dl id="meta-data" class="dl-horizontal"></ul>
+        <div id="sequenceControls" style="text-align:center">
+            <button id="add_control"><span class="control icon-plus"></span></button>
+            <button id="del_control"><span class="control icon-minus"></span></button>
+            <button id="up_control"><span class="control icon-arrow-up"></span></button>
+            <button id="down_control"><span class="control icon-arrow-down"></span></button>
+        </div>
+        <div id="questionControls"></div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
