@@ -21,14 +21,14 @@ function loadDocList( collection_id ){
 
 function showDocument(index){
     $("#doc-box").html(doc_list[index].content);
-    $("#doc_index").html(index+1);
+    $("#doc_index").val(index+1);
     console.log(doc_list[index]);
 
     var M = doc_list[index].metadata;
     $("#meta-data").html("");
     for( m in M ){
-        $("#meta-data").append("<li>"+m+"</li>");
-        $("#meta-data").append("<li>"+M[m]+"</li>");
+        $("#meta-data").append("<dt>"+m+"</dt>");
+        $("#meta-data").append("<dd>"+M[m]+"</dd>");
     }
 }
 
@@ -71,29 +71,52 @@ $(function(){
 </script>
 {% endblock %}
 
+{% block title %}
+<h3>{{collection.name}}</h3>
+{% endblock %}
+
 {% block document %}
 --- Document ---
 {% endblock %}
 
 {% block control %}
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">Collection</a></li>
+    <li><a href="#tab2" data-toggle="tab">Document</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+      <strong>Name</strong>
+      <p>{{ collection.name }}</p>
+
+      <strong>Description</strong>
+      <p>{{ collection.description }}</p>
+
+<!--
+      <strong>Size</strong>
+      <p>{{ collection.documents|length }}</p>
+-->
+    </div>
+    <div class="tab-pane" id="tab2">
+      <dl id="meta-data" class="dl-horizontal"></ul>
+    </div>
+  </div>
+</div>
+
+<hr/>
+
 <div style="text-align:center">
 <!--    --- Control ---<br/> -->
+  <form>
 	<button id="prevButton"><span class="icon-arrow-left ui-icon-triangle-1-w"></span></button>
-<!--	<button id="checkAnswers"><span class="ui-icon ui-icon-circle-check"></span></button> -->
-    <span id="doc_index">0</span> of <span id="doc_count">0</span>
+    &nbsp;&nbsp;
+    <input id="doc_index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"/>
+    of <span id="doc_count">0</span>
+    &nbsp;&nbsp;
 	<button id="nextButton"><span class="icon-arrow-right ui-icon-triangle-1-e"></span></button>
+  </form>
 </div>
-<hr/>
-<div>
-    <h3>Document</h3>
-    <ul id="meta-data"></ul>
-</div>
-<hr/>
-<div>
-    <h3>Collection</h3>
-    {{ collection.name }}<br/>
-    {{ collection.description }}
-    
-</div>
+
 {% endblock %}
 

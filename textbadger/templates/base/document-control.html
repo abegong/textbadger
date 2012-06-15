@@ -4,12 +4,17 @@
 
 {% block main_container %}
 <div class="row">
-  <div id="doc-box" class="span8 well">
+  <div class="span8 well" id="doc-box">
     {% block document %}
     --- Document ---
     {% endblock %}
   </div>
   <div id="control-box" class="span3 well">
+    {% block title %}
+    <h3>--- Title ---</h3>
+    {% endblock %}
+    <br/>
+
     {% block control %}
     --- Control ---
     {% endblock %}
