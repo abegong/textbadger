@@ -14,10 +14,22 @@ function loadDocList( collection_id ){
             doc_list = data.documents;
             showDocument(0);
             $("#doc_count").html(doc_list.length);
-//            $("#doc-box").html(JSON.stringify(data))
         },
         'json'
     )
+}
+
+function showDocument(index){
+    $("#doc-box").html(doc_list[index].content);
+    $("#doc_index").html(index+1);
+    console.log(doc_list[index]);
+
+    var M = doc_list[index].metadata;
+    $("#meta-data").html("");
+    for( m in M ){
+        $("#meta-data").append("<li>"+m+"</li>");
+        $("#meta-data").append("<li>"+M[m]+"</li>");
+    }
 }
 
 function loadPrevDoc(){
@@ -52,11 +64,6 @@ var collection_id = "{{collection|mongo_id}}";
 var doc_list = [];
 var doc_index = 0;
 
-function showDocument(index){
-    $("#doc-box").html(doc_list[index].content);
-    $("#doc_index").html(index+1);
-}
-
 $(function(){
     initialize();
     loadDocList(collection_id);
@@ -66,16 +73,27 @@ $(function(){
 
 {% block document %}
 --- Document ---
-{{documents}}
 {% endblock %}
 
 {% block control %}
---- Control ---
 <div style="text-align:center">
+<!--    --- Control ---<br/> -->
 	<button id="prevButton"><span class="icon-arrow-left ui-icon-triangle-1-w"></span></button>
 <!--	<button id="checkAnswers"><span class="ui-icon ui-icon-circle-check"></span></button> -->
     <span id="doc_index">0</span> of <span id="doc_count">0</span>
 	<button id="nextButton"><span class="icon-arrow-right ui-icon-triangle-1-e"></span></button>
+</div>
+<hr/>
+<div>
+    <h3>Document</h3>
+    <ul id="meta-data"></ul>
+</div>
+<hr/>
+<div>
+    <h3>Collection</h3>
+    {{ collection.name }}<br/>
+    {{ collection.description }}
+    
 </div>
 {% endblock %}
 

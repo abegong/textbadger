@@ -173,8 +173,6 @@ def upload_collection(request):
 def get_collection_docs(request):
     id_ = request.POST["id"]
     conn = connections["default"]
-
-    #! Hardcoded ObjectId here:
     collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId(id_)})
 
     #! Need error checking for invalid Ids
@@ -184,5 +182,6 @@ def get_collection_docs(request):
             "msg": "Everything all good AFAICT.",
             "documents" : collection["documents"]
             })
+
 
 
