@@ -2,8 +2,36 @@
 {% load tb_app_tags %}
 
 {% block start_scripts %}
+<script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}knockout-1.2.1.js" type="text/javascript"></script>
+
+<script src="{{ STATIC_URL }}informal/informalEditor.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}informal/informalScripts.js" type="text/javascript"></script>
+
+
+
 <script type="text/javascript">
 $(function(){
+//    codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
+//    codebookModel.questions.push( new cbQuestion(json[q].question_type, json[q].var_name, json[q].params) );
+    //var launchInformalEditor = function( initial_codebook_model ){
+
+	$.get("{{ STATIC_URL }}informal/_informalTemplateKO.htm", function(template){
+        codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
+        codebookModel.questions.push( new cbQuestion("Multiple choice", "tester", {}) );
+
+		$("#doc-box").append(template);
+		ko.applyBindings(codebookModel);
+        console.log(codebookModel);
+//		attachControlsToQuestion(0);
+//		$("#controlAccordion").accordion({ event: "mouseover", autoHeight:true });
+		//Hack to resize accordion dynamically http://jqueryui.com/demos/accordion/#option-autoHeight
+//		var autoHeight = $("#controlAccordion").accordion( "option", "autoHeight" );
+//        $("#controlAccordion").accordion( "option", "autoHeight", false );
+	}, "text");
+
 });
 </script>
 {% endblock %}
@@ -13,8 +41,8 @@ $(function(){
 {% endblock %}
 
 {% block document %}
---- Codebook ---
-{{codebook.questions}}
+<!-- --- Codebook --- -->
+<div data-bind="template: { name: 'question-template', foreach: questions }"></div>
 {% endblock %}
 
 {% block control %}
@@ -32,6 +60,8 @@ $(function(){
       <p>{{ codebook.description }}</p>
 
       <hr/>
+      {{codebook.questions}}
+      
       <div id="impexpControls">
           <a class="btn" id="exportJsonButton">Export json</a>
           <a class="btn" id="exportSelfCButton">Export HTML</a>
