@@ -149,4 +149,16 @@ LOGGING = {
     }
 }
 
-
+from django.conf import global_settings
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    "tb_app.processors.admin_names",
+)
+"""
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "tb_app.processors.admin_names",
+)
+"""

@@ -6,6 +6,7 @@
 * Hilight current location in menu
 * Add page header to collection page
 * Set off batches visually on shared-rez page
+* Fix mongo bug in loadfixtures script
 
 === Punt ===
 * Suppress ?next= part of login_required decorator
