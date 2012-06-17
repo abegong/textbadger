@@ -2,3 +2,6 @@
 === 2012/06/16 ===
     Installing django-nonrel from github:
     pip install git+https://github.com/django-nonrel/django-nonrel.git
+
+
+    http://stackoverflow.com/questions/6086852/how-to-fix-the-django-sites-table

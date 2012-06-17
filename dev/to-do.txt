@@ -2,11 +2,8 @@
 
 === To do ===
 
-* Add "administrators" mixin
 * Hilight current location in menu
-* Add page header to collection page
 * Set off batches visually on shared-rez page
-* Fix mongo bug in loadfixtures script
 
 === Punt ===
 * Suppress ?next= part of login_required decorator
@@ -40,6 +37,9 @@
 * Add csrf token to all forms
 * Add trailing slash to all form arguments
 * Enforce unique index on User.username
+* Add "administrators" mixin
+* Add page header to collection page
+* Fix mongo bug in loadfixtures script
 
 
 
