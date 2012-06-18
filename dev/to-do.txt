@@ -1,5 +1,4 @@
 === On deck ===
-    * Enable permission activation and deactivation.
 
 === To do ===
 * General UI stuff
@@ -68,6 +67,7 @@
     * Propagate name fields from "create new account" through to DB
     * Propagate admin field from "create new account" through to DB
     * Remove "application settings"
+    * Enable permission activation and deactivation.
 
 
 

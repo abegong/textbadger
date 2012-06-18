@@ -27,6 +27,34 @@ def jsonifyRecords( objs, fields ):
 def gen_json_response( result ):
     return HttpResponse(json.dumps(result, indent=2), mimetype='application/json')
 
+'''
+from django.core.exceptions import PermissionDenied
+
+def superuser_only(function):
+    """
+    Limit view to superusers only.
+    
+    Usage:
+    --------------------------------------------------------------------------
+    @superuser_only
+    def my_view(request):
+        ...
+    --------------------------------------------------------------------------
+    
+    or in urls:
+    
+    --------------------------------------------------------------------------
+    urlpatterns = patterns('',
+        (r'^foobar/(.*)', is_staff(my_view)),
+    )
+    --------------------------------------------------------------------------    
+    """
+    def _inner(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            raise PermissionDenied           
+        return function(request, *args, **kwargs)
+    return _inner
+'''
 ### Object list pages ########################################################
 
 @login_required(login_url='/')
@@ -127,10 +155,41 @@ def create_account(request):
         new_user.is_superuser = "admin" in request.POST
         new_user.save()
     except MultiValueDictKeyError as e:
-        print e.args
+#        print e.args
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
-    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
+    return gen_json_response({"status": "success", "msg": "Successfully created account."})
+
+@login_required(login_url='/')
+def update_permission(request):
+    if not request.user.is_superuser:
+        return gen_json_response({"status": "failed", "msg": "You must be an administrator to change account privileges."})
+
+    try:
+        user = User.objects.get(username=request.POST["username"])
+    except MultiValueDictKeyError as e:
+        return gen_json_response({"status": "failed", "msg": "Missing field 'username.'"})
+
+    print request.POST
+    if "active" in request.POST:
+        new_status = request.POST["active"]=='true'
+        if not new_status and user.is_superuser:
+            return gen_json_response({"status": "failed", "msg": "Sorry, you can't deactivate a user with admin privileges."})
+        else:
+            user.is_active = new_status
+        
+    if "admin" in request.POST:
+        new_status = request.POST["admin"]=='true'
+        if not new_status and User.objects.filter(is_superuser=True).count() < 2:
+            return gen_json_response({"status": "failed", "msg": "Sorry, you can't remove admin privileges from the last administrator."})
+        elif new_status and not user.is_active:
+            return gen_json_response({"status": "failed", "msg": "Sorry, you can't grant admin privileges to an inactive user."})
+        else:
+            user.is_superuser =  new_status
+    user.save()
+
+    return gen_json_response({"status": "success", "msg": "Successfully updated permissions.", "new_status": new_status})
+
 
 @login_required(login_url='/')
 def upload_collection(request):

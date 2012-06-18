@@ -32,6 +32,7 @@ urlpatterns = patterns('',
 
     url(r'^ajax/create-account/$', 'tb_app.views.create_account'),
     #url(r'^ajax/update-account/$', 'tb_app.views.update_account'),
+    url(r'^ajax/update-permission/$', 'tb_app.views.update_permission'),
 
     url(r'^ajax/create-codebook/$', 'tb_app.views.create_codebook'),
     #url(r'^ajax/save-codebook/$', 'tb_app.views.save_codebook'),

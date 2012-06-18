@@ -1,5 +1,57 @@
 {% extends "base/single-column.html" %}
 
+{% block start_scripts %}
+<script type="text/javascript">
+$(function(){
+    $('span.badge').css({'cursor':'pointer'});
+
+    $('span.badge:contains("admin")').click(function(){
+        var badge_button = $(this);
+    	$.post("/ajax/update-permission/",
+            {
+                "username": badge_button.attr("username"),
+                "admin": !badge_button.hasClass("badge-success"),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            function(result){
+                if( result.status == "success" ){
+                    if( result.new_status == true ){
+                        badge_button.addClass("badge-success");
+                    }else{
+                        badge_button.removeClass("badge-success");
+                    }
+                }else{
+                    alert( result.msg );
+                }
+        }, "json")
+    });
+
+    $('span.badge:contains("active")').click(function(){
+        var badge_button = $(this);
+    	$.post("/ajax/update-permission/",
+            {
+                "username": badge_button.attr("username"),
+                "active": !badge_button.hasClass("badge-success"),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            function(result){
+                if( result.status == "success" ){
+                    if( result.new_status == true ){
+                        badge_button.addClass("badge-success");
+                    }else{
+                        badge_button.removeClass("badge-success");
+                    }
+                }else{
+                    alert( result.msg );
+                }
+            },
+        "json")
+    });
+});
+</script>
+{% endblock %}
+
+
 {% block content %}
 <!-- User activity --------------------->
 <h3>User activity</h3>
@@ -47,15 +99,15 @@
       <td>{{user.email}}</td>
       <td>
       {% if user.is_active %}
-        <span class="badge badge-success">active</span>
+        <span username="{{user.username}}" class="badge badge-success">active</span>
       {% else %}
-        <span class="badge">active</span>
+        <span username="{{user.username}}" class="badge">active</span>
       {% endif %}
     
       {% if user.is_superuser %}
-        <span class="badge badge-success">admin</span>
+        <span username="{{user.username}}" class="badge badge-success">admin</span>
       {% else %}
-        <span class="badge">admin</span>
+        <span username="{{user.username}}" class="badge">admin</span>
       {% endif %}
       </td>
     </tr>
