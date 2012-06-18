@@ -3,6 +3,7 @@
 {% block start_scripts %}
 <script type="text/javascript">
 $(function(){
+    $('a[href*="/administration/"]').parent().addClass("active");
     $('span.badge').css({'cursor':'pointer'});
 
     $('span.badge:contains("admin")').click(function(){

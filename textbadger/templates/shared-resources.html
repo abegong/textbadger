@@ -3,7 +3,9 @@
 
 {% block start_scripts %}
 <script type="text/javascript">
-$(function(){});
+$(function(){
+    $('a[href*="/shared-resources/"]').parent().addClass("active");
+});
 </script>
 {% endblock %}
 

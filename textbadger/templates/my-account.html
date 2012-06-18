@@ -1,5 +1,13 @@
 {% extends "base/single-column.html" %}
 
+{% block start_scripts %}
+<script type="text/javascript">
+$(function(){
+    $('a[href*="/my-account/"]').parent().addClass("active");
+});
+</script>
+{% endblock %}
+
 {% block content %}
 <!-- Assignments --------------------->
 <h3>My Assignments</h3>

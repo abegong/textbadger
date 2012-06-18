@@ -1,20 +1,18 @@
 === On deck ===
-
-=== To do ===
-* General UI stuff
-    * Add icons
-    * Add navigation to codebook/collection/batches
-
 * Shared-rez page
-    * Hilight current location in menu
     * Make whole table rows in shared-rez clickable
     * Clean up codebook columns (empty)
     * Change "what will this codebook measure" to "Other information about this codebook. (optional)"
     * Make "create new codebook" click-through and redirect work.
     * Make "upload collection" click-through and redirect work.    
 
+=== To do ===
 * Collection page
     * Add formatting
+
+* General UI stuff
+    * Add icons
+    * Add navigation to codebook/collection/batches
 
 * Build batch page
 * Make descriptions optional
