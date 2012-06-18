@@ -247,13 +247,16 @@ def create_codebook(request):
         name = request.POST["name"]
 
         #! This isn't quite right.  Description shouldn't be required.
-        #description = get_argument(request,"description", "")
-        description = request.POST["description"]
+        description = request.GET.get("description", "")
+        #description = request.POST["description"]
 
         print name, description
     except MultiValueDictKeyError as e:
         print e.args
         return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    if len(name) < 4:
+        return gen_json_response({"status": "failed", "msg": "This name is too short.  Please give a name at least 4 letters long."})
 
     #Construct object
     J = {}

@@ -34,6 +34,14 @@ div#faq p strong{
 #sign-in-btn{
     cursor:pointer;
 }
+
+tr[href]{
+    cursor:pointer;
+}
+
+.tb-hilight{
+    background-color:#ddd;
+}
 /*** table.wide formatting ***************************************************/
 table.wide{
     width:100%;

@@ -16,7 +16,7 @@ $(function(){
 {% include "forms/create-codebook.htm" %}
 
 <h3>Codebooks</h3>
-  <table class="well wide">
+  <table class="wide table-bordered">
 <!--
   {% if codebooks %}
   <thead>
@@ -31,11 +31,8 @@ $(function(){
 -->
   <tbody>
   {% for p in codebooks %}
-    <tr>
+    <tr href="/codebook/{{ p|mongo_id }}">
       <td><a href="/codebook/{{ p|mongo_id }}">{{ p.name }}</a></td>
-      <td>[...]</td>
-      <td>[...]</td>
-      <td>[...]</td>
     </tr>
   {% empty %}
     <tr>
@@ -55,7 +52,7 @@ $(function(){
 {% include "forms/upload-collection.htm" %}
 
 <h3>Collections</h3>
-  <table class="well wide">
+  <table class="wide table-bordered">
 <!--
   {% if collections %}
   <thead>
@@ -68,9 +65,8 @@ $(function(){
 -->
   <tbody>
   {% for p in collections %}
-    <tr>
+    <tr href="/collection/{{ p|mongo_id }}">
       <td><a href="/collection/{{ p|mongo_id }}">{{ p.name }}</a></td>
-      <td>{{ p.id }}</td>
     </tr>
   {% empty %}
     <tr>
@@ -87,7 +83,7 @@ $(function(){
 {% include "forms/start-batch.htm" %}
 
 <h3>Batches</h3>
-  <table class="well wide">
+  <table class="wide table-bordered">
   {% if batches %}
   <thead>
     <tr>
@@ -100,7 +96,7 @@ $(function(){
   {% endif %}
   <tbody>
   {% for p in batches %}
-    <tr>
+    <tr href="/batch/{{ p|mongo_id }}">
       <td><a href="/codebook/{{ p.id }}">{{ p.profile.name }}</a></td>
       <td>[...]</td>
       <td>[...]</td>

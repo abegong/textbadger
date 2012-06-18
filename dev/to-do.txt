@@ -1,9 +1,4 @@
 === On deck ===
-* Shared-rez page
-    * Make whole table rows in shared-rez clickable
-    * Clean up codebook columns (empty)
-    * Change "what will this codebook measure" to "Other information about this codebook. (optional)"
-    * Make "create new codebook" click-through and redirect work.
     * Make "upload collection" click-through and redirect work.    
 
 === To do ===
@@ -68,6 +63,12 @@
 * Home/about page
     * Remove ref to Double-J
     * Add message on "forgot your login info?"
+* Shared-rez page
+    * Don't allow null-value strings name for in "create codebook"
+    * Make whole table rows in shared-rez clickable
+    * Clean up codebook columns (empty)
+    * Change "what will this codebook measure" to "Other information about this codebook. (optional)"
+    * Make "create new codebook" click-through and redirect work.
 
 
 

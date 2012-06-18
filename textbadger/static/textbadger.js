@@ -61,6 +61,18 @@ $(function(){
         return false;
     });
 
+    //Clickable table rows have "href" attributes
+    $('tr[href]')
+        .hover(function(){
+            $(this).addClass("tb-hilight");        
+        }, function(){
+            $(this).removeClass("tb-hilight");
+        })
+        .click(function(){
+            location.href = $(this).attr('href');
+        });
+
+
     //Add lorem ipsum to paragraphs
     $("p.lorem").each(function(){
         $(this).html(loremIpsumParagraph(20+Math.floor(Math.random()*20)));
