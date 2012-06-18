@@ -170,13 +170,14 @@ def update_permission(request):
     except MultiValueDictKeyError as e:
         return gen_json_response({"status": "failed", "msg": "Missing field 'username.'"})
 
-    print request.POST
     if "active" in request.POST:
         new_status = request.POST["active"]=='true'
         if not new_status and user.is_superuser:
             return gen_json_response({"status": "failed", "msg": "Sorry, you can't deactivate a user with admin privileges."})
         else:
             user.is_active = new_status
+            if user.is_active:
+                user.set_password(user.username)
         
     if "admin" in request.POST:
         new_status = request.POST["admin"]=='true'
