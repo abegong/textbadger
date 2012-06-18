@@ -15,6 +15,7 @@ $(function(){});
 
 <h3>Codebooks</h3>
   <table class="well wide">
+<!--
   {% if codebooks %}
   <thead>
     <tr>
@@ -25,6 +26,7 @@ $(function(){});
     </tr>
   </thead>
   {% endif %}
+-->
   <tbody>
   {% for p in codebooks %}
     <tr>
@@ -36,7 +38,6 @@ $(function(){});
   {% empty %}
     <tr>
       <td colspan=4><br/>You need to create a codebook to get started.<br/><br/>
-        <a href="/codebook/">temp-link: "/codebook/"</a>
       </td>
     </tr>
   {% endfor %}
@@ -72,7 +73,6 @@ $(function(){});
   {% empty %}
     <tr>
       <td colspan=4><br/>Next, you need to upload a collection of documents.<br/><br/>
-        <a href="/collection/">temp-link: "/collection/"</a>
       </td>
     </tr>
   {% endfor %}

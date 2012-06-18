@@ -1,12 +1,40 @@
 === On deck ===
 
 === To do ===
+* General UI stuff
+    * Add icons
+    * Add navigation to codebook/collection/batches
 
-* Hilight current location in menu
-* Set off batches visually on shared-rez page
+* Home/about page
+    * Fill in FAQ
+    * Remove ref to Double-J
+    * Add message on "forgot your login info?"
+
+* Shared-rez page
+    * Hilight current location in menu
+    * Make whole table rows in shared-rez clickable
+    * Clean up codebook columns (empty)
+    * Change "what will this codebook measure" to "Other information about this codebook. (optional)"
+    * Make "create new codebook" click-through and redirect work.
+    * Make "upload collection" click-through and redirect work.    
+
+* Collection page
+    * Add formatting
+
+* Administration page
+    * Enable permission activation and deactivation.
+    * Propagate name fields from "create new account" through to DB
+    * Remove application settings.
+
+* Build batch page
+* Make descriptions optional
+* Add "change account settings" button
+* Activate "create sub-collection" button
+* Create assignments page
 
 === Punt ===
 * Suppress ?next= part of login_required decorator
+* Set off batches visually on shared-rez page
 
 === Done ===
 * Get the welcome page up and running again

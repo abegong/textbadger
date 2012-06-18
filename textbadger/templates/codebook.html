@@ -14,13 +14,23 @@
 
 <script type="text/javascript">
 $(function(){
-//    codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
-//    codebookModel.questions.push( new cbQuestion(json[q].question_type, json[q].var_name, json[q].params) );
-    //var launchInformalEditor = function( initial_codebook_model ){
-
 	$.get("{{ STATIC_URL }}informal/_informalTemplateKO.htm", function(template){
-        codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
-        codebookModel.questions.push( new cbQuestion("Multiple choice", "tester", {}) );
+//        codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
+//        codebookModel.questions.push( new cbQuestion("Multiple choice", "tester", {}) );
+
+	    codebookModel.questions([
+		    new cbQuestion("Static text", "", {"header_text":"<h3>Static text</h3>"} ),
+		    new cbQuestion("Multiple choice", "", {} ),
+		    new cbQuestion("Check all that apply", "", {} ),
+		    new cbQuestion("Two-way scale", "", {} ),
+		    new cbQuestion("Radio matrix", "", {} ),
+		    new cbQuestion("Checkbox matrix", "", {} ),
+		    new cbQuestion("Two-way matrix", "", {} ),
+		    new cbQuestion("Text box", "", {} ),
+		    new cbQuestion("Short essay", "", {} ),
+		    new cbQuestion("Text matrix", "", {} )
+	    ]);
+
 
 		$("#doc-box").append(template);
 		ko.applyBindings(codebookModel);
