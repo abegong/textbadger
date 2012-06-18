@@ -114,7 +114,7 @@ def create_account(request):
     if not request.user.is_superuser:
         return gen_json_response({"status": "failed", "msg": "You must be an administrator to create new accounts."})
 
-    print request.POST
+    #! No response validation performed!
     try:
         new_user = User.objects.create_user(
                 request.POST["username"],
@@ -125,6 +125,7 @@ def create_account(request):
         new_user.last_name = request.POST["last_name"]
         new_user.is_staff = "admin" in request.POST
         new_user.is_superuser = "admin" in request.POST
+        new_user.save()
     except MultiValueDictKeyError as e:
         print e.args
         return gen_json_response({"status": "failed", "msg": "Missing field."})

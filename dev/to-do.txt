@@ -1,4 +1,5 @@
 === On deck ===
+    * Enable permission activation and deactivation.
 
 === To do ===
 * General UI stuff
@@ -20,11 +21,6 @@
 
 * Collection page
     * Add formatting
-
-* Administration page
-    * Enable permission activation and deactivation.
-    * Propagate name fields from "create new account" through to DB
-    * Remove application settings.
 
 * Build batch page
 * Make descriptions optional
@@ -68,6 +64,10 @@
 * Add "administrators" mixin
 * Add page header to collection page
 * Fix mongo bug in loadfixtures script
+* Administration page
+    * Propagate name fields from "create new account" through to DB
+    * Propagate admin field from "create new account" through to DB
+    * Remove "application settings"
 
 
 
