@@ -5,11 +5,6 @@
     * Add icons
     * Add navigation to codebook/collection/batches
 
-* Home/about page
-    * Fill in FAQ
-    * Remove ref to Double-J
-    * Add message on "forgot your login info?"
-
 * Shared-rez page
     * Hilight current location in menu
     * Make whole table rows in shared-rez clickable
@@ -26,6 +21,10 @@
 * Add "change account settings" button
 * Activate "create sub-collection" button
 * Create assignments page
+
+* Home/about page
+    * Fill in FAQ
+
 
 === Punt ===
 * Suppress ?next= part of login_required decorator
@@ -68,6 +67,9 @@
     * Propagate admin field from "create new account" through to DB
     * Remove "application settings"
     * Enable permission activation and deactivation.
+* Home/about page
+    * Remove ref to Double-J
+    * Add message on "forgot your login info?"
 
 
 
