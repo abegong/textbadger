@@ -1,9 +1,9 @@
 === On deck ===
 
-
 === To do ===
 * Codebook page
-    * Add question formatting (.css and .js)
+    * Activate questions when clicked
+    * Make styles use bootstrap themes as much as possible.
     * Get question export working
     * Resize question box (in css)
     * Add slider question_type

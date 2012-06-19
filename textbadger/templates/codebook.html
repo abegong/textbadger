@@ -12,50 +12,12 @@
 <script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}knockout-1.2.1.js" type="text/javascript"></script>
 
-<script src="{{ STATIC_URL }}informal/informalEditor.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}informal/informalScripts.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}informal/informalEditor.js" type="text/javascript"></script>
+<link href="{{ STATIC_URL }}informal/informal-styles.css" rel="stylesheet">
 
 <script type="text/javascript">
-function temp_load(json){
-	$.get("{{ STATIC_URL }}informal/_informalTemplateKO.htm", function(template){
-//        codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
-//        codebookModel.questions.push( new cbQuestion("Multiple choice", "tester", {}) );
-
-/*	    codebookModel.questions([
-		    new cbQuestion("Static text", "", {"header_text":"<h3>Static text</h3>"} ),
-		    new cbQuestion("Multiple choice", "", {} ),
-		    new cbQuestion("Check all that apply", "", {} ),
-		    new cbQuestion("Two-way scale", "", {} ),
-		    new cbQuestion("Radio matrix", "", {} ),
-		    new cbQuestion("Checkbox matrix", "", {} ),
-		    new cbQuestion("Two-way matrix", "", {} ),
-		    new cbQuestion("Text box", "", {} ),
-		    new cbQuestion("Short essay", "", {} ),
-		    new cbQuestion("Text matrix", "", {} )
-	    ]);
-*/
-//        json = initial_codebook_model
-		for( q in json ){ 
-			codebookModel.questions.push( new cbQuestion(json[q].question_type, json[q].var_name, json[q].params) );
-		}
-        console.log(codebookModel);
-
-		$("#doc-box").append(template);
-		ko.applyBindings(codebookModel);
-        console.log(codebookModel);
-
-        $("#loading-msg").hide();
-
-//		attachControlsToQuestion(0);
-//		$("#controlAccordion").accordion({ event: "mouseover", autoHeight:true });
-		//Hack to resize accordion dynamically http://jqueryui.com/demos/accordion/#option-autoHeight
-//		var autoHeight = $("#controlAccordion").accordion( "option", "autoHeight" );
-//        $("#controlAccordion").accordion( "option", "autoHeight", false );
-	}, "text");
-
-}
-
 var codebook_id = "{{codebook|mongo_id}}";
 
 $(function(){
@@ -76,10 +38,12 @@ $(function(){
 
 {% block document %}
 <!-- --- Codebook --- -->
+<!--
 <div id="loading-msg">
     <img class="tb-loading" src="{{ STATIC_URL }}ajax-loader.gif"></img>
     <p>Loading codebook...</p>
 </div>
+-->
 <div data-bind="template: { name: 'question-template', foreach: questions }"></div>
 {% endblock %}
 
@@ -97,9 +61,7 @@ $(function(){
       <strong>Description</strong>
       <p>{{ codebook.description }}</p>
 
-      <hr/>
-      {{codebook.questions}}
-      
+      <hr/>      
       <div id="impexpControls">
           <a class="btn" id="exportJsonButton">Export Json</a>
           <a class="btn" id="exportSelfCButton">Export HTML</a>

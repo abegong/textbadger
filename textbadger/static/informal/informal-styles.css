@@ -1,0 +1,69 @@
+/* Formatting for controls *******************************************************/
+/*#controlBoxHeader a{padding:2px; background-color:#fff;}
+.targetControl{background-color:#ddf; border: 2px solid #bbd;}*/
+
+/*#sequenceControls a{position:relative; top:6px; margin-bottom:4px; }*/
+#sequenceControls{text-align:center; margin-top:6px; margin-bottom:4px;}
+#questionControls {text-align:left;}
+/*#inputBox, #longInputBox{ position:absolute; }*/
+
+
+/*#loadJsonInput{
+	float:right;
+	display:hidden;
+	position:relative;
+	text-align: right;
+	-moz-opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+}
+*/
+
+
+/* Formatting for questions **************************************************/
+
+.questionBox{ margin:5px; padding:10px; text-align:left; border:2px solid #fff; border-radius:10px;}
+.headerText,.answerText,.questionText{ width:95%; padding:2px;} /*background-color:#eee; */
+.answerText{ padding-left:22px; cursor:pointer; }
+
+.mouseoverCell{
+	background-color:#ddf;
+	border-radius: 10px;
+}
+.hoverQuestion{ border:2px solid #ddf; }
+.targetQuestion{ border:2px solid #bbd; background-color:#ddf; }
+
+.questionBox p{ margin:0px 20px 0px 20px; }
+.questionBox input[type=text]{ margin-left:20px; }
+.questionBox textarea{ margin-left:20px; }
+
+
+table.matrixQuestion{
+	border-collapse:collapse;
+/*	width:630px; */
+	width: 90%;
+	margin:auto;
+	margin-bottom:20px;
+}
+thead{}
+
+tr{}
+.even{
+	background-color:#eee;
+}
+.odd{
+	background-color:#ccc;
+}
+
+td{
+	text-align:center;
+	padding:5px;
+}
+.textCol{
+	text-align:left;
+	padding-left:25px;
+	text-indent:-20px;
+}
+.leftCol{	text-align:right; }
+.rightCol{ text-align:left; }
+

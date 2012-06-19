@@ -83,6 +83,7 @@ var initControls = function(){
 	$('#down_control').click( function(){ codebookModel.moveQuestionDown(); } );
 };
 
+/*
 var loadCodebookModel = function(json){
 	try{
 		//This is kind of a hack. KO gets mad if I completely empty an observableArray, so I drop all the items but one, then drop the last one after loading the new questions.
@@ -97,6 +98,7 @@ var loadCodebookModel = function(json){
 	}
 	catch(err){ alert("JSON is not well formed, or something."); }
 };
+*/
 
 var launchInformalEditor = function( initial_codebook_model ){
   initControls();
@@ -122,17 +124,19 @@ var launchInformalEditor = function( initial_codebook_model ){
 	]);
 	*/
 //	loadCodebookModel( initial_codebook_model );
-    json = initial_codebook_model
-		for( q in json ){ 
-			codebookModel.questions.push( new cbQuestion(json[q].question_type, json[q].var_name, json[q].params) );
-		}
 
-  
+    //Add questions to codebookModel
+    json = initial_codebook_model;
+	for( q in json ){ 
+		codebookModel.questions.push( new cbQuestion(json[q].question_type, json[q].var_name, json[q].params) );
+	}
+
 	//Load the template and knockout model dynamically.
 	$.get("/static/informal/_informalTemplateKO.htm", function(template){
 		$("body").append(template);
 		ko.applyBindings(codebookModel);
 		attachControlsToQuestion(0);
+        codebookModel.addCodebookStyles();
 /*//NEW//
 		$("#controlAccordion").accordion({ event: "mouseover", autoHeight:true });
 		//Hack to resize accordion dynamically http://jqueryui.com/demos/accordion/#option-autoHeight
