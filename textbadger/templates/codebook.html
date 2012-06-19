@@ -14,6 +14,10 @@
 
 <script type="text/javascript">
 $(function(){
+    console.log($("#doc-box").attr("class"));
+    $("#doc-box").attr("class", "span3 well offset3");
+    console.log($("#doc-box").attr("class"));
+
 	$.get("{{ STATIC_URL }}informal/_informalTemplateKO.htm", function(template){
 //        codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
 //        codebookModel.questions.push( new cbQuestion("Multiple choice", "tester", {}) );
@@ -73,9 +77,9 @@ $(function(){
       {{codebook.questions}}
       
       <div id="impexpControls">
-          <a class="btn" id="exportJsonButton">Export json</a>
+          <a class="btn" id="exportJsonButton">Export Json</a>
           <a class="btn" id="exportSelfCButton">Export HTML</a>
-          <a class="btn" id="loadJsonButton">Import json</a>
+<!--          <a class="btn" id="loadJsonButton">Import json</a> -->
       </div>
     </div>
     <div class="tab-pane" id="tab2">

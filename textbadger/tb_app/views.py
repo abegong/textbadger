@@ -224,7 +224,8 @@ def upload_collection(request):
     conn = connections["default"]
     result = conn.get_collection("tb_app_collection").insert(J)
 
-    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
+#    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
+    return redirect('/shared-resources/')
 
 @login_required(login_url='/')
 def get_collection_docs(request):
