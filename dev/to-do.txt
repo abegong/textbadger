@@ -1,5 +1,5 @@
 === On deck ===
-* Populate codebook page from json
+* Add "loading..." icon
 ** Activate knockout controls
 
 === To do ===
