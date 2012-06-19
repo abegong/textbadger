@@ -1,8 +1,9 @@
 === On deck ===
+* Populate codebook page from json
+** Activate knockout controls
 
 === To do ===
 * Collection page
-    ** Activate knockout controls
     * Add question formatting (.css and .js)
     * Get question export working
     * Add default question to create-codebook

@@ -1,6 +1,12 @@
 {% extends "base/document-control.html" %}
 {% load tb_app_tags %}
 
+{% block doc_classes %}
+    span3
+    well
+    offset3
+{% endblock %}
+
 {% block start_scripts %}
 <script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
@@ -10,14 +16,8 @@
 <script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}informal/informalScripts.js" type="text/javascript"></script>
 
-
-
 <script type="text/javascript">
 $(function(){
-    console.log($("#doc-box").attr("class"));
-    $("#doc-box").attr("class", "span3 well offset3");
-    console.log($("#doc-box").attr("class"));
-
 	$.get("{{ STATIC_URL }}informal/_informalTemplateKO.htm", function(template){
 //        codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
 //        codebookModel.questions.push( new cbQuestion("Multiple choice", "tester", {}) );
