@@ -15,10 +15,12 @@ var attachControlsToQuestion = function(i){
 */
 
 	//Move the control box next to the target question
+/*//NEW//
 	controlBox = $("#controlBox");
 	offset = qB.offset();
 	offset.left = controlBox.offset().left;
 	controlBox.offset(offset);
+*/
 
 	//Add content within the control box: variable type and name
 	qC
@@ -131,11 +133,14 @@ var launchInformalEditor = function( initial_codebook_model ){
 		$("body").append(template);
 		ko.applyBindings(codebookModel);
 		attachControlsToQuestion(0);
+/*//NEW//
 		$("#controlAccordion").accordion({ event: "mouseover", autoHeight:true });
 		//Hack to resize accordion dynamically http://jqueryui.com/demos/accordion/#option-autoHeight
 		var autoHeight = $("#controlAccordion").accordion( "option", "autoHeight" );
   	$("#controlAccordion").accordion( "option", "autoHeight", false );
+*/
 	}, "text");
+
 };
 
 var getInformalJson = function(){

@@ -18,8 +18,6 @@
 
 <script type="text/javascript">
 function temp_load(json){
-    console.log(json);
-    console.log(JSON.stringify(json));
 	$.get("{{ STATIC_URL }}informal/_informalTemplateKO.htm", function(template){
 //        codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
 //        codebookModel.questions.push( new cbQuestion("Multiple choice", "tester", {}) );
@@ -48,6 +46,7 @@ function temp_load(json){
         console.log(codebookModel);
 
         $("#loading-msg").hide();
+
 //		attachControlsToQuestion(0);
 //		$("#controlAccordion").accordion({ event: "mouseover", autoHeight:true });
 		//Hack to resize accordion dynamically http://jqueryui.com/demos/accordion/#option-autoHeight
@@ -64,7 +63,7 @@ $(function(){
         {'id': codebook_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
             //! Need error checking for failed responses.
-            temp_load(response.codebook.questions);
+            launchInformalEditor(response.codebook.questions);
         }
     );
 });
