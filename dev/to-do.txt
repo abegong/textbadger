@@ -1,7 +1,4 @@
 === On deck ===
-* Collection page
-    * Add default question to create-codebook
-    * Populate codebook page from DB json
     * Add "loading..." icon
     ** Activate knockout controls
 

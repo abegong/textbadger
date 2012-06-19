@@ -46,6 +46,8 @@ function temp_load(json){
 		$("#doc-box").append(template);
 		ko.applyBindings(codebookModel);
         console.log(codebookModel);
+
+        $("#loading-msg").hide();
 //		attachControlsToQuestion(0);
 //		$("#controlAccordion").accordion({ event: "mouseover", autoHeight:true });
 		//Hack to resize accordion dynamically http://jqueryui.com/demos/accordion/#option-autoHeight
@@ -75,6 +77,10 @@ $(function(){
 
 {% block document %}
 <!-- --- Codebook --- -->
+<div id="loading-msg">
+    <img class="tb-loading" src="{{ STATIC_URL }}ajax-loader.gif"></img>
+    <p>Loading codebook...</p>
+</div>
 <div data-bind="template: { name: 'question-template', foreach: questions }"></div>
 {% endblock %}
 
