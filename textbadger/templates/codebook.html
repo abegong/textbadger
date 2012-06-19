@@ -17,30 +17,9 @@
 <script src="{{ STATIC_URL }}informal/informalScripts.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-J = [{
-    "question_type" : "Static text",
-    "var_name" : "default_question",
-    "params" : {
-        "header_text" : "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
-    }
-},
-{
-    "question_type" : "Multiple choice",
-    "var_name" : "mchoice",
-    "params" : {
-        "header_text" : "Here is an example of a multiple choice question.  Which answer do you like best?",
-        "answer_array" : ["This one","No, this one","A third option"],
-    }
-},
-{
-    "question_type" : "Short essay",
-    "var_name" : "essay",
-    "params" : {
-        "header_text" : "<hr/>Here's a short essay question.",
-    }
-}];
-
 function temp_load(json){
+    console.log(json);
+    console.log(JSON.stringify(json));
 	$.get("{{ STATIC_URL }}informal/_informalTemplateKO.htm", function(template){
 //        codebookModel.questions.push( new cbQuestion("Static text", "tester", {}) );
 //        codebookModel.questions.push( new cbQuestion("Multiple choice", "tester", {}) );
@@ -76,8 +55,16 @@ function temp_load(json){
 
 }
 
+var codebook_id = "{{codebook|mongo_id}}";
+
 $(function(){
-    temp_load(J);
+	$.post("/ajax/get-codebook/",
+        {'id': codebook_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        function(response){
+            //! Need error checking for failed responses.
+            temp_load(response.codebook.questions);
+        }
+    );
 });
 </script>
 {% endblock %}

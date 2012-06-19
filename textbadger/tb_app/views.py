@@ -24,8 +24,17 @@ def jsonifyRecords( objs, fields ):
         j.append(jsonifyRecord(o, fields))
     return j
 
+import json
+class MongoEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        if hasattr(obj, 'isoformat'):
+            return obj.isoformat()
+        return json.JSONEncoder.default(self, obj)
+
 def gen_json_response( result ):
-    return HttpResponse(json.dumps(result, indent=2), mimetype='application/json')
+    return HttpResponse(json.dumps(result, indent=2, cls=MongoEncoder), mimetype='application/json')
 
 '''
 from django.core.exceptions import PermissionDenied
@@ -90,8 +99,8 @@ def codebook(request, id_):
     conn = connections["default"] 
     result = {
         "codebook": conn.get_collection("tb_app_codebook").find_one(
-            {"_id":ObjectId(id_)},
-            {"name":1, "description": 1}
+            {"_id":ObjectId(id_)}
+#            {"name":1, "description": 1}
         )}
     return render_to_response('codebook.html', result, context_instance=RequestContext(request))
 
@@ -264,11 +273,43 @@ def create_codebook(request):
     J['name'] = name
     J['description'] = description
     J['create-time'] = datetime.datetime.utcnow()
-    J['questions'] = []
+    J['questions'] = [{
+            "question_type" : "Static text",
+            "var_name" : "default_question",
+            "params" : {
+                "header_text" : "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
+            }
+        },
+        {
+            "question_type" : "Multiple choice",
+            "var_name" : "mchoice",
+            "params" : {
+                "header_text" : "Here is an example of a multiple choice question.  Which answer do you like best?",
+                "answer_array" : ["This one","No, this one","A third option"],
+            }
+        },
+        {
+            "question_type" : "Short essay",
+            "var_name" : "essay",
+            "params" : {
+                "header_text" : "<hr/>Here's a short essay question.",
+            }
+        }]
 
     conn = connections["default"]
     result = conn.get_collection("tb_app_codebook").insert(J)
 
     return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
 
+@login_required(login_url='/')
+def get_codebook(request):
+    id_ = request.POST["id"]
+    conn = connections["default"]
+    codebook = conn.get_collection("tb_app_codebook").find_one({"_id":ObjectId(id_)})
 
+    #! Need error checking for invalid Ids
+    return gen_json_response({
+            "status": "success",
+            "msg": "Successfully retrieved codebook.",
+            "codebook" : codebook
+            })
