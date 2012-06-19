@@ -1,13 +1,14 @@
 === On deck ===
-* Add "loading..." icon
-** Activate knockout controls
+* Collection page
+    * Add default question to create-codebook
+    * Populate codebook page from DB json
+    * Add "loading..." icon
+    ** Activate knockout controls
 
 === To do ===
 * Collection page
     * Add question formatting (.css and .js)
     * Get question export working
-    * Add default question to create-codebook
-    * Populate codebook page from DB json
     * Resize question box (in css)
     * Add slider question_type
 

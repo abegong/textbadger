@@ -1,37 +1,35 @@
+[{
+    "question_type" : "Radio matrix",
+    "var_name" : "default_question",
+    "params" : {
+        "header_text" : "<h2> Entertainment </h2>",
+        "answer_array" : ["sA","A","N","D","sD"],
+        "question_array" : ["The article is intentionally humorous","The author uses gimmicks in an attempt to gain attention","The author uses satire: saying something when you mean the opposite","The article poses rhetorical questions","Politics is presented as a game","The article draws attention to the faults of an organization or individual","There are aspects of sensationalism","The main goal of this article is to entertain the reader","The article has a high level of newsworthiness","The author pokes fun of an issue or person in a humorous way","The author attempts to interject humor into a news story"]
+    }
+},
 {
-    "questions" : [{
-        "question_type" : "Radio matrix",
-        "var_name" : "default_question",
-        "params" : {
-            "header_text" : "<h2> Entertainment </h2>",
-            "answer_array" : ["sA","A","N","D","sD"],
-            "question_array" : ["The article is intentionally humorous","The author uses gimmicks in an attempt to gain attention","The author uses satire: saying something when you mean the opposite","The article poses rhetorical questions","Politics is presented as a game","The article draws attention to the faults of an organization or individual","There are aspects of sensationalism","The main goal of this article is to entertain the reader","The article has a high level of newsworthiness","The author pokes fun of an issue or person in a humorous way","The author attempts to interject humor into a news story"]
-        }
-    },
-    {
-        "question_type" : "Multiple choice",
-        "var_name" : "default_question",
-        "params" : {
-            "header_text" : "Does the author use any of the following: irony, satire, sarcasm or puns?",
-            "answer_array" : ["Yes","No"],
-            "question_array" : ["The article is intentionally humorous","The author uses gimmicks in an attempt to gain attention","The author uses satire: saying something when you mean the opposite","The article poses rhetorical questions","Politics is presented as a game","The article draws attention to the faults of an organization or individual","There are aspects of sensationalism","The main goal of this article is to entertain the reader","The article has a high level of newsworthiness","The author pokes fun of an issue or person in a humorous way","The author attempts to interject humor into a news story"],
-            "left_statements" : ["Statement 1","Statement 2"],
-            "right_statements" : ["Statement 1","Statement 2"],
-            "cols" : 20
-        }
-    },
-    {
-        "question_type" : "Two-way matrix",
-        "var_name" : "default_question",
-        "params" : {
-            "header_text" : "",
-            "answer_array" : ["1","2","3","4","6","7"],
-            "question_array" : ["The article is intentionally humorous","The author uses gimmicks in an attempt to gain attention","The author uses satire: saying something when you mean the opposite","The article poses rhetorical questions","Politics is presented as a game","The article draws attention to the faults of an organization or individual","There are aspects of sensationalism","The main goal of this article is to entertain the reader","The article has a high level of newsworthiness","The author pokes fun of an issue or person in a humorous way","The author attempts to interject humor into a news story"],
-            "left_statements" : ["The article was entertaining","The article was informational"],
-            "right_statements" : ["The article was not entertaining","The article was not informational"],
-            "cols" : 20,
-            "left_statement" : "Left statement",
-            "right_statement" : "Right statement"
-        }
-    }]
-}
+    "question_type" : "Multiple choice",
+    "var_name" : "default_question",
+    "params" : {
+        "header_text" : "Does the author use any of the following: irony, satire, sarcasm or puns?",
+        "answer_array" : ["Yes","No"],
+        "question_array" : ["The article is intentionally humorous","The author uses gimmicks in an attempt to gain attention","The author uses satire: saying something when you mean the opposite","The article poses rhetorical questions","Politics is presented as a game","The article draws attention to the faults of an organization or individual","There are aspects of sensationalism","The main goal of this article is to entertain the reader","The article has a high level of newsworthiness","The author pokes fun of an issue or person in a humorous way","The author attempts to interject humor into a news story"],
+        "left_statements" : ["Statement 1","Statement 2"],
+        "right_statements" : ["Statement 1","Statement 2"],
+        "cols" : 20
+    }
+},
+{
+    "question_type" : "Two-way matrix",
+    "var_name" : "default_question",
+    "params" : {
+        "header_text" : "",
+        "answer_array" : ["1","2","3","4","6","7"],
+        "question_array" : ["The article is intentionally humorous","The author uses gimmicks in an attempt to gain attention","The author uses satire: saying something when you mean the opposite","The article poses rhetorical questions","Politics is presented as a game","The article draws attention to the faults of an organization or individual","There are aspects of sensationalism","The main goal of this article is to entertain the reader","The article has a high level of newsworthiness","The author pokes fun of an issue or person in a humorous way","The author attempts to interject humor into a news story"],
+        "left_statements" : ["The article was entertaining","The article was informational"],
+        "right_statements" : ["The article was not entertaining","The article was not informational"],
+        "cols" : 20,
+        "left_statement" : "Left statement",
+        "right_statement" : "Right statement"
+    }
+}]
