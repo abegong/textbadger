@@ -24,7 +24,7 @@ var attachControlsToQuestion = function(i){
 
 	//Add content within the control box: variable type and name
 	qC
-		.html("<hr/>")
+		.html("")
 		.append( "Variable type<br/><select data-bind=\"options: questionTypes, value: questions()["+i+"].question_type, event: {change: function(event){codebookModel.questions()['"+i+"'].changeQuestionType(event.target.value);codebookModel.questionTypeChanged();}}\"></select><br/>" )
 		.append( "Variable name<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].var_name, event: {change: function(event){codebookModel.questions()["+i+"].changeQuestionName(event.target.value);}}\"></input><br/>" );
 
@@ -36,10 +36,13 @@ var attachControlsToQuestion = function(i){
 				qC.append( qA[p].label + "<textarea rows=\"5\" style=\"width:250px\" data-bind=\"event: {change: function(event){codebookModel.questions()['"+i+"'].updateParams('"+p+"', event.target.value.split('\\n'));}}\">" + qM.params[p]().join('\n') + "</textarea><br/>" )
 			}
 			else{
-				qC.append( qA[p].label +"<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
+				qC.append( qA[p].label +"<textarea rows=\"5\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
+//				qC.append( qA[p].label +"<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
 			}
 		}
 	}
+
+    qC.append("<hr/>");
 
 	//Re-bind questionControls
 	ko.applyBindings(codebookModel, qC[0]);

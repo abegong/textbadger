@@ -1,11 +1,13 @@
 === On deck ===
+* Move question buttons below question info.
+
 
 === To do ===
 * Codebook page
     * Activate questions when clicked
+    * Make header_text a textarea
     * Make styles use bootstrap themes as much as possible.
     * Get question export working
-    * Resize question box (in css)
     * Add slider question_type
 
 
