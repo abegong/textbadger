@@ -83,6 +83,7 @@ var codebookModel = {
 
     targetQuestion: function(i){
         this.questions()[this.target_index()].targeted(false);
+        this.addCodebookStyles($($(".questionBox")[this.target_index()]));
         this.target_index(i);
         this.questions()[this.target_index()].targeted(true);
     },
@@ -129,7 +130,7 @@ var codebookModel = {
         }
     },
 
-    moveQuestionDown: function(){
+    moveQuestionDown : function(){
         i = this.target_index();
         if( this.questions().length-i > 1 ){
             this.questions.splice( i+1, 0, this.questions().splice(i,1)[0] );
@@ -137,7 +138,7 @@ var codebookModel = {
         }
     },
 
-    addCodebookStyles: function(Q){
+    addCodebookStyles : function(Q){
         $("input[type=radio],input[type=checkbox]",Q).parent()
             .click( function(){    x = $('input',this); x.attr('checked',!x.attr('checked'));    })
 //            .mouseover( function(){ $(this).addClass('ui-state-hover'); })
@@ -153,5 +154,11 @@ var codebookModel = {
                 function(){$(this).removeClass('hoverQuestion');}
             )
         .click( function(){attachControlsToQuestion( $(this).index(".questionBox")); } );
+    },
+
+    addStyles: function(){
+        $("div.questionBox").each(function(i,q){
+            codebookModel.addCodebookStyles($(q));
+        })
     }
 };

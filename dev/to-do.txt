@@ -1,5 +1,4 @@
 === On deck ===
-* Move question buttons below question info.
 
 
 === To do ===

@@ -21,6 +21,11 @@
 var codebook_id = "{{codebook|mongo_id}}";
 
 $(function(){
+	$('#add_control').click( function(){ codebookModel.addQuestion(); } );
+	$('#del_control').click( function(){ codebookModel.delQuestion(); } );
+	$('#up_control').click( function(){ codebookModel.moveQuestionUp(); } );
+	$('#down_control').click( function(){ codebookModel.moveQuestionDown(); } );
+
 	$.post("/ajax/get-codebook/",
         {'id': codebook_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
@@ -33,6 +38,7 @@ $(function(){
 {% endblock %}
 
 {% block title %}
+<a id="loadJsonButton" class="btn btn-primary rightside" >Save changes</a>
 <h3>{{codebook.name}}</h3>
 {% endblock %}
 
@@ -63,13 +69,13 @@ $(function(){
 
       <hr/>      
       <div id="impexpControls">
-          <a class="btn" id="loadJsonButton">Save changes</a><br/>
           <a class="btn" id="exportJsonButton">Export Json</a>
           <a class="btn" id="exportSelfCButton">Export HTML</a>
       </div>
     </div>
     <div class="tab-pane" id="tab2">
         <div id="questionControls"></div>
+        <hr/>
         <div id="sequenceControls" style="text-align:center">
             <button id="add_control"><span class="control icon-plus"></span></button>
             <button id="del_control"><span class="control icon-minus"></span></button>
