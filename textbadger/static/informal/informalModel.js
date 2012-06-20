@@ -13,9 +13,11 @@ var cbQuestion = function(question_type, var_name, params, targeted) {
         this.question_type(T);
         this.fillInMissingParams();
     };
+
     this.changeQuestionName = function( N ){
         this.var_name( N.replace(/\W+/g,'') );
     };
+
     this.updateParams = function( p, A ){ this.params[p]( A ); };
 
     //Initialize
@@ -96,6 +98,10 @@ var codebookModel = {
         attachControlsToQuestion(this.target_index());
     },
 */
+    changeQuestionType: function( T ){
+        this.questions()[this.target_index()].changeQuestionType(T);
+        attachControlsToQuestion(this.target_index());
+    },
 
     addQuestion: function(){
         q1 = ko.toJS( this.questions.slice( this.target_index() )[0] );

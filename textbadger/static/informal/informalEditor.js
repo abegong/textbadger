@@ -24,8 +24,9 @@ var attachControlsToQuestion = function(i){
 
     //Add content within the control box: variable type and name
     qC
-        .html("")
-        .append( "Variable type<br/><select data-bind=\"options: questionTypes, value: questions()["+i+"].question_type, event: {change: function(event){codebookModel.questions()['"+i+"'].changeQuestionType(event.target.value);codebookModel.questionTypeChanged();}}\"></select><br/>" )
+//        .html("")
+//        .append( "Variable type<br/><select data-bind=\"options: questionTypes, value: questions()["+i+"].question_type, event: {change: function(event){codebookModel.questions()['"+i+"'].changeQuestionType(event.target.value);codebookModel.questionTypeChanged();}}\"></select><br/>" )
+        .html( "Variable type<br/><select data-bind=\"options: questionTypes, value: questions()["+i+"].question_type, event: {change: function(event){codebookModel.changeQuestionType(event.target.value);}}\"></select><br/>" )
         .append( "Variable name<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].var_name, event: {change: function(event){codebookModel.questions()["+i+"].changeQuestionName(event.target.value);}}\"></input><br/>" );
 
     //Add content within the control box: variable parameters
