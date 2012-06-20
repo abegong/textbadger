@@ -26,12 +26,17 @@ $(function(){
 	$('#up_control').click( function(){ codebookModel.moveQuestionUp(); } );
 	$('#down_control').click( function(){ codebookModel.moveQuestionDown(); } );
 
+/*
     $('#export-json').click( function(){
-        console.log(codebookModel.getCodebookJson());
+        //! Can't get this to work.
+        //! Better to just rewrite as real method.
+        var json = codebookModel.getCodebookJson();
+        window.open('/ajax/export-codebook/?'+JSON.stringify(json),"Json Download", "resizable=0,status=0,toolbar=0,width=600px,height=300px");
     });
-
+*/
     $('#export-html').click( function(){
-        console.log($("#codebook").html());
+        var new_window = window.open('about:blank',"Html Download", "resizable=0,status=0,toolbar=0,width=600px,height=300px");
+        new_window.document.write($("#codebook").html());
     });
 
 	$.post("/ajax/get-codebook/",
@@ -77,7 +82,7 @@ $(function(){
 
       <hr/>      
       <div id="impexpControls">
-          <a class="btn" id="export-json">Export Json</a>
+<!--          <a class="btn" id="export-json">Export Json</a> -->
           <a class="btn" id="export-html">Export HTML</a>
       </div>
     </div>
