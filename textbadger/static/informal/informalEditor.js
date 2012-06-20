@@ -142,7 +142,7 @@ var launchInformalEditor = function( codebook_json ){
     $.get("/static/informal/_informalTemplateKO.htm", function(template){
         $("body").append(template);
         ko.applyBindings(codebookModel);
-        codebookModel.addStyles();
+        codebookModel.addStylesToCodebook();
         attachControlsToQuestion(0);
 /*//NEW//
         $("#controlAccordion").accordion({ event: "mouseover", autoHeight:true });
@@ -152,9 +152,4 @@ var launchInformalEditor = function( codebook_json ){
 */
     }, "text");
 
-};
-
-var getInformalJson = function(){
-  return( ko.toJSON({'questions':codebookModel.questions()}) );
-//  return( ko.toJSON(codebookModel) );
 };

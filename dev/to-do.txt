@@ -1,12 +1,17 @@
 === On deck ===
+    * Get question export working
 
 
 === To do ===
 * Codebook page
-    * Activate questions when clicked
-    * Make header_text a textarea
+    * Questions are not activated after add/delete operations.
+    * Figure out urls, back buttons, etc.
+    * Shorten text-area to text input for integer values
+
+    * Fix vertical alignment of radio/checkbox answer text
+    * Don't let hover pills overflow their boundaries
     * Make styles use bootstrap themes as much as possible.
-    * Get question export working
+
     * Add slider question_type
 
 

@@ -85,7 +85,7 @@ var codebookModel = {
 
     targetQuestion: function(i){
         this.questions()[this.target_index()].targeted(false);
-        this.addCodebookStyles($($(".questionBox")[this.target_index()]));
+        this.addStylesToQuestion($($(".questionBox")[this.target_index()]));
         this.target_index(i);
         this.questions()[this.target_index()].targeted(true);
     },
@@ -144,7 +144,7 @@ var codebookModel = {
         }
     },
 
-    addCodebookStyles : function(Q){
+    addStylesToQuestion : function(Q){
         $("input[type=radio],input[type=checkbox]",Q).parent()
             .click( function(){    x = $('input',this); x.attr('checked',!x.attr('checked'));    })
 //            .mouseover( function(){ $(this).addClass('ui-state-hover'); })
@@ -162,9 +162,16 @@ var codebookModel = {
         .click( function(){attachControlsToQuestion( $(this).index(".questionBox")); } );
     },
 
-    addStyles: function(){
+    addStylesToCodebook: function(){
         $("div.questionBox").each(function(i,q){
-            codebookModel.addCodebookStyles($(q));
+            codebookModel.addStylesToQuestion($(q));
         })
+    },
+
+    getCodebookJson : function(){
+        j = ko.toJSON({'questions':this.questions()});
+        //! Remove "targeted" terms here
+        //! Add name and description (maybe)
+        return( j );
     }
 };

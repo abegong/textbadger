@@ -26,6 +26,14 @@ $(function(){
 	$('#up_control').click( function(){ codebookModel.moveQuestionUp(); } );
 	$('#down_control').click( function(){ codebookModel.moveQuestionDown(); } );
 
+    $('#export-json').click( function(){
+        console.log(codebookModel.getCodebookJson());
+    });
+
+    $('#export-html').click( function(){
+        console.log($("#codebook").html());
+    });
+
 	$.post("/ajax/get-codebook/",
         {'id': codebook_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
@@ -50,7 +58,7 @@ $(function(){
     <p>Loading codebook...</p>
 </div>
 -->
-<div data-bind="template: { name: 'question-template', foreach: questions }"></div>
+<div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }"></div>
 {% endblock %}
 
 {% block control %}
@@ -69,8 +77,8 @@ $(function(){
 
       <hr/>      
       <div id="impexpControls">
-          <a class="btn" id="exportJsonButton">Export Json</a>
-          <a class="btn" id="exportSelfCButton">Export HTML</a>
+          <a class="btn" id="export-json">Export Json</a>
+          <a class="btn" id="export-html">Export HTML</a>
       </div>
     </div>
     <div class="tab-pane" id="tab2">
