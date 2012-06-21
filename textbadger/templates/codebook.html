@@ -46,13 +46,31 @@ $(function(){
             launchInformalEditor(response.codebook.questions);
         }
     );
+
+    $("#save-codebook").click(function(){
+	    $.post(
+            "/ajax/save-codebook/",
+            {
+                'parent_id': codebook_id,
+                'questions':codebookModel.getCodebookJson(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            function(response){                
+                //! Need error checking for failed responses.
+                location.href = '/codebook/'+response._id;
+//                launchInformalEditor(response.codebook.questions);
+            }
+        );
+    });
 });
 </script>
 {% endblock %}
 
 {% block title %}
-<a id="loadJsonButton" class="btn btn-primary rightside" >Save changes</a>
-<h3>{{codebook.name}}</h3>
+<!--<form method="POST" action="/ajax/save-codebook/">-->
+    <button id="save-codebook" class="btn btn-primary rightside" type="submit">Save changes</button>
+    <h3>{{codebook.name}} ({{codebook.version}})</h3>
+<!--</form>-->
 {% endblock %}
 
 {% block document %}
@@ -79,6 +97,18 @@ $(function(){
 
       <strong>Description</strong>
       <p>{{ codebook.description }}</p>
+
+      <strong>Version</strong>
+      <p>{{ codebook.version }}</p>
+
+<!--
+      <dl class="dl-horizontal">
+        <dt>version</dt><dd>{{ codebook.version }}&nbsp;</dd>
+        <dt>previous version</dt><dd>{{ codebook.parent }}&nbsp;</dd>
+        <dt>has </dt><dd>Gong&nbsp;</dd>
+        <dt>email</dt><dd>agong@umich.edu&nbsp;</dd>
+-->
+      </dl>
 
       <hr/>      
       <div id="impexpControls">

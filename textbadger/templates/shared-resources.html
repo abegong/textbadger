@@ -32,7 +32,7 @@ $(function(){
   <tbody>
   {% for p in codebooks %}
     <tr href="/codebook/{{ p|mongo_id }}">
-      <td><a href="/codebook/{{ p|mongo_id }}">{{ p.name }}</a></td>
+      <td><a href="/codebook/{{ p|mongo_id }}">{{ p.name }} ({{ p.version }})</a></td>
     </tr>
   {% empty %}
     <tr>

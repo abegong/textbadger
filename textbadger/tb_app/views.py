@@ -77,7 +77,7 @@ def my_account(request):
 def shared_resources(request):
     conn = connections["default"]
     result = {
-        'codebooks' : list(conn.get_collection("tb_app_codebook").find(fields={"id":1, "name":1, "description":1})),
+        'codebooks' : list(conn.get_collection("tb_app_codebook").find()),
         'collections' : list(conn.get_collection("tb_app_collection").find(fields={"id":1, "name":1, "description":1})),
         'batches' : jsonifyRecords(PrivateBatch.objects.all(), ['username', 'first_name', 'last_name', 'email']),
         'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
@@ -273,6 +273,9 @@ def create_codebook(request):
     J['name'] = name
     J['description'] = description
     J['create-time'] = datetime.datetime.utcnow()
+    J['version'] = 1
+    J['children'] = []
+    J['parent'] = None
     J['questions'] = [{
             "question_type" : "Static text",
             "var_name" : "default_question",
@@ -292,7 +295,7 @@ def create_codebook(request):
             "question_type" : "Short essay",
             "var_name" : "essay",
             "params" : {
-                "header_text" : "<hr/>Here's a short essay question.",
+                "header_text" : "Here's a short essay question.",
             }
         }]
 
@@ -308,10 +311,46 @@ def get_codebook(request):
     codebook = conn.get_collection("tb_app_codebook").find_one({"_id":ObjectId(id_)})
 
     #! Need error checking for invalid Ids
+
     return gen_json_response({
             "status": "success",
             "msg": "Successfully retrieved codebook.",
             "codebook" : codebook
             })
 
+@login_required(login_url='/')
+def save_codebook(request):
+    parent_id = request.POST["parent_id"]
+    questions = json.loads(request.POST["questions"])["questions"]
+
+    #Retrieve parent codebook
+    conn = connections["default"]
+    coll = conn.get_collection("tb_app_codebook")
+    parent_codebook = coll.find_one({"_id":ObjectId(parent_id)})
+    print parent_codebook
+    #!Handle parent_codebook == None
+
+    #Create new codebook
+    J = {}
+    J['name'] = parent_codebook["name"]
+    J['description'] = parent_codebook["description"]
+    J['create-time'] = datetime.datetime.utcnow()
+    J['version'] = parent_codebook["version"]+1
+    J['children'] = []
+    J['parent'] = ObjectId(parent_id)
+    J['questions'] = questions
+
+    result_id = coll.insert(J)
+
+    print result_id
+
+    parent_codebook["children"].append(result_id)
+    coll.update({"_id":parent_id}, parent_codebook)
+
+    return gen_json_response({
+            "status": "success",
+            "msg": "Successfully saved codebook.",
+            "_id": result_id,
+            "codebook" : J,
+            })
 
