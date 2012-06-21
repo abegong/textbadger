@@ -1,31 +1,35 @@
-<div class="modal" id="myModal">
+<div class="modal" id="start-batch-modal">
   <div class="modal-header">
     <button class="close" data-dismiss="modal">&times;</button>
-    <h3>Start a private batch</h3>
+    <h3>Start a batch</h3>
   </div>
   <div class="modal-body">
     <form id="create-project-form" class="form-horizontal" tb-href="/ajax/create-project"><fieldset>
-<!--
-      <div class="control-group">
-        <label class="control-label" for="project-name">Name</label>
-        <div class="controls">
-          <input type="text" class="input-xlarge" name="name" placeholder='e.g. "New York Times op-eds"'>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="description">Description</label>
-        <div class="controls">
-          <textarea class="input-xlarge" name="description" rows="3" placeholder="This is what workers will see when they choose assignments."></textarea>
-        </div>
-      </div>
--->
+
       <div class="control-group">
         <label class="control-label" for="select01">Codebook</label>
         <div class="controls">
-          <select id="select01">
-            <option>My first codebook</option>
-            <option>Another codebook</option>
-            <option>Codebook with new awesomeness</option>
+          <span class="dropdown" id="batch-codebook-filter-menu">
+            <a class="dropdown-toggle btn" data-toggle="dropdown" href="#batch-codebook-filter-menu">
+              Filter
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a id="filterAllBatchCodebooks" href="#">Show all</a></li>
+              <li><a id="filterCurrentBatchCodebooks" href="#">Current versions only</a></li>
+              <li><a id="filterBatchBatchCodebooks" href="#">With batches only</a></li>
+            </ul>
+          </span>
+
+          <select id="codebook">
+            <!-- To be populated by jquery -->
+          </select>
+
+          <!-- Hack: this selector holds all the codebooks -->
+          <select id="hidden-codebook-selector" style="display:none">
+          {% for c in codebooks %}
+            <option class="{% if not c.children %}current{% endif %} {% if p.batches %}batches{% endif %}">{{ c.name }} ({{ c.version }})</option>
+          {% endfor %}
           </select>
         </div>
       </div>
@@ -33,10 +37,10 @@
       <div class="control-group">
         <label class="control-label" for="select01">Collection</label>
         <div class="controls">
-          <select id="select01">
-            <option>Collection numero uno</option>
-            <option>Another collection</option>
-            <option>More collection goodness</option>
+          <select id="collection">
+          {% for c in collections %}
+            <option>{{ c.name }}</option>
+          {% endfor %}
           </select>
         </div>
       </div>
@@ -44,18 +48,11 @@
       <div class="control-group">
         <label class="control-label" for="checkboxes">Assignments</label>
         <div class="controls">
-          <label class="checkbox">
-            <input type="checkbox" id="checkbox1" value="option1"> Me
-          </label>
-          <label class="checkbox">
-            <input type="checkbox" id="checkbox1" value="option1"> Roger Clements
-          </label>
-          <label class="checkbox">
-            <input type="checkbox" id="checkbox2" value="option2"> Daryl Strawberry
-          </label>
-          <label class="checkbox">
-            <input type="checkbox" id="checkbox3" value="option3"> Mickey Mantle
-          </label>
+          {% for u in users %}
+            <label class="checkbox">
+              <input type="checkbox" id="checkbox1" value="option1"> {{ u.first_name }} {{ u.last_name }}
+            </label>
+          {% endfor %}
         </div>
       </div>
 
@@ -74,4 +71,40 @@
     </fieldset></form>
   </div>
 </div>
+
+<script type="text/javascript">
+//var codebooks = {{codebooks|safe}};
+function filterAllBatchCodebooks(){
+    //Clear out the codebook list
+    $("select#codebook option").remove();
+
+    //Add back all the codebooks, by cloning from #hidden-codebook-selector
+    var options = $("#hidden-codebook-selector option").clone();
+    $("select#codebook").append( options );
+}
+
+function filterCurrentBatchCodebooks(){
+    filterAllBatchCodebooks();
+    $("select#codebook option:not(.current)").remove();
+}
+
+function filterBatchBatchCodebooks(){
+    filterAllBatchCodebooks();
+    $("select#codebook option:not(.batch)").remove();
+}
+
+
+$(function(){
+    //Set up listeners for the codebook filter dropdown
+    $("#batch-codebook-filter-menu ul li a").click(function(){
+        $("#batch-codebook-filter-menu ul li a i.icon-ok").remove();
+        $(this).prepend('<i class="icon-ok"></i> ');
+        eval( $(this).attr('id')+'()' );
+    });
+
+    //By default, filter to show only the current version of codebooks
+    $("#filterCurrentBatchCodebooks").prepend('<i class="icon-ok"></i> ');
+    filterCurrentBatchCodebooks();
+});
+</script>
 

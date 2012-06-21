@@ -3,7 +3,6 @@
 
 === To do ===
 * Codebook page
-    * Questions are not activated after add/delete operations.
     * Shorten text-area to text input for integer values
 
     * Fix vertical alignment of radio/checkbox answer text
