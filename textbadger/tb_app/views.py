@@ -332,7 +332,12 @@ def save_codebook(request):
 
     #Create new codebook
     J = {}
-    J['name'] = parent_codebook["name"]
+
+    if parent_codebook["children"]:
+        J['name'] = parent_codebook["name"]+" (branch)"
+    else:
+        J['name'] = parent_codebook["name"]
+
     J['description'] = parent_codebook["description"]
     J['created_at'] = datetime.datetime.utcnow()
     J['version'] = parent_codebook["version"]+1
