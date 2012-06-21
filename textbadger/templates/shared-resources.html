@@ -21,13 +21,17 @@ $(function(){
     //Highlight navbar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
 
-    //
+    //Set up listeners for the codebook filter dropdown
     $("#filter-menu ul li a").click(function(){
         $("#filter-menu ul li a i.icon-ok").remove();
         $(this).prepend('<i class="icon-ok"></i> ');
         eval( $(this).attr('id')+'()' );
     });
-//    $("#filter-menu ul li a").click(function
+
+    //By default, filter to show only the current version of codebooks
+    $("#filterCurrent").prepend('<i class="icon-ok"></i> ');
+    $("table#codebooks tbody tr:not(.current)").hide();
+    $("table#codebooks tbody tr.current").show();
 });
 </script>
 {% endblock %}
@@ -59,7 +63,7 @@ $(function(){
             <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a id="filterAll" href="#"><i class="icon-ok"></i> Show all</a></li>
+            <li><a id="filterAll" href="#">Show all</a></li>
             <li><a id="filterCurrent" href="#">Current versions only</a></li>
             <li><a id="filterBatch" href="#">With batches only</a></li>
           </ul>

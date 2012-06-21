@@ -171,7 +171,7 @@ var codebookModel = {
     getCodebookJson : function(){
         j = ko.toJSON({'questions':this.questions()});
         //! Remove "targeted" terms here
-        //! Add name and description (maybe)
+        //!? Add name and description (maybe)
         return( j );
     }
 };
