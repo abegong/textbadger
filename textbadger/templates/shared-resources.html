@@ -17,22 +17,31 @@ $(function(){
 
 <h3>Codebooks</h3>
   <table class="wide table-bordered">
-<!--
   {% if codebooks %}
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Recent activity</th>
-      <th>Batch progress</th>
-      <th>Assigned tasks</th>
+      <th>Name</th>
+      <th>Version</th>
+      <th>Created
+        <span class="badge rightside"><i class="icon-chevron-up"></i></span>
+      </th>
+      <th>Info
+        <span class="badge"><i class="icon-ok"></i> Current</span>
+        <span class="badge"><i class="icon-ok"></i> Batches</span>
+      </th>
     </tr>
   </thead>
   {% endif %}
--->
   <tbody>
   {% for p in codebooks %}
     <tr href="/codebook/{{ p|mongo_id }}">
-      <td><a href="/codebook/{{ p|mongo_id }}">{{ p.name }} ({{ p.version }})</a></td>
+      <td>{{ p.name }}</td>
+      <td>{{ p.version }}</td>
+      <td>{{ p.created_at|date_diff }}</td>
+      <td>
+        {% if not p.children %}<span class="badge badge-success">current</span>{% endif %}
+        {% if p.batches %}<span class="badge badge-success">batches</span>{% endif %}
+      </td>
     </tr>
   {% empty %}
     <tr>

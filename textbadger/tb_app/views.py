@@ -272,9 +272,10 @@ def create_codebook(request):
     J = {}
     J['name'] = name
     J['description'] = description
-    J['create-time'] = datetime.datetime.utcnow()
+    J['created_at'] = datetime.datetime.utcnow()
     J['version'] = 1
     J['children'] = []
+    J['batches'] = []
     J['parent'] = None
     J['questions'] = [{
             "question_type" : "Static text",
@@ -327,25 +328,25 @@ def save_codebook(request):
     conn = connections["default"]
     coll = conn.get_collection("tb_app_codebook")
     parent_codebook = coll.find_one({"_id":ObjectId(parent_id)})
-    print parent_codebook
     #!Handle parent_codebook == None
 
     #Create new codebook
     J = {}
     J['name'] = parent_codebook["name"]
     J['description'] = parent_codebook["description"]
-    J['create-time'] = datetime.datetime.utcnow()
+    J['created_at'] = datetime.datetime.utcnow()
     J['version'] = parent_codebook["version"]+1
     J['children'] = []
+    J['batches'] = []
     J['parent'] = ObjectId(parent_id)
     J['questions'] = questions
 
     result_id = coll.insert(J)
 
-    print result_id
-
     parent_codebook["children"].append(result_id)
-    coll.update({"_id":parent_id}, parent_codebook)
+    result = coll.update({"_id":ObjectId(parent_id)}, parent_codebook)
+    print result
+    print parent_codebook
 
     return gen_json_response({
             "status": "success",

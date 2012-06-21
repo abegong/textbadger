@@ -4,7 +4,6 @@
 === To do ===
 * Codebook page
     * Questions are not activated after add/delete operations.
-    * Figure out urls, back buttons, etc.
     * Shorten text-area to text input for integer values
 
     * Fix vertical alignment of radio/checkbox answer text
@@ -79,6 +78,9 @@
     * Change "what will this codebook measure" to "Other information about this codebook. (optional)"
     * Make "create new codebook" click-through and redirect work.
     * Make "upload collection" click-through and redirect work.    
+* Codebook page
     * Get question export working -- enough....
+    * Build save-codebook routes, logic, and template
+    * Figure out urls, back buttons, etc.
 
 

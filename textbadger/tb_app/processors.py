@@ -12,3 +12,4 @@ def admin_names(request):
         admin_names = "This instance of TextBadger is administered by "+", ".join(names[:-1])+" and "+names[-1]+"."
 
     return {'admin_names': admin_names}
+
