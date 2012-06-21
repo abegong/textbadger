@@ -3,8 +3,31 @@
 
 {% block start_scripts %}
 <script type="text/javascript">
+function filterAll(){
+    $("table#codebooks tbody tr").fadeIn();
+}
+
+function filterCurrent(){
+    $("table#codebooks tbody tr:not(.current)").fadeOut();
+    $("table#codebooks tbody tr.current").fadeIn();
+}
+
+function filterBatch(){
+    $("table#codebooks tbody tr:not(.batches)").fadeOut();
+    $("table#codebooks tbody tr.batches").fadeIn();
+}
+
 $(function(){
+    //Highlight navbar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
+
+    //
+    $("#filter-menu ul li a").click(function(){
+        $("#filter-menu ul li a i.icon-ok").remove();
+        $(this).prepend('<i class="icon-ok"></i> ');
+        eval( $(this).attr('id')+'()' );
+    });
+//    $("#filter-menu ul li a").click(function
 });
 </script>
 {% endblock %}
@@ -16,25 +39,38 @@ $(function(){
 {% include "forms/create-codebook.htm" %}
 
 <h3>Codebooks</h3>
-  <table class="wide table-bordered">
+  <table id="codebooks" class="wide table-bordered">
   {% if codebooks %}
   <thead>
     <tr>
       <th>Name</th>
       <th>Version</th>
       <th>Created
-        <span class="badge rightside"><i class="icon-chevron-up"></i></span>
+<!--        <span class="badge rightside"><i class="icon-chevron-up"></i></span> -->
       </th>
-      <th>Info
+<!--
         <span class="badge"><i class="icon-ok"></i> Current</span>
         <span class="badge"><i class="icon-ok"></i> Batches</span>
+-->
+      <th>
+        <span class="dropdown" id="filter-menu">
+          <a class="dropdown-toggle btn" data-toggle="dropdown" href="#filter-menu">
+            Filter
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a id="filterAll" href="#"><i class="icon-ok"></i> Show all</a></li>
+            <li><a id="filterCurrent" href="#">Current versions only</a></li>
+            <li><a id="filterBatch" href="#">With batches only</a></li>
+          </ul>
+        </span>
       </th>
     </tr>
   </thead>
   {% endif %}
   <tbody>
   {% for p in codebooks %}
-    <tr href="/codebook/{{ p|mongo_id }}">
+    <tr class="{% if not p.children %}current{% endif %} {% if p.batches %}batches{% endif %}" href="/codebook/{{ p|mongo_id }}">
       <td>{{ p.name }}</td>
       <td>{{ p.version }}</td>
       <td>{{ p.created_at|date_diff }}</td>

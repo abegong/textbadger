@@ -77,7 +77,7 @@ def my_account(request):
 def shared_resources(request):
     conn = connections["default"]
     result = {
-        'codebooks' : list(conn.get_collection("tb_app_codebook").find()),
+        'codebooks' : list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)])),
         'collections' : list(conn.get_collection("tb_app_collection").find(fields={"id":1, "name":1, "description":1})),
         'batches' : jsonifyRecords(PrivateBatch.objects.all(), ['username', 'first_name', 'last_name', 'email']),
         'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
