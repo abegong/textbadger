@@ -1,5 +1,6 @@
 var attachControlsToQuestion = function(i){
     //Change the targetQuestion in the model
+    console.log(i);
     codebookModel.targetQuestion(i);
 
     //Set index variables

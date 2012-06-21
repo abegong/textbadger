@@ -85,9 +85,13 @@ var codebookModel = {
 
     targetQuestion: function(i){
         this.questions()[this.target_index()].targeted(false);
-        this.addStylesToQuestion($($(".questionBox")[this.target_index()]));
+//        this.addStylesToQuestion($($(".questionBox")[this.target_index()]));
+
         this.target_index(i);
         this.questions()[this.target_index()].targeted(true);
+//        this.addStylesToQuestion($($(".questionBox")[this.target_index()]));
+
+        this.addStylesToCodebook();
     },
 
 /*//NEW//
@@ -100,13 +104,15 @@ var codebookModel = {
 */
     changeQuestionType: function( T ){
         this.questions()[this.target_index()].changeQuestionType(T);
-        attachControlsToQuestion(this.target_index());
+//        attachControlsToQuestion(this.target_index());
+        this.addStylesToCodebook();
     },
 
     addQuestion: function(){
         q1 = ko.toJS( this.questions.slice( this.target_index() )[0] );
         q2 = new cbQuestion( q1.question_type, q1.var_name, q1.params );
         this.questions.splice( this.target_index()+1, 0, q2 );
+        this.addStylesToCodebook();
     },
 
     delQuestion: function(){
@@ -119,6 +125,7 @@ var codebookModel = {
             this.questions.splice( i, 1 );
             attachControlsToQuestion( 0 );
         }
+        this.addStylesToCodebook();
     },
 
     moveQuestionUp: function(){
@@ -134,6 +141,7 @@ var codebookModel = {
                 attachControlsToQuestion(i-1);
             }
         }
+        this.addStylesToCodebook();
     },
 
     moveQuestionDown : function(){
@@ -142,6 +150,7 @@ var codebookModel = {
             this.questions.splice( i+1, 0, this.questions().splice(i,1)[0] );
             attachControlsToQuestion(i+1);$('input',this).attr
         }
+        this.addStylesToCodebook();
     },
 
     addStylesToQuestion : function(Q){
@@ -153,13 +162,18 @@ var codebookModel = {
             .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
 
         Q
+            .unbind('click mouseenter mouseleave')
             .hover( 
 //                function(){$(this).addClass('ui-state-error ui-corner-all');},
 //                function(){$(this).removeClass('ui-widget-content');}
                 function(){$(this).addClass('hoverQuestion');},
                 function(){$(this).removeClass('hoverQuestion');}
             )
-        .click( function(){attachControlsToQuestion( $(this).index(".questionBox")); } );
+            .click( function(){
+                console.log("x");
+                console.log($(this).index(".questionBox"));
+                attachControlsToQuestion( $(this).index(".questionBox") );
+            });
     },
 
     addStylesToCodebook: function(){
