@@ -1,3 +1,5 @@
+{% load tb_app_tags %}
+
 <div class="modal" id="start-batch-modal">
   <div class="modal-header">
     <button class="close" data-dismiss="modal">&times;</button>
@@ -7,7 +9,7 @@
     <form class="form-horizontal" tb-href="/ajax/start-batch/" tb-redirect="/shared-resources/"><fieldset>
       {% csrf_token %}
       <div class="control-group">
-        <label class="control-label" for="select01">Codebook</label>
+        <label class="control-label" for="codebook">Codebook</label>
         <div class="controls">
           <span class="dropdown" id="batch-codebook-filter-menu">
             <a class="dropdown-toggle btn" data-toggle="dropdown" href="#batch-codebook-filter-menu">
@@ -21,25 +23,25 @@
             </ul>
           </span>
 
-          <select id="codebook">
+          <select id="codebook" name="codebook_id">
             <!-- To be populated by jquery -->
           </select>
 
           <!-- Hack: this selector holds all the codebooks -->
           <select id="hidden-codebook-selector" style="display:none">
           {% for c in codebooks %}
-            <option class="{% if not c.children %}current{% endif %} {% if p.batches %}batches{% endif %}">{{ c.name }} ({{ c.version }})</option>
+            <option value="{{ c|mongo_id }}" class="{% if not c.children %}current{% endif %} {% if p.batches %}batches{% endif %}">{{ c.name }} ({{ c.version }})</option>
           {% endfor %}
           </select>
         </div>
       </div>
 
       <div class="control-group">
-        <label class="control-label" for="select01">Collection</label>
+        <label class="control-label" for="collection">Collection</label>
         <div class="controls">
-          <select id="collection">
+          <select id="collection" name="collection_id">
           {% for c in collections %}
-            <option>{{ c.name }}</option>
+            <option value="{{ c|mongo_id }}">{{ c.name }}</option>
           {% endfor %}
           </select>
         </div>
@@ -50,7 +52,7 @@
         <div class="controls">
           {% for u in users %}
             <label class="checkbox">
-              <input type="checkbox" id="checkbox1" value="option1"> {{ u.first_name }} {{ u.last_name }}
+              <input type="checkbox" name="coder{{ forloop.counter }}" value="{{ u.username }}"> {{ u.first_name }} {{ u.last_name }}
             </label>
           {% endfor %}
         </div>
@@ -60,8 +62,17 @@
         <label class="control-label" for="pct_overlap">Overlap</label>
         <div class="controls">
           <div class="input-prepend">
-            <input class="span2" id="pct_overlap" size="16" type="text"><span class="add-on">%</span>
+            <input class="span2" id="pct_overlap" size="16" type="text" name="pct_overlap"><span class="add-on">%</span>
           </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="shuffle">Shuffle</label>
+        <div class="controls">
+            <label class="checkbox">
+              <input type="checkbox" name="shuffle"> Shuffle the documents in assignments?
+            </label>
         </div>
       </div>
 

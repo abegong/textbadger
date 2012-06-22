@@ -370,58 +370,114 @@ def save_codebook(request):
 
 @login_required(login_url='/')
 def start_batch(request):
-    #Get name and description
+    #Get fields from form
+    print request.raw_post_data
+    for field in request.POST:
+        print field, '\t', request.POST[field]
+
     try:
         codebook_id = request.POST["codebook_id"]
         collection_id = request.POST["collection_id"]
-        coders = request.POST["coders"]
-        overlap = request.POST["overlap"]
+        pct_overlap = request.POST["pct_overlap"]
 
-        #! This isn't quite right.  Description shouldn't be required.
-        description = request.GET.get("description", "")
-        #description = request.POST["description"]
+        coders = []
+        for field in request.POST:
+            if re.match('coder\d+', field):
+                coders.append(request.POST[field])
+
+        shuffle = "shuffle" in request.POST
 
     except MultiValueDictKeyError as e:
-#        print e.args
+        print e.args
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
-    if len(name) < 4:
-        return gen_json_response({"status": "failed", "msg": "This name is too short.  Please give a name at least 4 letters long."})
+    #! Validate fields
+    try:
+        assert len(coders) > 0
+    except (AssertionError,) as e:
+        return gen_json_response({"status": "failed", "msg": "You must include at least one coder."})
 
-    #Construct object
-    J = {}
-    J['name'] = name
-    J['description'] = description
-    J['created_at'] = datetime.datetime.utcnow()
-    J['version'] = 1
-    J['children'] = []
-    J['batches'] = []
-    J['parent'] = None
-    J['questions'] = [{
-            "question_type" : "Static text",
-            "var_name" : "default_question",
-            "params" : {
-                "header_text" : "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
-            }
-        },
-        {
-            "question_type" : "Multiple choice",
-            "var_name" : "mchoice",
-            "params" : {
-                "header_text" : "Here is an example of a multiple choice question.  Which answer do you like best?",
-                "answer_array" : ["This one","No, this one","A third option"],
-            }
-        },
-        {
-            "question_type" : "Short essay",
-            "var_name" : "essay",
-            "params" : {
-                "header_text" : "Here's a short essay question.",
-            }
-        }]
+    try:
+        pct_overlap = float(pct_overlap)
+        assert pct_overlap >= 0
+        assert pct_overlap <= 100
+    except (AssertionError, ValueError) as e:
+        return gen_json_response({"status": "failed", "msg": "Overlap must be a percentage between 0 and 100."})    
 
+    #Establish db connection
     conn = connections["default"]
-    result = conn.get_collection("tb_app_codebook").insert(J)
+    coll = conn.get_collection("tb_app_batch")
 
-    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
+    #Count existing batches
+    count = coll.find().count()
+
+    #Retrieve the codebook and collection
+    codebook = conn.get_collection("tb_app_codebook").find_one({"_id":ObjectId(codebook_id)})
+    collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId(collection_id)})
+
+    #Construct assignments object
+    k = len(collection["documents"])
+    overlap = int((k*pct_overlap)/100)
+
+    doc_ids = range(k)
+    if shuffle:
+        import random
+        random.shuffle( doc_ids )
+    shared = doc_ids[:overlap]
+    unique = doc_ids[overlap:]
+
+    """
+    assignments = {}
+    splitsize = float(k-overlap)/len(coders)
+    assignments["ss"] = splitsize
+    for (i,coder) in enumerate(coders):
+        assignments[coder] = unique[int(round(i*splitsize)):int(round((i+1)*splitsize))]
+        if shuffle:
+            random.shuffle( assignments[coder] )
+    """
+
+    #Construct documents object
+    documents = []
+    empty_labels = dict([(x, None) for x in coders])
+    for i in shared:
+        documents.append({
+            'index': i,
+#            'content': collection["documents"][i]["content"],
+            'labels': empty_labels
+        })
+
+    for i in unique:
+        documents.append({
+            'index': i,
+#            'content': collection["documents"][i]["content"],
+            'labels': { coders[i%len(coders)] : None }
+        })
+    if shuffle:
+        random.shuffle( documents )
+
+
+    #Construct batch object
+    batch = {
+        'profile': {
+            'name': 'Batch '+str(count+1)+" : "+
+                collection["name"][:20]+" * "+ 
+                codebook["name"][:20]+" ("+str(codebook["version"])+")",
+            'codebook_id': codebook_id,
+            'collection_id': collection_id,
+            'coders':coders,
+            'pct_overlap': pct_overlap,
+            'shuffle':shuffle,
+            'created_at': datetime.datetime.utcnow(),
+        },
+        'documents': documents,
+        'reports': {
+            'completion': {},
+            'reliability': {},
+        },
+    }
+
+    return gen_json_response({"status": "failed", "msg": json.dumps(batch, indent=2, cls=MongoEncoder), "json": batch })
+    result = coll.insert(batch)
+
+    return gen_json_response({"status": "success", "msg": "New batch created."})
 
