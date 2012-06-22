@@ -4,8 +4,8 @@
     <h3>Start a batch</h3>
   </div>
   <div class="modal-body">
-    <form id="create-project-form" class="form-horizontal" tb-href="/ajax/create-project"><fieldset>
-
+    <form class="form-horizontal" tb-href="/ajax/start-batch/" tb-redirect="/shared-resources/"><fieldset>
+      {% csrf_token %}
       <div class="control-group">
         <label class="control-label" for="select01">Codebook</label>
         <div class="controls">

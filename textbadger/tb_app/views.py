@@ -368,3 +368,60 @@ def save_codebook(request):
             "codebook" : J,
             })
 
+@login_required(login_url='/')
+def start_batch(request):
+    #Get name and description
+    try:
+        codebook_id = request.POST["codebook_id"]
+        collection_id = request.POST["collection_id"]
+        coders = request.POST["coders"]
+        overlap = request.POST["overlap"]
+
+        #! This isn't quite right.  Description shouldn't be required.
+        description = request.GET.get("description", "")
+        #description = request.POST["description"]
+
+    except MultiValueDictKeyError as e:
+#        print e.args
+        return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    if len(name) < 4:
+        return gen_json_response({"status": "failed", "msg": "This name is too short.  Please give a name at least 4 letters long."})
+
+    #Construct object
+    J = {}
+    J['name'] = name
+    J['description'] = description
+    J['created_at'] = datetime.datetime.utcnow()
+    J['version'] = 1
+    J['children'] = []
+    J['batches'] = []
+    J['parent'] = None
+    J['questions'] = [{
+            "question_type" : "Static text",
+            "var_name" : "default_question",
+            "params" : {
+                "header_text" : "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
+            }
+        },
+        {
+            "question_type" : "Multiple choice",
+            "var_name" : "mchoice",
+            "params" : {
+                "header_text" : "Here is an example of a multiple choice question.  Which answer do you like best?",
+                "answer_array" : ["This one","No, this one","A third option"],
+            }
+        },
+        {
+            "question_type" : "Short essay",
+            "var_name" : "essay",
+            "params" : {
+                "header_text" : "Here's a short essay question.",
+            }
+        }]
+
+    conn = connections["default"]
+    result = conn.get_collection("tb_app_codebook").insert(J)
+
+    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
+
