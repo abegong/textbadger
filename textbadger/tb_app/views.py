@@ -457,7 +457,9 @@ def start_batch(request):
         documents.append({
             'index': i,
 #            'content': collection["documents"][i]["content"],
-            'labels': { coders[i%len(coders)] : None }
+#            'labels': { coders[i%len(coders)] : None }
+            #Populate the list with a random smattering of fake labels
+            'labels': { coders[i%len(coders)] : random.choice([None for x in range(20)]+range(20)) }
         })
     if shuffle:
         random.shuffle( documents )
@@ -506,16 +508,46 @@ def update_batch_reliability(request):
 #########################
 
 def update_batch_progress(id_):
+    #Connect to the DB
     conn = connections["default"] 
     coll = conn.get_collection("tb_app_batch")
 
+    #Retrieve the batch
     batch = coll.find_one({"_id":ObjectId(id_)})
+#    print json.dumps(batch, indent=2, cls=MongoEncoder)
 
-    print json.dumps(batch["reports"]["progress"], indent=2, cls=MongoEncoder)
-
+    #Scaffold the progress object
     coders = batch["profile"]["coders"]
-    progress = dict([(c, 0) for c in coders])
+    progress = dict([(c, {"total":0, "complete":0}) for c in coders])
 
+    #Count total and complete document codes
+    total, complete = 0, 0
+    for doc in batch["documents"]:
+        for coder in doc["labels"]:
+            total += 1
+            progress[coder]["total"] += 1
 
+            if not doc["labels"][coder] == None:
+                complete += 1
+                progress[coder]["complete"] += 1
+
+    #Calculate percentages
+    for coder in progress:
+        p = progress[coder]
+        p["percent"] = float(p["complete"])/p["total"]
+
+    progress["SUMMARY"] = {
+        "total": total,
+        "complete": complete,
+        "percent": float(complete)/total,
+    }
+
+    batch["reports"]["progress"] = progress
+#    print json.dumps(progress, indent=2, cls=MongoEncoder)
+
+    result = coll.update({"_id":ObjectId(id_)}, batch)
+#    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
+
+    #! Validate response
 
 

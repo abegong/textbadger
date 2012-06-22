@@ -69,7 +69,7 @@ $(function(){
       <td>94%</td>
     </tr>
 
-  {% for c in batch.progress.coders %}
+  {% for c in batch.reports.progress.coders %}
     <tr>
       <td>{{ c.name }}</td>
       <td>{{ c.done }}/{{ c.assigned }}</td>
