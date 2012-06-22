@@ -127,7 +127,7 @@ $(function(){
 <br/><br/>
 
 <!-- Batches ------------------------->
-<a class="btn btn-primary open-modal rightside auto">Start a batch</a>
+<a class="btn btn-primary open-modal rightside">Start a batch</a>
 {% include "forms/start-batch.htm" %}
 
 <h3>Batches</h3>
@@ -136,18 +136,14 @@ $(function(){
   <thead>
     <tr>
       <th>Project</th>
-      <th>Recent activity</th>
-      <th>Batch progress</th>
-      <th>Assigned tasks</th>
+      <th>Progress</th>
     </tr>
   </thead>
   {% endif %}
   <tbody>
   {% for p in batches %}
     <tr href="/batch/{{ p|mongo_id }}">
-      <td><a href="/codebook/{{ p.id }}">{{ p.profile.name }}</a></td>
-      <td>[...]</td>
-      <td>[...]</td>
+      <td><a href="/batch/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
       <td>[...]</td>
     </tr>
   {% empty %}
