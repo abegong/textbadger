@@ -73,6 +73,9 @@ var doc_list = [];
 var doc_index = 0;
 
 $(function(){
+    //Highlight "my-account" in nav bar
+    $('a[href*="/my-account/"]').parent().addClass("active");
+
     initialize();
     loadDocList(collection_id);
 });
@@ -81,15 +84,16 @@ $(function(){
 
 
 {% block breadcrumbs %}
+<div class="container">
 <ul class="breadcrumb">
   <li>
-    <a href="#">Home</a> <span class="divider">/</span>
+    <a href="/my-account/#assignments">Assignments</a> <span class="divider">/</span>
   </li>
   <li>
-    <a href="#">Library</a> <span class="divider">/</span>
+    <a href="#">Batch 1</a></span>
   </li>
-  <li class="active">Data</li>
 </ul>
+</div>
 {% endblock %}
 
 {% block title %}

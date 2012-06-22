@@ -40,31 +40,18 @@
   </head>
   <body>
 
-  {% comment %}
-    <div class="navbar">
-  {% else %}
+    {% comment %}
+      <div class="navbar">
+    {% else %}
+      <div class="navbar navbar-fixed-top">
+    {% endcomment %}
     <div class="navbar navbar-fixed-top">
-  {% endcomment %}
-  <div class="navbar navbar-fixed-top">
-    {% block navbar %}{% include "base/menu.html" %}{% endblock %}
-    {% block breadcrumbs %}{% endblock %}
-  </div>
-  {% include "forms/sign-in.htm" %}
-
-<!--
-    <div class="modal" id="myModal">
-      <div class="modal-header">
-        <button class="close" data-dismiss="modal">&times;</button>
-        <h3></h3>
-      </div>
-      <div class="modal-body">
-        <p></p>
-      </div>
+      {% block navbar %}{% include "base/menu.html" %}{% endblock %}
+      {% block breadcrumbs %}{% endblock %}
     </div>
--->
+    {% include "forms/sign-in.htm" %}
 
     <div class="container main">
-    {{ request.GET.next }}
     {% block main_container %}{% endblock %}
 
     {% block footer_columns %}{% endblock %}
