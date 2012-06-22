@@ -52,10 +52,6 @@ $(function(){
       <th>Created
 <!--        <span class="badge rightside"><i class="icon-chevron-up"></i></span> -->
       </th>
-<!--
-        <span class="badge"><i class="icon-ok"></i> Current</span>
-        <span class="badge"><i class="icon-ok"></i> Batches</span>
--->
       <th>
         <span class="dropdown" id="filter-menu">
           <a class="dropdown-toggle btn" data-toggle="dropdown" href="#filter-menu">
@@ -75,7 +71,7 @@ $(function(){
   <tbody>
   {% for p in codebooks %}
     <tr class="{% if not p.children %}current{% endif %} {% if p.batches %}batches{% endif %}" href="/codebook/{{ p|mongo_id }}">
-      <td>{{ p.name }}</td>
+      <td><a href="/codebook/{{ p|mongo_id }}">{{ p.name }}</a></td>
       <td>{{ p.version }}</td>
       <td>{{ p.created_at|date_diff }}</td>
       <td>
@@ -102,20 +98,23 @@ $(function(){
 
 <h3>Collections</h3>
   <table class="wide table-bordered">
-<!--
   {% if collections %}
   <thead>
     <tr>
       <th>Name</th>
-      <th>Documents</th>
+      <th>Created</th>
+      <th>Type</th>
+      <th>Size</th>
     </tr>
   </thead>
   {% endif %}
--->
   <tbody>
   {% for p in collections %}
     <tr href="/collection/{{ p|mongo_id }}">
       <td><a href="/collection/{{ p|mongo_id }}">{{ p.name }}</a></td>
+      <td>{{ p.created_at }}</td>
+      <td>{{ p.type }}</td>
+      <td>{{ p.documents|length }}</td>
     </tr>
   {% empty %}
     <tr>

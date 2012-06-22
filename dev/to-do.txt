@@ -4,16 +4,22 @@
 === To do ===
 * General UI stuff
     * Add icons
-    * Add navigation to codebook/collection/batches
 
-* Make descriptions optional
+* Make descriptions optional for codebooks and collections
 * Add "change account settings" button
 * Activate "create sub-collection" button
-* Create assignments page
 
-* Add @admin_required decorator
-* Catalog and refactor all javascript/jquery
-* Catalog and refactor all database code
+*** Design/architecture
+    * Figure out batch/coding DB structure
+    * Figure out how to "delete"/"deactivate" codebooks/collections -- just sort by recent on "created_at" field
+
+*** Technical debt
+    * Add @admin_required decorator
+    * Catalog and refactor all javascript/jquery
+    * Catalog and refactor all database code
+
+* Add size, type, and created_at fields to collections
+*?  Add "profile" fields to codebooks, collections, and batches
 
 * Home/about page
     * Fill in FAQ
@@ -85,5 +91,6 @@
     * Build save-codebook routes, logic, and template
     * Figure out urls, back buttons, etc.
 * Build batch page
+* Add breadcrumb navigation to codebook/collection/batches
 
 
