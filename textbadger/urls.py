@@ -24,6 +24,8 @@ urlpatterns = patterns('',
     url(r'^batch/(.*)/$', 'textbadger.tb_app.views.batch' ),
 
     #Game page(s)
+    url(r'^assignment/(.*)/$', 'textbadger.tb_app.views.assignment' ),
+
     #!?    url(r'^game/$', 'textbadger.tb_app.views.game' ),
 
     #Ajax

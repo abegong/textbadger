@@ -40,7 +40,17 @@
   </head>
   <body>
 
+  {% comment %}
+    <div class="navbar">
+  {% else %}
+    <div class="navbar navbar-fixed-top">
+  {% endcomment %}
+  <div class="navbar navbar-fixed-top">
     {% block navbar %}{% include "base/menu.html" %}{% endblock %}
+    {% block breadcrumbs %}{% endblock %}
+  </div>
+  {% include "forms/sign-in.htm" %}
+
 <!--
     <div class="modal" id="myModal">
       <div class="modal-header">

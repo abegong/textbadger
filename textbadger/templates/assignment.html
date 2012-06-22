@@ -79,6 +79,19 @@ $(function(){
 </script>
 {% endblock %}
 
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li>
+    <a href="#">Home</a> <span class="divider">/</span>
+  </li>
+  <li>
+    <a href="#">Library</a> <span class="divider">/</span>
+  </li>
+  <li class="active">Data</li>
+</ul>
+{% endblock %}
+
 {% block title %}
 <h3>{{collection.name}}</h3>
 {% endblock %}

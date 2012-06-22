@@ -20,6 +20,7 @@ div.faq-q{
 .rightside{
     margin-left:5px;
     float:right;
+    text-align:right;
 }
 
 ul.big-list li{

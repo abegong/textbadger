@@ -116,13 +116,11 @@ def collection(request, id_):
 
 @login_required(login_url='/')
 def batch(request, id_):
-    conn = connections["default"] 
-    result = {
-        "collection": {
-            "codebook": "hi"
-        }
-    }
-    return render_to_response('batch.html', result, context_instance=RequestContext(request))
+    return render_to_response('batch.html', {}, context_instance=RequestContext(request))
+
+@login_required(login_url='/')
+def assignment(request, id_):
+    return render_to_response('assignment.html', {}, context_instance=RequestContext(request))
 
 ### Ajax calls ###############################################################
 

@@ -2,6 +2,22 @@
 
 
 === To do ===
+* General UI stuff
+    * Add icons
+    * Add navigation to codebook/collection/batches
+
+* Make descriptions optional
+* Add "change account settings" button
+* Activate "create sub-collection" button
+* Create assignments page
+
+* Add @admin_required decorator
+* Catalog and refactor all javascript/jquery
+* Catalog and refactor all database code
+
+* Home/about page
+    * Fill in FAQ
+
 * Codebook page
     * Shorten text-area to text input for integer values
 
@@ -11,21 +27,6 @@
 
     * Add slider question_type
 
-
-* General UI stuff
-    * Add icons
-    * Add navigation to codebook/collection/batches
-
-* Build batch page
-* Make descriptions optional
-* Add "change account settings" button
-* Activate "create sub-collection" button
-* Create assignments page
-
-* Home/about page
-    * Fill in FAQ
-
-* Add @admin_required decorator
 
 === Punt ===
 * Suppress ?next= part of login_required decorator
@@ -83,5 +84,6 @@
     * Get question export working -- enough....
     * Build save-codebook routes, logic, and template
     * Figure out urls, back buttons, etc.
+* Build batch page
 
 

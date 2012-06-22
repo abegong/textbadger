@@ -11,8 +11,6 @@ $(function(){
 <!-- Overview --------------------->
 <a class="btn btn-primary open-modal rightside">Review results</a>
 {% include "forms/export-batch.htm" %}
-<a class="btn btn-primary open-modal rightside">Download report</a>
-{% include "forms/export-batch.htm" %}
 <a class="btn btn-primary open-modal rightside">Export results</a>
 {% include "forms/export-batch.htm" %}
 <h2>Batch 27</h2>
@@ -74,12 +72,14 @@ $(function(){
 
 
 <!-- Reliability --------------------->
-<a class="btn btn-primary open-modal rightside"><i class="icon-refresh"></i> Update reliability</a>
-{% include "forms/export-batch.htm" %}
+<div class="rightside">
+  <a class="btn btn-primary rightside"><i class="icon-refresh"></i> Update reliability</a>
+  <br/>
+  <span class="rightside">Last update: 2 hours ago, 457 completed tasks</span>
+  <br/>
+  <br/>
+</div>
 <h3>Reliability</h3>
-<span>Last update: 2 hours ago, 457 completed tasks</span>
-<br/>
-<br/>
 
 <table class="well wide">
   <thead>
@@ -129,6 +129,7 @@ $(function(){
   {% endfor %}
   </tbody>
 </table>
+<a>View/print extended report</a>
 
 
 {% endblock %}
