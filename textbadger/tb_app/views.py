@@ -117,11 +117,19 @@ def collection(request, id_):
 @login_required(login_url='/')
 def batch(request, id_):
     conn = connections["default"] 
+
     update_batch_progress(id_)
-    batch = conn.get_collection("tb_app_batch").find_one({"_id":ObjectId(id_)},fields={"profile":1, "progress":1})
+    batch = conn.get_collection("tb_app_batch").find_one({"_id":ObjectId(id_)},fields={"profile":1, "reports":1})
+
+    print json.dumps(batch, indent=2, cls=MongoEncoder)
     result = {
         'batch' : batch,
-#        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
+        'codebook' : conn.get_collection("tb_app_codebook").find_one({"_id":ObjectId(batch["profile"]["codebook_id"])}),
+        'collection' : conn.get_collection("tb_app_collection").find_one(
+            {"_id":ObjectId(batch["profile"]["collection_id"])}#,
+#            fields={"name":1, "reports":1}
+        ),
+        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
     return render_to_response('batch.html', result, context_instance=RequestContext(request))
 
@@ -518,28 +526,31 @@ def update_batch_progress(id_):
 
     #Scaffold the progress object
     coders = batch["profile"]["coders"]
-    progress = dict([(c, {"total":0, "complete":0}) for c in coders])
+    progress = {
+        "coders": dict([(c, {"total":0, "complete":0}) for c in coders]),
+        "summary": {}
+    }
 
     #Count total and complete document codes
     total, complete = 0, 0
     for doc in batch["documents"]:
         for coder in doc["labels"]:
             total += 1
-            progress[coder]["total"] += 1
+            progress["coders"][coder]["total"] += 1
 
             if not doc["labels"][coder] == None:
                 complete += 1
-                progress[coder]["complete"] += 1
+                progress["coders"][coder]["complete"] += 1
 
     #Calculate percentages
-    for coder in progress:
-        p = progress[coder]
-        p["percent"] = float(p["complete"])/p["total"]
+    for coder in progress["coders"]:
+        p = progress["coders"][coder]
+        p["percent"] = round(float(100*p["complete"])/p["total"],1)
 
-    progress["SUMMARY"] = {
+    progress["summary"] = {
         "total": total,
         "complete": complete,
-        "percent": float(complete)/total,
+        "percent": round(float(100*complete)/total,1),
     }
 
     batch["reports"]["progress"] = progress

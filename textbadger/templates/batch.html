@@ -32,11 +32,11 @@ $(function(){
 <h2>Batch 27</h2>
 
 <dl class="dl-horizontal">
-    <dt>Codebook</dt><dd>Objectivity{{batch.codebook.name}}&nbsp;</dd>
-    <dt>Collection</dt><dd>Public option : NYTimes comments (sample A){{batch.collection.name}}&nbsp;</dd>
-    <dt>Documents</dt><dd>120{{batch.codebook.size}}&nbsp;</dd>
-    <dt>Overlap</dt><dd>80{{ batch.collection.size }}%</dd>
-    <dt>Total tasks</dt><dd>600 (494 complete)</dd>
+    <dt>Codebook</dt><dd>{{ codebook.name }} ({{ codebook.version }})&nbsp;</dd>
+    <dt>Collection</dt><dd>{{ collection.name }}&nbsp;</dd>
+    <dt>Documents</dt><dd>{{ collection.documents|length }}&nbsp;</dd>
+    <dt>Overlap</dt><dd>{{ batch.profile.pct_overlap }}%</dd>
+    <dt>Total tasks</dt><dd>{{ batch.reports.progress.summary.total }} ({{ batch.reports.progress.summary.complete }} complete)</dd>
 </dl>
 <br/>
 
@@ -52,31 +52,14 @@ $(function(){
     </tr>
   </thead>
   <tbody>
+  {% for coder,value in batch.reports.progress.coders.items %}
     <tr>
-      <td>Mickey Mouse</td>
-      <td>78/120</td>
+      <td>{{ coder }}</td>
+      <td>{{ value.complete }}/{{ value.total }}</td>
       <td class="progress progress-striped">
-          <div class="bar" style="width: 57%;"></div>
+          <div class="bar" style="width: {{ value.percent }}%;"></div>
       </td>
-      <td>57%</td>
-    </tr>
-    <tr>
-      <td>Donald Duck</td>
-      <td>112/120</td>
-      <td class="progress progress-striped progress-success">
-          <div class="bar" style="width: 94%;"></div>
-      </td>
-      <td>94%</td>
-    </tr>
-
-  {% for c in batch.reports.progress.coders %}
-    <tr>
-      <td>{{ c.name }}</td>
-      <td>{{ c.done }}/{{ c.assigned }}</td>
-      <td class="progress progress-striped progress-warning">
-          <div class="bar" style="width: {{ c.percent }}%;"></div>
-      </td>
-      <td>{{ c.percent }}%</td>
+      <td>{{ value.percent }}%</td>
     </tr>
   {% endfor %}
   </tbody>
