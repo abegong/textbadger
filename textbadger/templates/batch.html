@@ -48,7 +48,7 @@ $(function(){
     <tr>
       <th>Name</th>
       <th>Progress</th>
-      <th style="width: 50%"></th>
+      <th style="width: 40%"></th>
       <th></th>
     </tr>
   </thead>
@@ -57,9 +57,9 @@ $(function(){
     <tr>
       <td>{{ coder }}</td>
       <td>{{ value.complete }}/{{ value.total }}</td>
-      <td class="progress progress-striped">
+      <td><div class="progress progress-striped" style="margin:0px">
           <div class="bar" style="width: {{ value.percent }}%;"></div>
-      </td>
+      </div></td>
       <td>{{ value.percent }}%</td>
     </tr>
   {% endfor %}
@@ -93,27 +93,42 @@ $(function(){
       <td>1</td>
       <td>How many jelly beans are...</td>
       <td>Interval</td>
+      <td><div class="progress progress-striped progress-warning" style="margin:0px">
+          <div class="bar" style="width: 23%;"></div>
+      </div></td>
+<!--
       <td class="progress progress-striped progress-warning">
           <div class="bar" style="width: 23%;"></div>
       </td>
+-->
       <td>.2347</td>
     </tr>
     <tr>
       <td>2</td>
       <td>How much wood would a woodchuck...</td>
       <td>Ordinal</td>
+      <td><div class="progress progress-striped progress-success" style="margin:0px">
+          <div class="bar" style="width: 85%;"></div>
+      </div></td>
+<!--
       <td class="progress progress-striped progress-success">
           <div class="bar" style="width: 85%;"></div>
       </td>
+-->
       <td>.8576</td>
     </tr>
     <tr>
       <td>3</td>
       <td>How many jelly beans are...</td>
       <td>Interval</td>
+      <td><div class="progress progress-striped" style="margin:0px">
+          <div class="bar" style="width: 57%;"></div>
+      </div></td>
+<!--
       <td class="progress progress-striped progress-active">
           <div class="bar" style="width: 57%;"></div>
       </td>
+-->
       <td>.5744</td>
     </tr>
 

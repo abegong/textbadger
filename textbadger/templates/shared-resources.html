@@ -43,7 +43,7 @@ $(function(){
 {% include "forms/create-codebook.htm" %}
 
 <h3>Codebooks</h3>
-  <table id="codebooks" class="wide table-bordered">
+  <table id="codebooks" class="well wide">
   {% if codebooks %}
   <thead>
     <tr>
@@ -97,7 +97,7 @@ $(function(){
 {% include "forms/upload-collection.htm" %}
 
 <h3>Collections</h3>
-  <table class="wide table-bordered">
+  <table class="well wide">
   {% if collections %}
   <thead>
     <tr>
@@ -131,7 +131,7 @@ $(function(){
 {% include "forms/start-batch.htm" %}
 
 <h3>Batches</h3>
-  <table class="wide table-bordered">
+  <table class="well wide">
   {% if batches %}
   <thead>
     <tr>
@@ -145,9 +145,9 @@ $(function(){
   {% for p in batches %}
     <tr href="/batch/{{ p|mongo_id }}">
       <td><a href="/batch/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
-      <td class="progress progress-striped">
+      <td><div class="progress progress-striped" style="margin:0px">
           <div class="bar" style="width: {{ p.reports.progress.summary.percent }}%;"></div>
-      </td>
+      </div></td>
       <td>{{ p.reports.progress.summary.percent }}%</td>
     </tr>
   {% empty %}

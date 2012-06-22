@@ -68,8 +68,27 @@ def superuser_only(function):
 
 @login_required(login_url='/')
 def my_account(request):
+    conn = connections["default"]
+    batches = list(conn.get_collection("tb_app_batch").find(
+        {"profile.coders":{"$in":[request.user.username]}},
+        fields={"profile":1,"reports.progress":1},
+    ))
+
+    assignments = []
+    for b in batches:
+        assignments.append({
+            "batch":{
+                "name": b["profile"]["name"],
+                #! Need to add index to batch
+                "index": 1,#b["index"],
+                "_id": b["_id"],
+            },
+            "progress": b["reports"]["progress"]["coders"][request.user.username],
+        })
+    print json.dumps(assignments, indent=2, cls=MongoEncoder)
+
     result = {
-        'assignments' : []#! Get assignments from DB
+        'assignments' : assignments, #! Get assignments from DB
     }
     return render_to_response('my-account.html', result, context_instance=RequestContext(request))
 
@@ -126,7 +145,6 @@ def batch(request, id_):
     update_batch_progress(id_)
     batch = conn.get_collection("tb_app_batch").find_one({"_id":ObjectId(id_)},fields={"profile":1, "reports":1})
 
-    print json.dumps(batch, indent=2, cls=MongoEncoder)
     result = {
         'batch' : batch,
         'codebook' : conn.get_collection("tb_app_codebook").find_one({"_id":ObjectId(batch["profile"]["codebook_id"])}),
@@ -532,16 +550,16 @@ def update_batch_progress(id_):
     #Scaffold the progress object
     coders = batch["profile"]["coders"]
     progress = {
-        "coders": dict([(c, {"total":0, "complete":0}) for c in coders]),
+        "coders": dict([(c, {"assigned":0, "complete":0}) for c in coders]),
         "summary": {}
     }
 
     #Count total and complete document codes
-    total, complete = 0, 0
+    assigned, complete = 0, 0
     for doc in batch["documents"]:
         for coder in doc["labels"]:
-            total += 1
-            progress["coders"][coder]["total"] += 1
+            assigned += 1
+            progress["coders"][coder]["assigned"] += 1
 
             if not doc["labels"][coder] == None:
                 complete += 1
@@ -550,12 +568,12 @@ def update_batch_progress(id_):
     #Calculate percentages
     for coder in progress["coders"]:
         p = progress["coders"][coder]
-        p["percent"] = round(float(100*p["complete"])/p["total"],1)
+        p["percent"] = round(float(100*p["complete"])/p["assigned"],1)
 
     progress["summary"] = {
-        "total": total,
+        "assigned": assigned,
         "complete": complete,
-        "percent": round(float(100*complete)/total,1),
+        "percent": round(float(100*complete)/assigned,1),
     }
 
     batch["reports"]["progress"] = progress

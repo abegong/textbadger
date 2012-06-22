@@ -13,23 +13,25 @@ $(function(){
 <!-- Assignments --------------------->
 <h3>My Assignments</h3>
   <table class="well wide">
-  {% if codebooks %}
+  {% if assignments %}
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Recent activity</th>
-      <th>Batch progress</th>
-      <th>Assigned tasks</th>
+      <th>Assignment</th>
+      <th style="width:30%">Progress</th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   {% endif %}
   <tbody>
-  {% for p in batches %}
-    <tr>
-      <td><a href="/codebook/{{ p.id }}">{{ p.profile.name }}</a></td>
-      <td>[...]</td>
-      <td>[...]</td>
-      <td>[...]</td>
+  {% for a in assignments %}
+    <tr <a href="/assignment/{{ a.batch.index }}">
+      <td><a href="/assignment/{{ a.batch.index }}">{{ a.batch.name }}</a></td>
+      <td><div class="progress progress-striped progress-success" style="margin:0px">
+          <div class="bar" style="width: {{a.progress.percent}}%;"></div>
+      </div></td>
+      <td>{{a.progress.complete}}/{{a.progress.assigned}}</td>
+      <td>{{a.progress.percent}}%</td>
     </tr>
   {% empty %}
     <tr>
