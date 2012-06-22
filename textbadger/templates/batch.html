@@ -36,7 +36,8 @@ $(function(){
     <dt>Collection</dt><dd>{{ collection.name }}&nbsp;</dd>
     <dt>Documents</dt><dd>{{ collection.documents|length }}&nbsp;</dd>
     <dt>Overlap</dt><dd>{{ batch.profile.pct_overlap }}%</dd>
-    <dt>Total tasks</dt><dd>{{ batch.reports.progress.summary.total }} ({{ batch.reports.progress.summary.complete }} complete)</dd>
+    <dt>Shuffle</dt><dd>{{ batch.profile.shuffle }}&nbsp;</dd>
+    <dt>Total tasks</dt><dd>{{ batch.reports.progress.summary.complete }}  of {{ batch.reports.progress.summary.total }} complete</dd>
 </dl>
 <br/>
 

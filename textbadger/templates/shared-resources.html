@@ -137,6 +137,7 @@ $(function(){
     <tr>
       <th>Project</th>
       <th>Progress</th>
+      <th></th>
     </tr>
   </thead>
   {% endif %}
@@ -144,7 +145,10 @@ $(function(){
   {% for p in batches %}
     <tr href="/batch/{{ p|mongo_id }}">
       <td><a href="/batch/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
-      <td>[...]</td>
+      <td class="progress progress-striped">
+          <div class="bar" style="width: {{ p.reports.progress.summary.percent }}%;"></div>
+      </td>
+      <td>{{ p.reports.progress.summary.percent }}%</td>
     </tr>
   {% empty %}
     <tr>
