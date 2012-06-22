@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     #Object view pages
     url(r'^codebook/(.*)/$', 'textbadger.tb_app.views.codebook' ),
     url(r'^collection/(.*)/$', 'textbadger.tb_app.views.collection' ),
-    #url(r'^batch/(.*)/$', 'textbadger.tb_app.views.batch' ),
+    url(r'^batch/(.*)/$', 'textbadger.tb_app.views.batch' ),
 
     #Game page(s)
     #!?    url(r'^game/$', 'textbadger.tb_app.views.game' ),

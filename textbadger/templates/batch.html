@@ -1,0 +1,137 @@
+{% extends "base/single-column.html" %}
+
+{% block start_scripts %}
+<script type="text/javascript">
+$(function(){
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Overview --------------------->
+<a class="btn btn-primary open-modal rightside">Review results</a>
+{% include "forms/export-batch.htm" %}
+<a class="btn btn-primary open-modal rightside">Download report</a>
+{% include "forms/export-batch.htm" %}
+<a class="btn btn-primary open-modal rightside">Export results</a>
+{% include "forms/export-batch.htm" %}
+<h2>Batch 27</h2>
+
+<dl class="dl-horizontal">
+    <dt>Codebook</dt><dd>Objectivity{{batch.codebook.name}}&nbsp;</dd>
+    <dt>Collection</dt><dd>Public option : NYTimes comments (sample A){{batch.collection.name}}&nbsp;</dd>
+    <dt>Documents</dt><dd>120{{batch.codebook.size}}&nbsp;</dd>
+    <dt>Overlap</dt><dd>80{{ batch.collection.size }}%</dd>
+    <dt>Total tasks</dt><dd>600 (494 complete)</dd>
+</dl>
+<br/>
+
+<!-- Overview --------------------->
+<h3>Coders</h3>
+<table class="well wide">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Progress</th>
+      <th style="width: 50%"></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Mickey Mouse</td>
+      <td>78/120</td>
+      <td class="progress progress-striped">
+          <div class="bar" style="width: 57%;"></div>
+      </td>
+      <td>57%</td>
+    </tr>
+    <tr>
+      <td>Donald Duck</td>
+      <td>112/120</td>
+      <td class="progress progress-striped progress-success">
+          <div class="bar" style="width: 94%;"></div>
+      </td>
+      <td>94%</td>
+    </tr>
+    <tr>
+      <td>Daffy Duck</td>
+      <td>12/120</td>
+      <td class="progress progress-striped progress-warning">
+          <div class="bar" style="width: 10%;"></div>
+      </td>
+      <td>10%</td>
+    </tr>
+  {% for c in batch.coders %}
+    <tr>
+      <td>{{ c.name }}</td>
+      <td>[...]</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br/><br/>
+
+
+<!-- Reliability --------------------->
+<a class="btn btn-primary open-modal rightside"><i class="icon-refresh"></i> Update reliability</a>
+{% include "forms/export-batch.htm" %}
+<h3>Reliability</h3>
+<span>Last update: 2 hours ago, 457 completed tasks</span>
+<br/>
+<br/>
+
+<table class="well wide">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Question</th>
+      <th>Type</th>
+      <th style="width:20%">Reliability</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>How many jelly beans are...</td>
+      <td>Interval</td>
+      <td class="progress progress-striped progress-warning">
+          <div class="bar" style="width: 23%;"></div>
+      </td>
+      <td>.2347</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>How much wood would a woodchuck...</td>
+      <td>Ordinal</td>
+      <td class="progress progress-striped progress-success">
+          <div class="bar" style="width: 85%;"></div>
+      </td>
+      <td>.8576</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>How many jelly beans are...</td>
+      <td>Interval</td>
+      <td class="progress progress-striped progress-active">
+          <div class="bar" style="width: 57%;"></div>
+      </td>
+      <td>.5744</td>
+    </tr>
+
+  {% for p in batches %}
+    <tr>
+      <td>{{ p.profile.name }}</td>
+      <td>[...]</td>
+      <td>[...]</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
+
+{% block footer_columns %}{% endblock %}
+

@@ -25,6 +25,7 @@
 * Home/about page
     * Fill in FAQ
 
+* Add @admin_required decorator
 
 === Punt ===
 * Suppress ?next= part of login_required decorator

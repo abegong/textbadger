@@ -82,5 +82,5 @@ $(function(){
     $(".auto").click();
 
     //This development snippet autorefreshes the page every 2 seconds
-//    autoRefresh(2000);
+    autoRefresh(1000);
 });

@@ -114,6 +114,16 @@ def collection(request, id_):
         )}
     return render_to_response('collection.html', result, context_instance=RequestContext(request))
 
+@login_required(login_url='/')
+def batch(request, id_):
+    conn = connections["default"] 
+    result = {
+        "collection": {
+            "codebook": "hi"
+        }
+    }
+    return render_to_response('batch.html', result, context_instance=RequestContext(request))
+
 ### Ajax calls ###############################################################
 
 def signin(request):
