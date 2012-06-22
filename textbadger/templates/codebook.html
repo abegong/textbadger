@@ -1,12 +1,6 @@
 {% extends "base/document-control.html" %}
 {% load tb_app_tags %}
 
-{% block doc_classes %}
-    span3
-    well
-    offset3
-{% endblock %}
-
 {% block start_scripts %}
 <script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
@@ -21,6 +15,10 @@
 var codebook_id = "{{codebook|mongo_id}}";
 
 $(function(){
+    //Highlight "my-account" in nav bar
+    $('a[href*="/shared-resources/"]').parent().addClass("active");
+
+    //Activate button controls
 	$('#add_control').click( function(){ codebookModel.addQuestion(); } );
 	$('#del_control').click( function(){ codebookModel.delQuestion(); } );
 	$('#up_control').click( function(){ codebookModel.moveQuestionUp(); } );
@@ -63,6 +61,25 @@ $(function(){
     });
 });
 </script>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+<ul class="breadcrumb">
+  <li>
+    <a href="/shared-resources/#codebooks">Codebooks</a> <span class="divider">/</span>
+  </li>
+  <li>
+    <a href="#">{{codebook.name}} ({{codebook.version}})</a></span>
+  </li>
+</ul>
+</div>
+{% endblock %}
+
+{% block doc_classes %}
+    span3
+    well
+    offset3
 {% endblock %}
 
 {% block title %}

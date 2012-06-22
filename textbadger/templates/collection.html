@@ -73,10 +73,26 @@ var doc_list = [];
 var doc_index = 0;
 
 $(function(){
+    //Highlight "shared-rez" in nav bar
+    $('a[href*="/shared-resources/"]').parent().addClass("active");
+
     initialize();
     loadDocList(collection_id);
 });
 </script>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+<ul class="breadcrumb">
+  <li>
+    <a href="/shared-resources/#collections">Collections</a> <span class="divider">/</span>
+  </li>
+  <li>
+    <a href="#">{{collection.name}}</a></span>
+  </li>
+</ul>
+</div>
 {% endblock %}
 
 {% block title %}

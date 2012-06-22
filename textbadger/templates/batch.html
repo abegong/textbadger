@@ -3,9 +3,25 @@
 {% block start_scripts %}
 <script type="text/javascript">
 $(function(){
+    //Highlight "shared-rez" in nav bar
+    $('a[href*="/shared-resources/"]').parent().addClass("active");
 });
 </script>
 {% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+<ul class="breadcrumb">
+  <li>
+    <a href="/shared-resources/#batches">Batches</a> <span class="divider">/</span>
+  </li>
+  <li>
+    <a href="#">Batch 27{{batch.name}}</a></span>
+  </li>
+</ul>
+</div>
+{% endblock %}
+
 
 {% block content %}
 <!-- Overview --------------------->
