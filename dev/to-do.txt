@@ -15,6 +15,7 @@
 
 *** Technical debt
     * Add @admin_required decorator
+    * Add @mongo_connection decorator
     * Catalog and refactor all javascript/jquery
     * Catalog and refactor all database code
 

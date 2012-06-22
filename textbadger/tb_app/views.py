@@ -80,7 +80,7 @@ def shared_resources(request):
         'codebooks' : list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)])),
         'collections' : list(conn.get_collection("tb_app_collection").find(fields={"id":1, "name":1, "description":1})),
         'batches' : list(conn.get_collection("tb_app_batch").find(fields={"profile":1},sort=[('created_at',1)])),
-#        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
+        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
 
     return render_to_response('shared-resources.html', result, context_instance=RequestContext(request))
@@ -116,7 +116,14 @@ def collection(request, id_):
 
 @login_required(login_url='/')
 def batch(request, id_):
-    return render_to_response('batch.html', {}, context_instance=RequestContext(request))
+    conn = connections["default"] 
+    update_batch_progress(id_)
+    batch = conn.get_collection("tb_app_batch").find_one({"_id":ObjectId(id_)},fields={"profile":1, "progress":1})
+    result = {
+        'batch' : batch,
+#        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
+    }
+    return render_to_response('batch.html', result, context_instance=RequestContext(request))
 
 @login_required(login_url='/')
 def assignment(request, id_):
@@ -455,7 +462,6 @@ def start_batch(request):
     if shuffle:
         random.shuffle( documents )
 
-
     #Construct batch object
     batch = {
         'profile': {
@@ -471,7 +477,7 @@ def start_batch(request):
         },
         'documents': documents,
         'reports': {
-            'completion': {},
+            'progress': {},
             'reliability': {},
         },
     }
@@ -480,4 +486,36 @@ def start_batch(request):
     result = coll.insert(batch)
 
     return gen_json_response({"status": "success", "msg": "New batch created."})
+
+
+@login_required(login_url='/')
+def update_batch_reliability(request):
+    return gen_json_response({"status": "failed", "msg": "Nope.  You can't do this yet."})
+
+
+
+
+
+
+
+
+
+
+
+
+#########################
+
+def update_batch_progress(id_):
+    conn = connections["default"] 
+    coll = conn.get_collection("tb_app_batch")
+
+    batch = coll.find_one({"_id":ObjectId(id_)})
+
+    print json.dumps(batch["reports"]["progress"], indent=2, cls=MongoEncoder)
+
+    coders = batch["profile"]["coders"]
+    progress = dict([(c, 0) for c in coders])
+
+
+
 

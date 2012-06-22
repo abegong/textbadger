@@ -16,7 +16,7 @@ $(function(){
     <a href="/shared-resources/#batches">Batches</a> <span class="divider">/</span>
   </li>
   <li>
-    <a href="#">Batch 27{{batch.name}}</a></span>
+    <a href="#">{{batch.profile.name}}</a></span>
   </li>
 </ul>
 </div>
@@ -68,18 +68,15 @@ $(function(){
       </td>
       <td>94%</td>
     </tr>
-    <tr>
-      <td>Daffy Duck</td>
-      <td>12/120</td>
-      <td class="progress progress-striped progress-warning">
-          <div class="bar" style="width: 10%;"></div>
-      </td>
-      <td>10%</td>
-    </tr>
-  {% for c in batch.coders %}
+
+  {% for c in batch.progress.coders %}
     <tr>
       <td>{{ c.name }}</td>
-      <td>[...]</td>
+      <td>{{ c.done }}/{{ c.assigned }}</td>
+      <td class="progress progress-striped progress-warning">
+          <div class="bar" style="width: {{ c.percent }}%;"></div>
+      </td>
+      <td>{{ c.percent }}%</td>
     </tr>
   {% endfor %}
   </tbody>
@@ -100,7 +97,7 @@ $(function(){
 <table class="well wide">
   <thead>
     <tr>
-      <th></th>
+      <th>#</th>
       <th>Question</th>
       <th>Type</th>
       <th style="width:20%">Reliability</th>
