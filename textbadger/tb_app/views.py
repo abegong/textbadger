@@ -490,7 +490,7 @@ def start_batch(request):
 #            'content': collection["documents"][i]["content"],
 #            'labels': { coders[i%len(coders)] : None }
             #Populate the list with a random smattering of fake labels
-            'labels': { coders[i%len(coders)] : random.choice([None for x in range(20)]+range(20)) }
+            'labels': { coders[i%len(coders)] : random.choice([None for x in range(2)]+range(20)) }
         })
     if shuffle:
         random.shuffle( documents )
@@ -561,7 +561,7 @@ def update_batch_progress(id_):
             assigned += 1
             progress["coders"][coder]["assigned"] += 1
 
-            if not doc["labels"][coder] == None:
+            if doc["labels"][coder] != None:
                 complete += 1
                 progress["coders"][coder]["complete"] += 1
 
