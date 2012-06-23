@@ -1,11 +1,17 @@
 === On deck ===
-
+* Fixtures
+    * Add fixtures for codebooks and batches
+    * Set up default fixture with "The Administrator"
 
 === To do ===
 * General UI stuff
     * Add icons
 
+* Fix codebook display for an empty list
+* Add size, type, and created_at fields to collections
+*?  Add "profile" fields to codebooks, collections, and batches
 * Make descriptions optional for codebooks and collections
+
 * Add "change account settings" button
 * Activate "create sub-collection" button
 
@@ -18,9 +24,6 @@
     * Add @mongo_connection decorator
     * Catalog and refactor all javascript/jquery
     * Catalog and refactor all database code
-
-* Add size, type, and created_at fields to collections
-*?  Add "profile" fields to codebooks, collections, and batches
 
 * Home/about page
     * Fill in FAQ

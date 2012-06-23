@@ -43,7 +43,7 @@ $(function(){
 {% include "forms/create-codebook.htm" %}
 
 <h3>Codebooks</h3>
-  <table id="codebooks" class="well wide">
+<table id="codebooks" class="well wide">
   {% if codebooks %}
   <thead>
     <tr>
@@ -86,7 +86,7 @@ $(function(){
     </tr>
   {% endfor %}
   </tbody>
-  </table>
+</table>
 <br/><br/>
 
 
@@ -131,7 +131,7 @@ $(function(){
 {% include "forms/start-batch.htm" %}
 
 <h3>Batches</h3>
-  <table class="well wide">
+<table class="well wide">
   {% if batches %}
   <thead>
     <tr>
@@ -153,12 +153,12 @@ $(function(){
   {% empty %}
     <tr>
       <td colspan=4><br/>Once you have at least one codebook and one collection, you can launch a batch.<br/><br/>
-        <a href="/batch/1">temp-link: "/batch/1"</a>
+<!--        <a href="/batch/1">temp-link: "/batch/1"</a> -->
       </td>
     </tr>
   {% endfor %}
   </tbody>
-  </table>
+</table>
 
 <br/><br/>
 

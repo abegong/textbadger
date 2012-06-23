@@ -25,7 +25,7 @@ class Collection(Model):
     description = TextField()
     documents = ListField()
 
-class PrivateBatch(Model):
+class Batch(Model):
     codebook = TextField()
     collection = TextField()
     assignments = DictField() #e.g. {'agong': [1,2,3,4,5], 'mrchampe': [3,4,5,6,7]}
