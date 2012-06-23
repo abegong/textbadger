@@ -85,7 +85,7 @@ def my_account(request):
             },
             "progress": b["reports"]["progress"]["coders"][request.user.username],
         })
-    print json.dumps(assignments, indent=2, cls=MongoEncoder)
+#    print json.dumps(assignments, indent=2, cls=MongoEncoder)
 
     result = {
         'assignments' : assignments, #! Get assignments from DB
