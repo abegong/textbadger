@@ -1,0 +1,57 @@
+
+
+
+### From your local machine
+# Set up your EC2 instance
+# http://cloud.ubuntu.com/ami/
+
+    #ec2-run-instances ami-xxxxx -k [ec2-keypair]
+    ec2-run-instances ami-4dad7424 -k agongkey
+    ec2-describe-instances
+    #ssh ubuntu@[instance-url] -i [keyfile]
+    ssh ubuntu@ec2-23-22-22-132.compute-1.amazonaws.com -i ~/Dropbox/reference/qdata/agongkey.pem 
+
+### From your EC2 instance
+# Install pip and git
+    sudo apt-get install python-pip
+    sudo apt-get install git
+
+# Install and set up mongodb
+# http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian-or-ubuntu-linux/
+# Use the 10-gen debian file and apt-get
+
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+    deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
+    sudo vi /etc/apt/sources.list.d/10gen.list
+    sudo apt-get update
+    sudo apt-get install mongodb-10gen
+    mongo
+
+    mongod run --config /usr/local/etc/mongod.conf  
+
+# Clone into the TextBadger repository
+    git clone https://github.com/agong/textbadger.git
+
+# Install python dependencies
+    cd textbadger
+    sudo pip install -r requirements.txt 
+
+# Installing django-nonrel with pip doesn't work
+    #http://stackoverflow.com/questions/10401499/mongokit-importerror-no-module-named-objectid-error
+    #ImportError at /
+    #No module named objectid
+    cd ..
+    git clone https://github.com/django-nonrel/django-nonrel.git
+    cd django-nonrel/
+    sudo python setup.py install
+
+# Run textbadger using Django's debugging server
+    python textbadger/manage.py runserver 0.0.0.0:8000
+
+
+### Back at the ranch, plug this URL into your browser ###
+    http://ec2-23-22-22-132.compute-1.amazonaws.com:8000/
+
+#Terminate the instance
+    ec2-terminate-instances i-04bb927d
+

@@ -1,0 +1,132 @@
+    1  ls
+    2  python
+    3  pip
+    4  sudo apt-get install python-pip
+    5  sudo apt-get install git
+    6  curl http://downloads.mongodb.org/linux/mongodb-linux-x86_64-x.y.z.tgz > mongo.tgz
+    7  ls
+    8  tar -zxvf mongo.tgz
+    9  curl http://downloads.mongodb.org/linux/mongodb-linux-x86_64-x.y.z.tgz > mongo.tar.gz
+   10  tar -zxvf mongo.tar.gz
+   11  pwd
+   12  mkdir -p /data/db
+   13  sudo mkdir -p /data/db
+   14  curl http://downloads.mongodb.org/linux/mongodb-linux-x86_64-2.0.6.tgz > mongo.tar.gz
+   15  ls
+   16  rm mongo.tgz 
+   17  tar -zxvf mongo.tar.gz
+   18  ls
+   19  mongo
+   20  ls
+   21  git pull https://github.com/agong/textbadger.git
+   22  git clone https://github.com/agong/textbadger.git
+   23  ls
+   24  cd textbadger/
+   25  sudo pip install requirements.txt 
+   26  sudo pip install -r requirements.txt 
+   27  ls
+   28  cd textbadger/
+   29  ls
+   30  python manage.py loadfixtures
+   31  mongo
+   32  sudo apt-get install mongo-clients
+   33  sudo apt-get install mongodb-clients
+   34  mongo
+   35  history
+   36  sudo apt-get install mongodb-10gen
+   37  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+   38  deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
+   39  vi /etc/apt/sources.list.d/10gen.list
+   40  sudo vi /etc/apt/sources.list.d/10gen.list
+   41  sudo apt-get update
+   42  sudo apt-get install mongodb-10gen
+   43  mongo
+   44  sudo service mongodb start
+   45  sudo /etc/init.d/mongodb start
+   46  sudo apt-get uninstall mongodb-clients
+   47  sudo apt-get remove mongodb-clients
+   48  sudo apt-get install mongodb-10gen
+   49  history
+   50  mongo
+   51  sudo service mongodb start
+   52  mongod run --config /usr/local/etc/mongod.conf  
+   53  mongodb
+   54  mongo
+   55  cd textbadger/
+   56  ls
+   57  cd textbadger/
+   58  ls
+   59  python manage.py runserver
+   60  python manage.py runserver 0.0.0.0:80
+   61  python manage.py runserver 0.0.0.0:8000
+   62  ls
+   63  pip freeze
+   64  cd ..
+   65  pip install -r requirements.txt 
+   66  python
+   67  pip install -r requirements.txt 
+   68  python textbadger/manage.py runserver .0.0.0.:8000
+   69  python textbadger/manage.py runserver 0.0.0.0:8000
+   70  python
+   71  cd ..
+   72  git clone https://github.com/django-nonrel/django-nonrel.git
+   73  ls
+   74  cd django-nonrel/
+   75  ls
+   76  python setup.py 
+   77  python setup.py install
+   78  sudo python setup.py install
+   79  cd ..
+   80  history
+   81  cd textbadger/
+   82  python textbadger/manage.py runserver 0.0.0.0:8000
+   83  cd ..
+   84  git clone https://github.com/django-mongodb-engine/mongodb-engine.git
+   85  ls
+   86  cd mongodb-
+   87  cd mongodb-engine/
+   88  ls
+   89  cd ..
+   90  ls
+   91  cd textbadger/
+   92  cat requirements.txt 
+   93  python textbadger/manage.py runserver 0.0.0.0:8000
+   94  cd ../mongodb-engine/
+   95  ls
+   96  cd ../django-nonrel/
+   97  ls
+   98  ls scripts/
+   99  ls django/
+  100  cd ..
+  101  pip remove django-mongodb-engine
+  102  pip install remove mongodb-engine
+  103  pip --help
+  104  pip install --help
+  105  pip uninstall mongodb-engine
+  106  sudo pip uninstall mongodb-engine
+  107  sudo pip uninstall django-mongodb-engine
+  108  cd textbadger/
+  109  python textbadger/manage.py runserver 0.0.0.0:8000
+  110  cd ../django-nonrel/
+  111  pip install .
+  112  sudo pip install .
+  113  cd ..
+  114  python textbadger/manage.py runserver 0.0.0.0:8000
+  115  python textbadger/textbadger/manage.py runserver 0.0.0.0:8000
+  116  git clone https://github.com/django-nonrel/mongodb-engine.git
+  117  rm mongo-engine -rf
+  118  git clone https://github.com/django-nonrel/mongodb-engine.git
+  119  ls
+  120  rm mongodb-engine -rf
+  121  git clone https://github.com/django-nonrel/mongodb-engine.git
+  122  cd mongodb-
+  123  cd mongodb-engine/
+  124  ls
+  125  pip install .
+  126  sudo pip install .
+  127  cd ..
+  128  python textbadger/textbadger/manage.py runserver 0.0.0.0:8000
+  129  python textbadger/textbadger/manage.py loadfixtures
+  130  python textbadger/textbadger/manage.py runserver 0.0.0.0:8000
+  131  history
+
