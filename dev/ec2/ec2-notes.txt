@@ -81,3 +81,8 @@
     http://ec2-23-20-181-168.compute-1.amazonaws.com:8000/
 
     Get started with user/pw: admin/admin.  (You'll want to change the password right away.)
+
+
+#On adding SSH access
+#http://stackoverflow.com/questions/8339912/allowing-users-to-ssh-to-an-ec2-ubuntu-instance
+
