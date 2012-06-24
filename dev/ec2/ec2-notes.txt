@@ -1,57 +1,83 @@
-
-
-
-### From your local machine
+### From your local machine ###
 # Set up your EC2 instance
 # http://cloud.ubuntu.com/ami/
 
+    #Fire up an EC2 instance
     #ec2-run-instances ami-xxxxx -k [ec2-keypair]
     ec2-run-instances ami-4dad7424 -k agongkey
-    ec2-describe-instances
+
+    #SSH into the instance
     #ssh ubuntu@[instance-url] -i [keyfile]
-    ssh ubuntu@ec2-23-22-22-132.compute-1.amazonaws.com -i ~/Dropbox/reference/qdata/agongkey.pem 
+    ssh ubuntu@ec2-23-20-181-168.compute-1.amazonaws.com -i ~/Dropbox/reference/qdata/agongkey.pem 
 
-### From your EC2 instance
-# Install pip and git
-    sudo apt-get install python-pip
-    sudo apt-get install git
+### From your EC2 instance ###
+# Install pip and git -- these plus apt-get (pre-installed) will handle all our installs
+    sudo apt-get install python-pip git
 
-# Install and set up mongodb
-# http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian-or-ubuntu-linux/
-# Use the 10-gen debian file and apt-get
+# Install and set up mongodb using the 10-gen debian file and apt-get
+# Source: http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian-or-ubuntu-linux/
 
+    #Add 10gen to apt's trusted source list
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
-    deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
+
     sudo vi /etc/apt/sources.list.d/10gen.list
+    #Add this line:
+    #deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
+
+    #Refresh sources and install mongo
     sudo apt-get update
     sudo apt-get install mongodb-10gen
+
+    #Test to make sure it worked
     mongo
 
     mongod run --config /usr/local/etc/mongod.conf  
 
-# Clone into the TextBadger repository
+#Install TextBadger itself
+    # Clone into the TextBadger repository
     git clone https://github.com/agong/textbadger.git
 
-# Install python dependencies
+    # Install the main python dependencies
     cd textbadger
     sudo pip install -r requirements.txt 
+    
+    #We also have to update a couple libraries from source.
 
-# Installing django-nonrel with pip doesn't work
-    #http://stackoverflow.com/questions/10401499/mongokit-importerror-no-module-named-objectid-error
+    #First, django-nonrel/mongodb-engine v.0.4.0 has a buggy import.
+    #Explained: http://stackoverflow.com/questions/10401499/mongokit-importerror-no-module-named-objectid-error
+
+    #Clone into the latest version on github
+    cd
+    git clone https://github.com/django-nonrel/mongodb-engine.git
+    cd mongodb-engine
+    sudo pip install . --upgrade
+
+    #If you skip this step, you will still be able to run manage.py runserver,
+    #but you will probably get this error in your browser:
     #ImportError at /
     #No module named objectid
-    cd ..
+
+    #Second, there's a similar problem with django/nonrel itself
+    #Info: https://groups.google.com/forum/?fromgroups#!msg/django-non-relational/BQEE37BwsSM/WsLrBe3eGpAJ
+    #More info: https://groups.google.com/forum/?fromgroups#!msg/django-non-relational/PS9HMLDgls0/dXlpPShmmrcJ
+
+    #Clone into the latest version on github
+    cd
     git clone https://github.com/django-nonrel/django-nonrel.git
-    cd django-nonrel/
-    sudo python setup.py install
+    cd django-nonrel
+    sudo pip install . --upgrade
 
-# Run textbadger using Django's debugging server
-    python textbadger/manage.py runserver 0.0.0.0:8000
+    #Now we can get everything running
+    cd
+    cd textbadger/textbadger
 
+    #Load fixtures
+    python manage.py loadfixtures
 
-### Back at the ranch, plug this URL into your browser ###
-    http://ec2-23-22-22-132.compute-1.amazonaws.com:8000/
+    # Run textbadger using Django's debugging server
+    python manage.py runserver 0.0.0.0:8000
 
-#Terminate the instance
-    ec2-terminate-instances i-04bb927d
+    ###Back at the ranch, plug this URL into your browser: ###
+    http://ec2-23-20-181-168.compute-1.amazonaws.com:8000/
 
+    Get started with user/pw: admin/admin.  (You'll want to change the password right away.)
