@@ -8,7 +8,7 @@ $(function(){
     $('a[href*="/my-account/"]').parent().addClass("active");
 
     DocManager.initialize();
-    DocManager.loadDocList("{{collection|mongo_id}}","{{csrf_token}}");
+    DocManager.loadDocList("{{batch.profile.collection_id}}","{{csrf_token}}");
 });
 </script>
 {% endblock %}

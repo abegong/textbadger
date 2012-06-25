@@ -162,7 +162,7 @@ def batch(request, id_):
 @login_required(login_url='/')
 def assignment(request, batch_index, username):
     conn = connections["default"] 
-    batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index},fields={"profile":1, "reports.progress":1})
+    batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
 
     result = { 'batch' : batch }
     print json.dumps( batch, cls=MongoEncoder, indent=2 )
