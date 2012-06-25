@@ -3,7 +3,7 @@
 
 {% block start_scripts %}
 <script type="text/javascript">
-
+/*
 //! This .js code needs a refactor!
 
 function loadDocList( collection_id ){
@@ -71,13 +71,14 @@ function initialize(){
 var collection_id = "{{collection|mongo_id}}";
 var doc_list = [];
 var doc_index = 0;
+*/
 
 $(function(){
     //Highlight "shared-rez" in nav bar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
 
-    initialize();
-    loadDocList(collection_id);
+    DocManager.initialize();
+    DocManager.loadDocList("{{collection|mongo_id}}","{{csrf_token}}");
 });
 </script>
 {% endblock %}

@@ -1,3 +1,75 @@
+var DocManager = {
+    //!This is wrong:
+    doc_list : [],
+    doc_index : 0,
+
+    loadDocList : function( collection_id, csrf_token ){
+        $.post(
+            '/ajax/get-collection-docs/',
+            {'id': collection_id, 'csrfmiddlewaretoken': csrf_token },
+            function(data){
+                DocManager.doc_list = data.documents;
+                DocManager.showDocument(0);
+                $("#doc_count").html(DocManager.doc_list.length);
+            },
+            'json'
+        )
+    },
+
+    showDocument : function(index){
+        $("#doc_index").val(index+1);
+    //    console.log(doc_list[index]);
+
+        $("#doc-box").html(DocManager.doc_list[index].content);
+
+        var M = DocManager.doc_list[index].metadata;
+        $("#meta-data").html("");
+        for( m in M ){
+            $("#meta-data").append("<dt>"+m+"</dt>");
+            $("#meta-data").append("<dd>"+M[m]+"</dd>");
+        }
+    },
+
+    loadPrevDoc : function(){
+	    if( DocManager.doc_index > 0 ){
+		    DocManager.doc_index -= 1;
+
+		    DocManager.showDocument( DocManager.doc_index );
+		    if( DocManager.doc_index == 0 ){ $("#prevButton").addClass("ui-state-disabled"); }
+		    $("#nextButton").removeClass("ui-state-disabled");
+	    }
+	    return( false );
+    },
+
+    loadNextDoc : function(){
+	    if( DocManager.doc_index < DocManager.doc_list.length-1 ){
+		    DocManager.doc_index += 1;
+
+		    DocManager.showDocument( DocManager.doc_index );
+		    if( DocManager.doc_index == DocManager.doc_list.length-1 ){ $("#nextButton").addClass("ui-state-disabled"); }
+		    $("#prevButton").removeClass("ui-state-disabled");
+	    }
+	    return( false );
+    },
+
+    initialize : function(){
+        $("#prevButton").click( DocManager.loadPrevDoc );
+        $("#nextButton").click( DocManager.loadNextDoc );
+        $("#doc_index").change(function(){
+            var x = $(this).val();
+
+            //! Need to add validation to this function
+            DocManager.doc_index = x;
+            DocManager.showDocument(x)
+        });
+    }
+}
+
+
+
+
+
+
 //This development snippet to autorefresh the page
 function autoRefresh(interval) {
 	setTimeout('location.reload(true);',interval);
