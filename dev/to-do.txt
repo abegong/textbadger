@@ -16,7 +16,6 @@
 * Activate "create sub-collection" button
 
 *** Design/architecture
-    * Figure out batch/coding DB structure
     * Figure out how to "delete"/"deactivate" codebooks/collections -- just sort by recent on "created_at" field
 
 *** Technical debt
@@ -96,5 +95,5 @@
     * Figure out urls, back buttons, etc.
 * Build batch page
 * Add breadcrumb navigation to codebook/collection/batches
-
+* Figure out batch/coding DB structure
 
