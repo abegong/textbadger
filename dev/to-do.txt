@@ -44,8 +44,12 @@
     * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
 
 * Assignments page
+    * Scaffold
+    * ... ...
 
 * Review page
+    * Scaffold
+    * ... ...
 
 *** Technical debt ***
     * Add @admin_required decorator
