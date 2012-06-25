@@ -25,8 +25,8 @@ $(function(){
   {% endif %}
   <tbody>
   {% for a in assignments %}
-    <tr <a href="/assignment/{{ a.batch.index }}">
-      <td><a href="/assignment/{{ a.batch.index }}">{{ a.batch.name }}</a></td>
+    <tr <a href="/assignment/{{ a.batch.index }}/{{ user.username }}">
+      <td><a href="/assignment/{{ a.batch.index }}/{{ user.username }}">{{ a.batch.name }}</a></td>
       <td><div class="progress progress-striped progress-success" style="margin:0px">
           <div class="bar" style="width: {{a.progress.percent}}%;"></div>
       </div></td>

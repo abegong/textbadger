@@ -161,7 +161,9 @@ def batch(request, id_):
     return render_to_response('batch.html', result, context_instance=RequestContext(request))
 
 @login_required(login_url='/')
-def assignment(request, id_):
+def assignment(request, batch_index, username):
+#    batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index},fields={"profile":1, "reports.progress":1})
+
     return render_to_response('assignment.html', {}, context_instance=RequestContext(request))
 
 ### Ajax calls ###############################################################
@@ -293,6 +295,7 @@ def get_collection_docs(request):
 
     try:
         collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId(id_)})
+
     # Error checking for invalid Ids
     except InvalidId as e:
         return gen_json_response({"status": "failed", "msg": "Not a valid collection ID."})
