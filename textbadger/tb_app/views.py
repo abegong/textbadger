@@ -82,8 +82,7 @@ def my_account(request):
         assignments.append({
             "batch":{
                 "name": b["profile"]["name"],
-                #! Need to add index to batch
-                "index": 1,#b["index"],
+                "index": b["profile"]["index"],
                 "_id": b["_id"],
             },
             "progress": b["reports"]["progress"]["coders"][request.user.username],
@@ -162,9 +161,14 @@ def batch(request, id_):
 
 @login_required(login_url='/')
 def assignment(request, batch_index, username):
-#    batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index},fields={"profile":1, "reports.progress":1})
+    conn = connections["default"] 
+    batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index},fields={"profile":1, "reports.progress":1})
 
-    return render_to_response('assignment.html', {}, context_instance=RequestContext(request))
+    result = { 'batch' : batch }
+    print json.dumps( batch, cls=MongoEncoder, indent=2 )
+    assignment = {}
+
+    return render_to_response('assignment.html', result, context_instance=RequestContext(request))
 
 ### Ajax calls ###############################################################
 
@@ -510,6 +514,7 @@ def start_batch(request):
         'profile': {
             'name': 'Batch '+str(count+1),
             'description': collection["name"][:20]+" * "+ codebook["name"][:20]+" ("+str(codebook["version"])+")",
+            'index': str(count+1),
             'codebook_id': codebook_id,
             'collection_id': collection_id,
             'coders':coders,
