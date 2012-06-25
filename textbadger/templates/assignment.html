@@ -7,8 +7,8 @@ $(function(){
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 
-    initialize();
-    loadDocList(collection_id);
+    DocManager.initialize();
+    DocManager.loadDocList("{{collection|mongo_id}}","{{csrf_token}}");
 });
 </script>
 {% endblock %}

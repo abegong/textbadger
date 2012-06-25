@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import connections
 from bson.objectid import ObjectId
+from pymongo.errors import InvalidId
+
 #from tb_app.models import Codebook, Collection, Batch
 from tb_app.models import convert_csv_to_bson
 
@@ -288,9 +290,12 @@ def upload_collection(request):
 def get_collection_docs(request):
     id_ = request.POST["id"]
     conn = connections["default"]
-    collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId(id_)})
 
-    #! Need error checking for invalid Ids
+    try:
+        collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId(id_)})
+    # Error checking for invalid Ids
+    except InvalidId as e:
+        return gen_json_response({"status": "failed", "msg": "Not a valid collection ID."})
 
     return gen_json_response({
             "status": "success",
