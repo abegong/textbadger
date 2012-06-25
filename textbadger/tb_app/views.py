@@ -340,6 +340,31 @@ def get_collection_docs(request):
             })
 
 @login_required(login_url='/')
+def update_collection(request):
+    #Get name and description
+    try:
+        id_ = request.POST["id_"]
+        name = request.POST["name"]
+        
+        if len(request.POST["name"]) == 0:
+            return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
+
+        description = request.POST.get("description", '')
+
+    except MultiValueDictKeyError as e:
+        return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    conn = connections["default"]
+    coll = conn.get_collection("tb_app_collection")
+    J = coll.find_one({"_id":ObjectId(id_)})
+    J['name'] = name
+    J['description'] = description
+    
+    result = conn.get_collection("tb_app_collection").update({"_id":ObjectId(id_)}, J)
+
+    return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
+
+@login_required(login_url='/')
 def create_codebook(request):
     #Get name and description
     try:

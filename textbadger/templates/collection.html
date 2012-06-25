@@ -35,29 +35,18 @@ $(function(){
 {% endblock %}
 
 {% block control %}
-<div class="tabbable">
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">Collection</a></li>
-    <li><a href="#tab2" data-toggle="tab">Document</a></li>
-  </ul>
-  <div class="tab-content">
-    <div class="tab-pane active" id="tab1">
-      <strong>Name</strong>
-      <p>{{ collection.name }}</p>
+<a class="btn btn-primary open-modal rightside">Edit collection info</a>
+{% include "forms/edit-collection.htm" %}
+<h4>Collection</h4>
+<strong>Name</strong>
+<p>{{ collection.name }}</p>
+<strong>Description</strong>
+<p>{{ collection.description }}</p>
 
-      <strong>Description</strong>
-      <p>{{ collection.description }}</p>
+<h4>Document</h4>
+<dl id="meta-data" class="dl-horizontal"></dl>
 
-<!--
-      <strong>Size</strong>
-      <p>{{ collection.documents|length }}</p>
--->
-    </div>
-    <div class="tab-pane" id="tab2">
-      <dl id="meta-data" class="dl-horizontal"></dl>
-    </div>
-  </div>
-</div>
+
 
 <hr/>
 
