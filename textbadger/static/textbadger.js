@@ -16,11 +16,13 @@ var DocManager = {
     },
 
     showDocument : function(index){
-        $("#doc_index").val(index+1);
-    //    console.log(doc_list[index]);
-
+        //Show the document
         $("#doc-box").html(DocManager.doc_list[index].content);
 
+        //Update navigation
+        $("#doc_index").val(index+1);
+
+        //Update metadata
         var M = DocManager.doc_list[index].metadata;
         $("#meta-data").html("");
         for( m in M ){
@@ -57,7 +59,7 @@ var DocManager = {
         $("#doc_index").change(function(){
             var x = $(this).val();
 
-            //! Need to add validation to this function
+            //! Need to add input validation to this function
             DocManager.doc_index = x;
             DocManager.showDocument(x)
         });
@@ -87,6 +89,7 @@ $(function(){
 //    .hide();
 
     //.open-modal buttons open modal dialogs
+    //The dialog must be the next element in the DOM after the button
     $(".open-modal").click(function(){
       $(this).next().modal({'backdrop': 'static'});
     });

@@ -35,34 +35,27 @@ $(function(){
 {% endblock %}
 
 {% block control %}
-<div class="tabbable">
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">Collection</a></li>
-    <li><a href="#tab2" data-toggle="tab">Document</a></li>
-  </ul>
-  <div class="tab-content">
-    <div class="tab-pane active" id="tab1">
-      <strong>Name</strong>
-      <p>{{ collection.name }}</p>
 
-      <strong>Description</strong>
-      <p>{{ collection.description }}</p>
+
+<h3>Collection Info</h3>
+<strong>Name</strong>
+<p>{{ collection.name }}</p>
+
+<strong>Description</strong>
+<p>{{ collection.description }}</p>
 
 <!--
-      <strong>Size</strong>
-      <p>{{ collection.documents|length }}</p>
+<strong>Size</strong>
+<p>{{ collection.documents|length }}</p>
 -->
-    </div>
-    <div class="tab-pane" id="tab2">
-      <dl id="meta-data" class="dl-horizontal"></ul>
-    </div>
-  </div>
-</div>
 
-<hr/>
+<h3>Document Info</h3>
+<dl id="meta-data" class="dl-horizontal"></dl>
 
+
+
+<h3>Browse</h3>
 <div style="text-align:center">
-<!--    --- Control ---<br/> -->
   <form>
 	<button id="prevButton"><span class="icon-arrow-left"></span></button>
     &nbsp;&nbsp;
