@@ -1,5 +1,4 @@
 var DocManager = {
-    //!This is wrong:
     doc_list : [],
     doc_index : 0,
 
