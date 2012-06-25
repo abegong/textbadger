@@ -208,6 +208,9 @@ def create_account(request):
         return gen_json_response({"status": "failed", "msg": "You must be an administrator to create new accounts."})
 
     #! No response validation performed!
+    if len(request.POST["first_name"]) == 0:
+        return gen_json_response({"status": "failed", "msg": "First name cannot be blank."})
+
     try:
         new_user = User.objects.create_user(
                 request.POST["username"],
@@ -224,6 +227,32 @@ def create_account(request):
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
     return gen_json_response({"status": "success", "msg": "Successfully created account."})
+
+@login_required(login_url='/')
+def update_account(request):
+    #Performed response validation
+    if len(request.POST["first_name"]) == 0:
+        return gen_json_response({"status": "failed", "msg": "First name cannot be blank."})
+
+    if len(request.POST["password"]) < 4:
+        return gen_json_response({"status": "failed", "msg": "Password must be at least 4 characters long."})
+
+    #! More validation needed
+
+    user = request.user
+    try:
+        user.first_name = request.POST["first_name"]
+        user.last_name = request.POST["last_name"]
+        user.email = request.POST["email"]
+        user.set_password( request.POST["password"] )
+
+        user.save()
+    except MultiValueDictKeyError as e:
+        print e.args
+        return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    return gen_json_response({"status": "success", "msg": "Successfully updated account."})
+
 
 @login_required(login_url='/')
 def update_permission(request):
