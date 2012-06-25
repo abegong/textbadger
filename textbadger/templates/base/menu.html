@@ -23,8 +23,8 @@
       <div class="nav-collapse">
         <ul class="nav">
         {% if user.is_authenticated %}
-          <li><a href="/my-account/">My account</a></li>
           <li><a href="/shared-resources/">Shared resources</a></li>
+          <li><a href="/my-account/">My account</a></li>
           {% if user.is_superuser %}
           <li><a href="/administration/">Administration</a></li>
           {% endif %}

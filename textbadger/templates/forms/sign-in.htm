@@ -4,7 +4,7 @@
     <h3>Sign in</h3>
   </div>
   <div class="modal-body">
-    <form class="form-horizontal" tb-href="/ajax/sign-in/" tb-redirect="/my-account/"><fieldset>
+    <form class="form-horizontal" tb-href="/ajax/sign-in/" tb-redirect="/shared-resources/"><fieldset>
       {% csrf_token %}
       <div class="control-group">
         <label class="control-label" for="username">Username</label>
@@ -23,7 +23,7 @@
           <a id="forgot-login" href="#">Forgot your login info?</a>
           <p>
               Please ask a system administrator for account information. {{admin_names}}<br/><br/>
-              If you've forgotten your password, and administrator can reset your account. Once your account has just been reset, your password will be the same as your username.
+              If you've forgotten your password, an administrator can reset your account. Once your account has just been reset, your password will be the same as your username.  Don't forget to change your password right away!
           </p>
         </div>
       </div>
