@@ -2,6 +2,15 @@
 {% load tb_app_tags %}
 
 {% block start_scripts %}
+<script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}knockout-1.2.1.js" type="text/javascript"></script>
+
+<script src="{{ STATIC_URL }}informal/informalScripts.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}informal/informalEditor.js" type="text/javascript"></script>
+<link href="{{ STATIC_URL }}informal/informal-styles.css" rel="stylesheet">
+
 <script type="text/javascript">
 $(function(){
     //Highlight "my-account" in nav bar
@@ -9,6 +18,14 @@ $(function(){
 
     DocManager.initialize();
     DocManager.loadDocList("{{batch.profile.collection_id}}","{{csrf_token}}");
+
+	$.post("/ajax/get-codebook/",
+        {'id': "{{batch.profile.codebook_id}}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        function(response){
+            //! Need error checking for failed responses.
+            launchInformalEditor(response.codebook.questions);
+        }
+    );
 });
 </script>
 {% endblock %}
@@ -35,7 +52,7 @@ $(function(){
 {% endblock %}
 
 {% block control %}
-
+<div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }"></div>
 
 <h3>Collection Info</h3>
 <strong>Name</strong>
