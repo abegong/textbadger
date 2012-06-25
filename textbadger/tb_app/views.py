@@ -500,9 +500,8 @@ def start_batch(request):
     #Construct batch object
     batch = {
         'profile': {
-            'name': 'Batch '+str(count+1)+" : "+
-                collection["name"][:20]+" * "+ 
-                codebook["name"][:20]+" ("+str(codebook["version"])+")",
+            'name': 'Batch '+str(count+1),
+            'description': collection["name"][:20]+" * "+ codebook["name"][:20]+" ("+str(codebook["version"])+")",
             'codebook_id': codebook_id,
             'collection_id': collection_id,
             'coders':coders,
@@ -518,7 +517,8 @@ def start_batch(request):
     }
 
 #    return gen_json_response({"status": "failed", "msg": json.dumps(batch, indent=2, cls=MongoEncoder), "json": batch })
-    result = coll.insert(batch)
+    batch_id = coll.insert(batch)
+    update_batch_progress(batch_id)
 
     return gen_json_response({"status": "success", "msg": "New batch created."})
 

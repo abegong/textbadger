@@ -144,7 +144,7 @@ $(function(){
   <tbody>
   {% for p in batches %}
     <tr href="/batch/{{ p|mongo_id }}">
-      <td><a href="/batch/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
+      <td><a href="/batch/{{ p|mongo_id }}">{{ p.profile.name }} : {{ p.profile.description }}</a></td>
       <td><div class="progress progress-striped" style="margin:0px">
           <div class="bar" style="width: {{ p.reports.progress.summary.percent }}%;"></div>
       </div></td>

@@ -1,34 +1,28 @@
 === On deck ===
-* Fixtures
-    * Add fixtures for codebooks and batches
-
 
 === To do ===
 
-* Codebook page
-* Collection page
-* Admin page
-
-* Add size, type, and created_at fields to collections
-*?  Add "profile" fields to codebooks, collections, and batches
-* Make descriptions optional for codebooks and collections
-
-* Add "change account settings" button
-* Activate "create sub-collection" button
-
-*** Design/architecture
-    * Figure out how to "delete"/"deactivate" codebooks/collections -- just sort by recent on "created_at" field
-
-*** Technical debt
-    * Add @admin_required decorator
-    * Add @mongo_connection decorator
-    * Catalog and refactor all javascript/jquery
-    * Catalog and refactor all database code
-
-* Home/about page
+* About page
     * Fill in FAQ
 
+* Shared resources page
+    * Activate "create sub-collection" button
+    * Make descriptions optional for codebooks and collections
+    * Add size, type, and created_at fields to collections
+    * Add sort by name/date functionality for codebooks, collections, and batches
+    * Add filter by status functionality to batches
+
+* My account page
+    * Add "change account settings" button
+
 * Codebook page
+    * Change codebook/question tabs to a simple stack.
+    * inFormal
+        * Comment code
+        * Clean up cruft
+        * Refactor as necessary
+        * Check for cross-browser compatibility
+
     * Shorten text-area to text input for integer values
 
     * Fix vertical alignment of radio/checkbox answer text
@@ -36,6 +30,30 @@
     * Make styles use bootstrap themes as much as possible.
 
     * Add slider question_type
+
+* Collections page
+    * Change codebook/question tabs to a simple stack.
+    * Add "Update collection info" button
+    * Make metadata editable
+
+* Batches page
+
+* Assignments page
+    * Scaffold
+    * Hook up routes
+
+*** Technical debt ***
+    * Add @admin_required decorator
+    * Add @mongo_connection decorator
+    * Document and refactor all javascript/jquery
+    * Document and refactor all database code
+        *?  Add "profile" fields to codebooks, collections, and batches
+        * Add "type" field to questions in codebooks
+        * Implement "batches" functionality in codebooks
+    * Add fixtures for codebooks, batches, and assignments
+
+* Home page
+* Administration page
 
 
 === Punt ===

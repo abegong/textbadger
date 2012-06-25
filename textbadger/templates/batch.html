@@ -25,11 +25,11 @@ $(function(){
 
 {% block content %}
 <!-- Overview --------------------->
-<a class="btn btn-primary open-modal rightside">Review results</a>
+<a class="btn btn-inverse open-modal rightside">Review results</a>
 {% include "forms/under-construction.htm" %}
-<a class="btn btn-primary open-modal rightside">Export results</a>
+<a class="btn btn-inverse open-modal rightside">Export results</a>
 {% include "forms/under-construction.htm" %}
-<h2>Batch 27</h2>
+<h2>{{batch.profile.name}}</h2>
 
 <dl class="dl-horizontal">
     <dt>Codebook</dt><dd>{{ codebook.name }} ({{ codebook.version }})&nbsp;</dd>
@@ -70,7 +70,7 @@ $(function(){
 
 <!-- Reliability --------------------->
 <div class="rightside">
-  <a class="btn btn-primary rightside"><i class="icon-refresh"></i> Update reliability</a>
+  <a class="btn btn-inverse rightside"><i class="icon-refresh"></i> Update reliability</a>
   <br/>
   <span class="rightside">Last update: 2 hours ago, 457 completed tasks</span>
   <br/>
