@@ -1,5 +1,9 @@
 === On deck ===
 
+* Assignments page
+    * Scaffold
+    * ... ...
+
 === To do ===
 
 * About page
@@ -42,10 +46,6 @@
     * Get "Work on my tasks" button working
     * Get reliability reports working
     * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
-
-* Assignments page
-    * Scaffold
-    * ... ...
 
 * Review page
     * Scaffold
