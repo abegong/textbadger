@@ -37,6 +37,8 @@
     * Make metadata editable
 
 * Batches page
+    * Get "export results" button working
+    * Get reliability reports working
 
 * Assignments page
     * Scaffold
@@ -117,3 +119,4 @@
 * Figure out batch/coding DB structure
 * Fix codebook display for an empty list
 * Set up default fixture with "The Administrator"
+* Add descriptino field to batch.profile
