@@ -80,7 +80,7 @@ $(function(){
       </td>
     </tr>
   {% empty %}
-    <tr>
+    <tr class="current batches"> <!-- Including classes "current batches" is a hack to make this row play nice with the filtering logic. -->
       <td colspan=4><br/>You need to create a codebook to get started.<br/><br/>
       </td>
     </tr>
@@ -91,7 +91,7 @@ $(function(){
 
 
 <!-- Collections --------------------->
-<a class="btn btn-primary open-modal rightside">Create sub-collection</a>
+<a class="btn btn-inverse open-modal rightside">Create sub-collection</a>
 {% include "forms/under-construction.htm" %}
 <a class="btn btn-primary open-modal rightside">Upload collection</a>
 {% include "forms/upload-collection.htm" %}
