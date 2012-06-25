@@ -114,7 +114,7 @@ def shared_resources(request):
 @login_required(login_url='/')
 def administration(request):
     result = {
-        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
+        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser', 'last_login']),
     }
     return render_to_response('administration.html', result, context_instance=RequestContext(request))
 
@@ -320,7 +320,7 @@ def create_codebook(request):
     J = {}
     J['name'] = name
     J['description'] = description
-    J['created_at'] = datetime.datetime.utcnow()
+    J['created_at'] = datetime.datetime.now()
     J['version'] = 1
     J['children'] = []
     J['batches'] = []
@@ -387,7 +387,7 @@ def save_codebook(request):
         J['name'] = parent_codebook["name"]
 
     J['description'] = parent_codebook["description"]
-    J['created_at'] = datetime.datetime.utcnow()
+    J['created_at'] = datetime.datetime.now()
     J['version'] = parent_codebook["version"]+1
     J['children'] = []
     J['batches'] = []
@@ -508,7 +508,7 @@ def start_batch(request):
             'coders':coders,
             'pct_overlap': pct_overlap,
             'shuffle':shuffle,
-            'created_at': datetime.datetime.utcnow(),
+            'created_at': datetime.datetime.now(),
         },
         'documents': documents,
         'reports': {

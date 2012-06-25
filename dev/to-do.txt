@@ -1,7 +1,7 @@
 === On deck ===
 * Fixtures
     * Add fixtures for codebooks and batches
-    * Set up default fixture with "The Administrator"
+
 
 === To do ===
 
@@ -9,7 +9,6 @@
 * Collection page
 * Admin page
 
-* Fix codebook display for an empty list
 * Add size, type, and created_at fields to collections
 *?  Add "profile" fields to codebooks, collections, and batches
 * Make descriptions optional for codebooks and collections
@@ -98,4 +97,5 @@
 * Build batch page
 * Add breadcrumb navigation to codebook/collection/batches
 * Figure out batch/coding DB structure
-
+* Fix codebook display for an empty list
+* Set up default fixture with "The Administrator"

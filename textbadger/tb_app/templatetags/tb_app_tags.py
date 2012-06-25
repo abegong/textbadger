@@ -17,7 +17,7 @@ import datetime
 
 @register.filter
 def date_diff(d):
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now()
     today = datetime.datetime(now.year, now.month, now.day)
     delta = now - d
     delta_midnight = today - d
