@@ -25,9 +25,9 @@ $(function(){
 
 {% block content %}
 <!-- Overview --------------------->
-<a class="btn btn-inverse open-modal rightside">Review results</a>
+<a class="btn btn-inverse open-modal rightside">Review results &raquo;</a>
 {% include "forms/under-construction.htm" %}
-<a class="btn btn-inverse open-modal rightside">Export results</a>
+<a class="btn btn-inverse open-modal rightside"><i class="icon-download"></i> Export results</a>
 {% include "forms/under-construction.htm" %}
 <h2>{{batch.profile.name}}</h2>
 
@@ -41,8 +41,10 @@ $(function(){
 </dl>
 <br/>
 
-<!-- Overview --------------------->
-<h3>Coders</h3>
+<!-- Assignments --------------------->
+<a class="btn btn-inverse open-modal rightside">Work on my tasks &raquo;</a>
+{% include "forms/under-construction.htm" %}
+<h3>Assignments</h3>
 <table class="well wide">
   <thead>
     <tr>

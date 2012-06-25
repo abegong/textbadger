@@ -569,8 +569,8 @@ def update_batch_progress(id_):
 
     #Calculate percentages
     for coder in progress["coders"]:
-        p = progress["coders"][coder]
-        p["percent"] = round(float(100*p["complete"])/p["assigned"],1)
+        c = progress["coders"][coder]
+        c["percent"] = round(float(100*c["complete"])/c["assigned"],1)
 
     progress["summary"] = {
         "assigned": assigned,
