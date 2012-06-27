@@ -54,6 +54,11 @@ $(function(){
 {% block control %}
 <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }"></div>
 
+<a class="btn btn-primary rightside">Submit</a>
+
+<span id="docs_left">0</span> documents remaining.
+
+<!--
 <h3>Collection Info</h3>
 <strong>Name</strong>
 <p>{{ collection.name }}</p>
@@ -61,15 +66,8 @@ $(function(){
 <strong>Description</strong>
 <p>{{ collection.description }}</p>
 
-<!--
-<strong>Size</strong>
-<p>{{ collection.documents|length }}</p>
--->
-
 <h3>Document Info</h3>
 <dl id="meta-data" class="dl-horizontal"></dl>
-
-
 
 <h3>Browse</h3>
 <div style="text-align:center">
@@ -82,6 +80,7 @@ $(function(){
 	<button id="nextButton"><span class="icon-arrow-right"></span></button>
   </form>
 </div>
+-->
 
 {% endblock %}
 
