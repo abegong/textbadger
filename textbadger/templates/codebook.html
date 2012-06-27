@@ -101,21 +101,18 @@ $(function(){
 {% endblock %}
 
 {% block control %}
-<div class="tabbable">
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">Codebook</a></li>
-    <li><a href="#tab2" data-toggle="tab">Question</a></li>
-  </ul>
-  <div class="tab-content">
-    <div class="tab-pane active" id="tab1">
-      <strong>Name</strong>
-      <p>{{ codebook.name }}</p>
+<h4>Codebook</h4>
+<strong>Name</strong>
+<p>{{ codebook.name }}</p>
 
-      <strong>Description</strong>
-      <p>{{ codebook.description }}</p>
+<strong>Description</strong>
+<p>{{ codebook.description }}</p>
 
-      <strong>Version</strong>
-      <p>{{ codebook.version }}</p>
+<strong>Version</strong>
+<p>{{ codebook.version }}</p>
+
+
+
 
 <!--
       <dl class="dl-horizontal">
@@ -123,8 +120,9 @@ $(function(){
         <dt>previous version</dt><dd>{{ codebook.parent }}&nbsp;</dd>
         <dt>has </dt><dd>Gong&nbsp;</dd>
         <dt>email</dt><dd>agong@umich.edu&nbsp;</dd>
+           </dl>
 -->
-      </dl>
+   
 
 <!--
       <hr/>
@@ -134,7 +132,8 @@ $(function(){
       </div>
 -->
     </div>
-    <div class="tab-pane" id="tab2">
+    <h4>Question</h4>
+  
         <div id="questionControls"></div>
         <hr/>
         <div id="sequenceControls" style="text-align:center">
@@ -143,7 +142,7 @@ $(function(){
             <button id="up_control"><span class="control icon-arrow-up"></span></button>
             <button id="down_control"><span class="control icon-arrow-down"></span></button>
         </div>
-    </div>
+
   </div>
 </div>
 {% endblock %}
