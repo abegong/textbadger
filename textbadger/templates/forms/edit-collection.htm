@@ -1,0 +1,29 @@
+{% load tb_app_tags %}
+<div class="modal" id="myModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3>Edit collection info</h3>
+  </div>
+  <div class="modal-body">
+    <form method="POST" enctype="multipart/form-data" class="form-horizontal" tb-href="/ajax/update-collection/" tb-redirect="/collection/{{collection|mongo_id}}"><fieldset>
+      {% csrf_token %}
+       <input type="hidden" value="{{collection|mongo_id}}" name="id_">
+      <div class="control-group">
+        <label class="control-label" for="project-name">Name</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="name" placeholder='e.g. "New York Times op-eds"' value="{{collection.name}}">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="description">Description</label>
+        <div class="controls">
+          <textarea class="input-xlarge" name="description" rows="3" placeholder="Where does this collection come from?">{{collection.description}}</textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary rightside">Save &raquo;</button>
+      <button type="cancel" class="btn rightside">Cancel &times;</button>
+    </fieldset></form>
+  </div>
+</div>
+

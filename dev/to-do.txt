@@ -17,7 +17,6 @@
     * Add filter by status functionality to batches
 
 * My account page
-    * Add "change account settings" button
 
 * Codebook page
     * Change codebook/question tabs to a simple stack.
@@ -127,3 +126,5 @@
 * Fix codebook display for an empty list
 * Set up default fixture with "The Administrator"
 * Add descriptino field to batch.profile
+* Add "change account settings" button on my-account
+
