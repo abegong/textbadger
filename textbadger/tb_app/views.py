@@ -102,7 +102,7 @@ def shared_resources(request):
     for b in batches:
         update_batch_progress(b["_id"])
 
-    print list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
+#    print list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
         'codebooks' : list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)])),
         'collections' : list(conn.get_collection("tb_app_collection").find(fields={"id":1, "name":1, "description":1})),
