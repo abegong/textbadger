@@ -107,7 +107,8 @@ var loadCodebookModel = function(json){
 
 var launchInformalEditor = function( codebook_json ){
 //  initControls();
-  /*
+
+/*
   //Create the default question
     codebookModel.questions([
         new cbQuestion("Static text", "", {} ),
@@ -121,7 +122,7 @@ var launchInformalEditor = function( codebook_json ){
         new cbQuestion("Short essay", "", {} ),
         new cbQuestion("Text matrix", "", {} )
     ]);
-  */
+*/
   
   /*
   codebookModel.questions([
@@ -151,6 +152,19 @@ var launchInformalEditor = function( codebook_json ){
         var autoHeight = $("#controlAccordion").accordion( "option", "autoHeight" );
       $("#controlAccordion").accordion( "option", "autoHeight", false );
 */
+    }, "text");
+
+};
+
+var launchInformalViewer = function( codebook_json ){
+    codebookModel.loadQuestions(codebook_json);
+    
+    //Load the template and knockout model dynamically.
+    $.get("/static/informal/_informalTemplateKO.htm", function(template){
+        $("body").append(template);
+        ko.applyBindings(codebookModel);
+//        codebookModel.addStylesToCodebook();
+//        attachControlsToQuestion(0);
     }, "text");
 
 };

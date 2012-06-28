@@ -23,7 +23,7 @@ $(function(){
         {'id': "{{batch.profile.codebook_id}}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
             //! Need error checking for failed responses.
-            launchInformalEditor(response.codebook.questions);
+            launchInformalViewer(response.codebook.questions);
         }
     );
 });
@@ -54,7 +54,7 @@ $(function(){
 {% block control %}
 <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }"></div>
 
-<a class="btn btn-primary rightside">Submit</a>
+<a class="btn btn-inverse rightside">Submit</a>
 
 <span id="docs_left">0</span> documents remaining.
 

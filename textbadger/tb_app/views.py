@@ -413,7 +413,7 @@ def create_codebook(request):
                 "header_text" : "Here's a short essay question.",
             }
         }]
-
+    
     conn = connections["default"]
     result = conn.get_collection("tb_app_codebook").insert(J)
 
