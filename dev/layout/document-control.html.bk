@@ -1,0 +1,24 @@
+{% extends "base/base.html" %}
+
+{% block start_scripts %}{% endblock %}
+
+{% block main_container %}
+<div class="row">
+  <div class="{% block doc_classes %}span8{% endblock %}">
+    <div class="well" id="doc-box" >
+    {% block document %}
+    --- Document ---
+    {% endblock %}
+    </div>
+  </div>
+  <div id="control-box" class="{% block control_classes %}span3{% endblock %}">
+    {% block title %}
+    <h3>--- Title ---</h3>
+    {% endblock %}
+
+    {% block control %}
+    --- Control ---
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}
