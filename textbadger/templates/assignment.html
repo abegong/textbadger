@@ -16,8 +16,7 @@ $(function(){
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 
-    DocManager.initialize();
-    DocManager.loadDocList("{{batch.profile.collection_id}}","{{csrf_token}}");
+    DocManager.initialize("{{batch.profile.collection_id}}","{{csrf_token}}");
 
 	$.post("/ajax/get-codebook/",
         {'id': "{{batch.profile.codebook_id}}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
@@ -73,6 +72,7 @@ $(function(){
 <hr/>
 <h4>Document Info</h4>
 <dl id="meta-data" class="dl-horizontal"></dl>
+-->
 
 <hr/>
 <h4>Browse</h4>
@@ -87,6 +87,5 @@ $(function(){
   </form>
 </div>
 
--->
 {% endblock %}
 

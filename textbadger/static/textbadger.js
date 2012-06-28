@@ -1,3 +1,10 @@
+/*
+Manager document-related data and DOM manipulation.
+All pages that use documents should begin with a call to:
+    DocManager.initialize(collection_id, csrf_token)
+
+No other code is needed.
+*/
 var DocManager = {
     doc_list : [],
     doc_index : 0,
@@ -23,6 +30,12 @@ var DocManager = {
         //Update navigation
         $("#doc-index").val(index+1);
 
+	    if( DocManager.doc_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
+	    else{ $("#prev-doc-button").removeClass("disabled"); }
+
+	    if( DocManager.doc_index == DocManager.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
+	    else{ $("#next-doc-button").removeClass("disabled"); }
+
         //Update metadata
         var M = DocManager.doc_list[index].metadata;
         $("#doc-metadata").html("");
@@ -30,14 +43,6 @@ var DocManager = {
             $("#doc-metadata").append("<dt>"+m+"</dt>");
             $("#doc-metadata").append("<dd>"+M[m]+"</dd>");
         }
-
-	    if( DocManager.doc_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
-	    else{ $("#prev-doc-button").removeClass("disabled"); }
-
-	    if( DocManager.doc_index == DocManager.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
-	    else{ $("#next-doc-button").removeClass("disabled"); }
-
-
     },
 
     loadPrevDoc : function(){
@@ -58,7 +63,7 @@ var DocManager = {
 	    return( false );
     },
 
-    initialize : function(){
+    initialize : function( collection_id, csrf_token ){
         $("#prev-doc-button").click( DocManager.loadPrevDoc );
         $("#next-doc-button").click( DocManager.loadNextDoc );
         $("#doc-index").change(function(){
@@ -68,6 +73,8 @@ var DocManager = {
             DocManager.doc_index = x;
             DocManager.showDocument(x)
         });
+
+        DocManager.loadDocList( collection_id, csrf_token );
     }
 }
 

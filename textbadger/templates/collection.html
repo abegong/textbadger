@@ -7,8 +7,7 @@ $(function(){
     //Highlight "shared-rez" in nav bar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
 
-    DocManager.initialize();
-    DocManager.loadDocList("{{collection|mongo_id}}","{{csrf_token}}");
+    DocManager.initialize("{{collection|mongo_id}}","{{csrf_token}}");
 });
 </script>
 {% endblock %}
