@@ -52,35 +52,41 @@ $(function(){
 {% endblock %}
 
 {% block control %}
+<h3>{{codebook.name}}</h3>
+
+<hr/>
 <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }"></div>
 
 <a class="btn btn-inverse rightside">Submit</a>
-
-<span id="docs_left">0</span> documents remaining.
+<br/>
 
 <!--
-<h3>Collection Info</h3>
+<hr/>
+<h4>Collection Info</h4>
 <strong>Name</strong>
 <p>{{ collection.name }}</p>
 
 <strong>Description</strong>
 <p>{{ collection.description }}</p>
 
-<h3>Document Info</h3>
+
+<hr/>
+<h4>Document Info</h4>
 <dl id="meta-data" class="dl-horizontal"></dl>
 
-<h3>Browse</h3>
+<hr/>
+<h4>Browse</h4>
 <div style="text-align:center">
   <form>
-	<button id="prevButton"><span class="icon-arrow-left"></span></button>
+	<button id="prev-doc-button" class="btn"><span class="icon-arrow-left"></span></button>
     &nbsp;&nbsp;
-    <input id="doc_index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"></input>
-    of <span id="doc_count">0</span>
+    <input id="doc-index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"></input>
+    of <span id="doc-count">0</span>
     &nbsp;&nbsp;
-	<button id="nextButton"><span class="icon-arrow-right"></span></button>
+	<button id="next-doc-button" class="btn"><span class="icon-arrow-right"></span></button>
   </form>
 </div>
--->
 
+-->
 {% endblock %}
 
