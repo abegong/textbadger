@@ -85,26 +85,15 @@ var codebookModel = {
 
     targetQuestion: function(i){
         this.questions()[this.target_index()].targeted(false);
-//        this.addStylesToQuestion($($(".questionBox")[this.target_index()]));
 
         this.target_index(i);
         this.questions()[this.target_index()].targeted(true);
-//        this.addStylesToQuestion($($(".questionBox")[this.target_index()]));
 
         this.addStylesToCodebook();
     },
 
-/*//NEW//
-    questionTypeChanged: function(){
-        q1 = ko.toJS( this.questions.slice( this.target_index() )[0] );
-        q2 = new cbQuestion( q1.question_type, q1.var_name, q1.params, true );
-        this.questions.splice( this.target_index(), 1, q2 );
-        attachControlsToQuestion(this.target_index());
-    },
-*/
     changeQuestionType: function( T ){
         this.questions()[this.target_index()].changeQuestionType(T);
-//        attachControlsToQuestion(this.target_index());
         this.addStylesToCodebook();
     },
 
@@ -156,16 +145,12 @@ var codebookModel = {
     addStylesToQuestion : function(Q){
         $("input[type=radio],input[type=checkbox]",Q).parent()
             .click( function(){    x = $('input',this); x.attr('checked',!x.attr('checked'));    })
-//            .mouseover( function(){ $(this).addClass('ui-state-hover'); })
-//            .mouseout( function(){ $(this).removeClass('ui-state-hover'); });
             .mouseover( function(){ $(this).addClass('mouseoverCell'); })
             .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
 
         Q
             .unbind('click mouseenter mouseleave')
             .hover( 
-//                function(){$(this).addClass('ui-state-error ui-corner-all');},
-//                function(){$(this).removeClass('ui-widget-content');}
                 function(){$(this).addClass('hoverQuestion');},
                 function(){$(this).removeClass('hoverQuestion');}
             )
