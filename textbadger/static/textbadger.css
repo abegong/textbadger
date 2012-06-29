@@ -96,13 +96,14 @@ div.border{
 }
 
 #codebook .questionBox{
+	margin-bottom:10px;
 }
 #codebook .headerText,.answerText,.questionText{ width:95%; padding:0px;} /*background-color:#eee; */
 #codebook .answerText{ padding-left:22px; cursor:pointer; }
 
 #codebook .mouseoverCell{
-	background-color:#ddf;
-	border-radius: 10px;
+	background-color:#dddddd;/*#ddf;*/
+	
 }
 #codebook .hoverQuestion{ border:2px solid #ddf; }
 #codebook .targetQuestion{ border:2px solid #bbd; background-color:#ddf; }
@@ -116,7 +117,6 @@ div.border{
 	border-collapse:collapse;
 	width: 90%;
 	margin:auto;
-	margin-bottom:10px;
 }
 
 #codebook tr.even{
