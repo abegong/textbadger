@@ -142,7 +142,7 @@ var codebookModel = {
         this.addStylesToCodebook();
     },
 
-    addStylesToQuestion : function(Q){
+    addEditorStylesToQuestion : function(Q){
         $("input[type=radio],input[type=checkbox]",Q).parent()
             .click( function(){    x = $('input',this); x.attr('checked',!x.attr('checked'));    })
             .mouseover( function(){ $(this).addClass('mouseoverCell'); })
@@ -161,10 +161,25 @@ var codebookModel = {
             });
     },
 
+    addViewerStylesToQuestion : function(Q){
+        $("input[type=radio],input[type=checkbox]",Q).parent()
+            .click( function(){    x = $('input',this); x.attr('checked',!x.attr('checked'));    })
+            .mouseover( function(){ $(this).addClass('mouseoverCell'); })
+            .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
+    },
+
     addStylesToCodebook: function(){
-        $("div.questionBox").each(function(i,q){
-            codebookModel.addStylesToQuestion($(q));
-        })
+		if( $("#codebook").attr("tb-codebook-mode") == 'viewer' ){
+			$("div.questionBox").each(function(i,q){
+				codebookModel.addViewerStylesToQuestion($(q));
+			});
+		}
+		else if ( $("#codebook").attr("tb-codebook-mode") == 'editor' ){
+			$("div.questionBox").each(function(i,q){
+				codebookModel.addEditorStylesToQuestion($(q));
+			});
+		}
+
     },
 
     getCodebookJson : function(){

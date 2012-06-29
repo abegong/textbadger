@@ -97,7 +97,7 @@ div.border{
 
 #codebook .questionBox{
 }
-#codebook .headerText,.answerText,.questionText{ width:95%; padding:2px;} /*background-color:#eee; */
+#codebook .headerText,.answerText,.questionText{ width:95%; padding:0px;} /*background-color:#eee; */
 #codebook .answerText{ padding-left:22px; cursor:pointer; }
 
 #codebook .mouseoverCell{

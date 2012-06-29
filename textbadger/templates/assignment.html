@@ -15,6 +15,7 @@ var launchInformalViewer = function( codebook_json ){
     $.get("/static/informal/_informalTemplateKO.htm", function(template){
         $("body").append(template);
         ko.applyBindings(codebookModel);
+        codebookModel.addStylesToCodebook();
     }, "text");
 
 };
@@ -55,7 +56,7 @@ $(function(){
 {% endblock %}
 
 {% block control %}
-<div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }"></div>
+<div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }" tb-codebook-mode="viewer"></div>
 
 <a class="btn btn-inverse rightside">Submit</a>
 <br/>
