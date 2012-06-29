@@ -501,7 +501,7 @@ def update_codebook(request):
 
         description = request.POST.get("description", '')
 
-    except MultiValueDictKeyError as e:  # ?
+    except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
     conn = connections["default"]
@@ -510,7 +510,7 @@ def update_codebook(request):
     J['name'] = name
     J['description'] = description
 
-    result = conn.get_collection("tb_app_collection").update({"_id": ObjectId(id_)}, J)  # ?
+    conn.get_collection("tb_app_codebook").update({"_id": ObjectId(id_)}, J)
 
     return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
 
