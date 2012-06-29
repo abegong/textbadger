@@ -67,7 +67,7 @@ var codebookModel = {
         width: ko.observable(350)
     },
 
-  questions: ko.observableArray([]),
+    questions: ko.observableArray([]),
     target_index: ko.observable(0),
 
     //These functions are used to modify the codebook
@@ -137,7 +137,7 @@ var codebookModel = {
         i = this.target_index();
         if( this.questions().length-i > 1 ){
             this.questions.splice( i+1, 0, this.questions().splice(i,1)[0] );
-            attachControlsToQuestion(i+1);$('input',this).attr
+            this.attachControlsToQuestion(i+1);$('input',this).attr
         }
         this.addStylesToCodebook();
     },
@@ -157,7 +157,7 @@ var codebookModel = {
             .click( function(){
                 console.log("x");
                 console.log($(this).index(".questionBox"));
-                attachControlsToQuestion( $(this).index(".questionBox") );
+                codebookModel.attachControlsToQuestion( $(this).index(".questionBox") );
             });
     },
 
@@ -172,5 +172,39 @@ var codebookModel = {
         //! Remove "targeted" terms here
         //!? Add name and description (maybe)
         return( j );
-    }
+    },
+    
+    attachControlsToQuestion : function(i){
+		//Change the targetQuestion in the model
+		//console.log(i);
+		codebookModel.targetQuestion(i);
+
+		//Set index variables
+		qB = $(".questionBox:eq("+i+")");        //The DOM object for the selected questionBox
+		qC = $("#questionControls");             //The DOM object for the questionControls div
+		qM = codebookModel.questions()[i];       //The question object in the knockout.js model
+		qA = codebookModel.questionArguments[qM.question_type()];    //The questionArguments object in the knockout.js model
+
+		//Add content within the control box: variable type and name
+		qC
+			.html( "Variable type<br/><select data-bind=\"options: questionTypes, value: questions()["+i+"].question_type, event: {change: function(event){codebookModel.changeQuestionType(event.target.value);}}\"></select><br/>" )
+			.append( "Variable name<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].var_name, event: {change: function(event){codebookModel.questions()["+i+"].changeQuestionName(event.target.value);}}\"></input><br/>" );
+
+		//Add content within the control box: variable parameters
+		for( p in qA ){
+			if( p in qM.params ){
+	//            alert( p + ": " + qM.params[p]() );//+ "\n" + $.isArray( qM.params[p]() ) );// + ": " + $.isArray( qM.params[p]() );
+				if( $.isArray( qM.params[p]() ) ){
+					qC.append( qA[p].label + "<textarea rows=\"5\" style=\"width:250px\" data-bind=\"event: {change: function(event){codebookModel.questions()['"+i+"'].updateParams('"+p+"', event.target.value.split('\\n'));}}\">" + qM.params[p]().join('\n') + "</textarea><br/>" )
+				}
+				else{
+					qC.append( qA[p].label +"<textarea rows=\"5\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
+	//                qC.append( qA[p].label +"<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
+				}
+			}
+		}
+
+		//Re-bind questionControls
+		ko.applyBindings(codebookModel, qC[0]);
+	}
 };

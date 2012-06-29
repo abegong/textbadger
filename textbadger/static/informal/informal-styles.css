@@ -1,24 +1,7 @@
 /* Formatting for controls *******************************************************/
-/*#controlBoxHeader a{padding:2px; background-color:#fff;}
-.targetControl{background-color:#ddf; border: 2px solid #bbd;}*/
 
-/*#sequenceControls a{position:relative; top:6px; margin-bottom:4px; }*/
 #sequenceControls{text-align:center; margin-top:6px; margin-bottom:4px;}
 #questionControls {text-align:left;}
-/*#inputBox, #longInputBox{ position:absolute; }*/
-
-
-/*#loadJsonInput{
-	float:right;
-	display:hidden;
-	position:relative;
-	text-align: right;
-	-moz-opacity:0 ;
-	filter:alpha(opacity: 0);
-	opacity: 0;
-}
-*/
-
 
 /* Formatting for questions **************************************************/
 
@@ -40,7 +23,6 @@
 
 table.matrixQuestion{
 	border-collapse:collapse;
-/*	width:630px; */
 	width: 90%;
 	margin:auto;
 	margin-bottom:20px;

@@ -25,6 +25,7 @@ $(function(){
 	$('#down_control').click( function(){ codebookModel.moveQuestionDown(); } );
 
 /*
+	//! Didn't work
     $('#export-json').click( function(){
         //! Can't get this to work.
         //! Better to just rewrite as real method.
@@ -32,11 +33,15 @@ $(function(){
         window.open('/ajax/export-codebook/?'+JSON.stringify(json),"Json Download", "resizable=0,status=0,toolbar=0,width=600px,height=300px");
     });
 */
+/*
+	//! Not used
     $('#export-html').click( function(){
         var new_window = window.open('about:blank',"Html Download", "resizable=0,status=0,toolbar=0,width=600px,height=300px");
         new_window.document.write($("#codebook").html());
     });
+*/
 
+	//Load the codebook on initialization.
 	$.post("/ajax/get-codebook/",
         {'id': codebook_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
@@ -45,6 +50,7 @@ $(function(){
         }
     );
 
+	//AJAX to save the codebook
     $("#save-codebook").click(function(){
 	    $.post(
             "/ajax/save-codebook/",
