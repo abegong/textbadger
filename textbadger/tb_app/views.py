@@ -1,13 +1,15 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect  # ?
 from django.contrib.auth import authenticate, login, logout
-from django.utils.datastructures import MultiValueDictKeyError 
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.utils.datastructures import MultiValueDictKeyError
+from django.shortcuts import render_to_response, get_object_or_404, redirect  # ?
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-import json, re, datetime
+import json
+import re
+import datetime
 
 from django.contrib.auth.models import User
-from django.conf import settings
+from django.conf import settings  # ?
 from django.db import connections
 from bson.objectid import ObjectId
 from pymongo.errors import InvalidId
@@ -15,19 +17,21 @@ from pymongo.errors import InvalidId
 #from tb_app.models import Codebook, Collection, Batch
 from tb_app.models import convert_csv_to_bson
 
-def jsonifyRecord( obj, fields ):
+
+def jsonifyRecord(obj, fields):
     j = {}
     for f in fields:
         j[f] = obj.__dict__[f]
     return j
 
-def jsonifyRecords( objs, fields ):
+
+def jsonifyRecords(objs, fields):
     j = []
     for o in objs:
         j.append(jsonifyRecord(o, fields))
     return j
 
-import json
+
 class MongoEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, ObjectId):
@@ -36,7 +40,8 @@ class MongoEncoder(json.JSONEncoder):
             return obj.isoformat()
         return json.JSONEncoder.default(self, obj)
 
-def gen_json_response( result ):
+
+def gen_json_response(result):
     return HttpResponse(json.dumps(result, indent=2, cls=MongoEncoder), mimetype='application/json')
 
 '''
@@ -45,42 +50,40 @@ from django.core.exceptions import PermissionDenied
 def superuser_only(function):
     """
     Limit view to superusers only.
-    
     Usage:
     --------------------------------------------------------------------------
     @superuser_only
     def my_view(request):
         ...
     --------------------------------------------------------------------------
-    
     or in urls:
-    
     --------------------------------------------------------------------------
     urlpatterns = patterns('',
         (r'^foobar/(.*)', is_staff(my_view)),
     )
-    --------------------------------------------------------------------------    
+    --------------------------------------------------------------------------
     """
     def _inner(request, *args, **kwargs):
         if not request.user.is_superuser:
-            raise PermissionDenied           
+            raise PermissionDenied
         return function(request, *args, **kwargs)
     return _inner
 '''
 ### Object list pages ########################################################
 
+
 @login_required(login_url='/')
 def my_account(request):
     conn = connections["default"]
     batches = list(conn.get_collection("tb_app_batch").find(
-        {"profile.coders":{"$in":[request.user.username]}},
-        fields={"profile":1,"reports.progress":1},
+        {"profile.coders": {"$in": [request.user.username]}},
+        fields={"profile": 1, "reports.progress": 1},
     ))
 
     assignments = []
     for b in batches:
         assignments.append({
-            "batch":{
+            "batch": {
                 "name": b["profile"]["name"],
                 "index": b["profile"]["index"],
                 "_id": b["_id"],
@@ -90,87 +93,94 @@ def my_account(request):
 #    print json.dumps(assignments, indent=2, cls=MongoEncoder)
 
     result = {
-        'assignments' : assignments, #! Get assignments from DB
+        'assignments': assignments,  # Get assignments from DB
     }
     return render_to_response('my-account.html', result, context_instance=RequestContext(request))
+
 
 @login_required(login_url='/')
 def shared_resources(request):
     conn = connections["default"]
-    batches = list(conn.get_collection("tb_app_batch").find(fields={"profile":1,"reports":1},sort=[('created_at',1)]))
+    batches = list(conn.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('created_at', 1)]))
 
     for b in batches:
         update_batch_progress(b["_id"])
 
 #    print list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
-        'codebooks' : list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)])),
-        'collections' : list(conn.get_collection("tb_app_collection").find(fields={"id":1, "name":1, "description":1})),
-        'batches' : batches,
-        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
+        'codebooks': list(conn.get_collection("tb_app_codebook").find(sort=[('created_at', 1)])),
+        'collections': list(conn.get_collection("tb_app_collection").find(fields={"id": 1, "name": 1, "description": 1})),
+        'batches': batches,
+        'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
 
     return render_to_response('shared-resources.html', result, context_instance=RequestContext(request))
 
+
 @login_required(login_url='/')
 def administration(request):
     result = {
-        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser', 'last_login']),
+        'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser', 'last_login']),
     }
     return render_to_response('administration.html', result, context_instance=RequestContext(request))
 
 ### Object view pages ########################################################
 
+
 @login_required(login_url='/')
 def codebook(request, id_):
-    conn = connections["default"] 
+    conn = connections["default"]
     result = {
         "codebook": conn.get_collection("tb_app_codebook").find_one(
-            {"_id":ObjectId(id_)}
+            {"_id": ObjectId(id_)}
 #            {"name":1, "description": 1}
         )}
     return render_to_response('codebook.html', result, context_instance=RequestContext(request))
 
+
 @login_required(login_url='/')
 def collection(request, id_):
-    conn = connections["default"] 
+    conn = connections["default"]
     result = {
         "collection": conn.get_collection("tb_app_collection").find_one(
-            {"_id":ObjectId(id_)},
-            {"name":1, "description": 1}
+            {"_id": ObjectId(id_)},
+            {"name": 1, "description": 1}
         )}
     return render_to_response('collection.html', result, context_instance=RequestContext(request))
 
+
 @login_required(login_url='/')
 def batch(request, id_):
-    conn = connections["default"] 
+    conn = connections["default"]
 
     update_batch_progress(id_)
-    batch = conn.get_collection("tb_app_batch").find_one({"_id":ObjectId(id_)},fields={"profile":1, "reports":1})
+    batch = conn.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1})
 
     result = {
-        'batch' : batch,
-        'codebook' : conn.get_collection("tb_app_codebook").find_one({"_id":ObjectId(batch["profile"]["codebook_id"])}),
-        'collection' : conn.get_collection("tb_app_collection").find_one(
-            {"_id":ObjectId(batch["profile"]["collection_id"])}#,
+        'batch': batch,
+        'codebook': conn.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])}),
+        'collection': conn.get_collection("tb_app_collection").find_one(
+            {"_id": ObjectId(batch["profile"]["collection_id"])}#,
 #            fields={"name":1, "reports":1}
         ),
-        'users' : jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
+        'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
     return render_to_response('batch.html', result, context_instance=RequestContext(request))
 
+
 @login_required(login_url='/')
 def assignment(request, batch_index, username):
-    conn = connections["default"] 
+    conn = connections["default"]
     batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
 
-    result = { 'batch' : batch }
-    print json.dumps( batch, cls=MongoEncoder, indent=2 )
-    assignment = {}
+    result = {'batch': batch}
+    print json.dumps(batch, cls=MongoEncoder, indent=2)
+    assignment = {}  # ?
 
     return render_to_response('assignment.html', result, context_instance=RequestContext(request))
 
 ### Ajax calls ###############################################################
+
 
 def signin(request):
     try:
@@ -185,7 +195,7 @@ def signin(request):
         if user.is_active:
             login(request, user)
             # Redirect to a success page.
-            result = {"status": "success", "msg": "Sign in succeeded.  Welcome back, "+username}
+            result = {"status": "success", "msg": "Sign in succeeded.  Welcome back, " + username}
         else:
             # Return a 'disabled account' error message
             result = {"status": "failed", "msg": "Sorry, this account has been disabled."}
@@ -194,6 +204,7 @@ def signin(request):
         result = {"status": "failed", "msg": "Sorry, this username and password don't go together.  Try again?"}
 
     return HttpResponse(json.dumps(result, indent=2), mimetype='application/json')
+
 
 #This is only kinda sorta ajax, but it belongs with signin.
 def signout(request):
@@ -215,18 +226,19 @@ def create_account(request):
         new_user = User.objects.create_user(
                 request.POST["username"],
                 request.POST["email"],
-                request.POST["username"],   #Password
+                request.POST["username"],   # Password
                 )
         new_user.first_name = request.POST["first_name"]
         new_user.last_name = request.POST["last_name"]
         new_user.is_staff = "admin" in request.POST
         new_user.is_superuser = "admin" in request.POST
         new_user.save()
-    except MultiValueDictKeyError as e:
+    except MultiValueDictKeyError as e:  # ?
 #        print e.args
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
     return gen_json_response({"status": "success", "msg": "Successfully created account."})
+
 
 @login_required(login_url='/')
 def update_account(request):
@@ -244,8 +256,7 @@ def update_account(request):
         user.first_name = request.POST["first_name"]
         user.last_name = request.POST["last_name"]
         user.email = request.POST["email"]
-        user.set_password( request.POST["password"] )
-
+        user.set_password(request.POST["password"])
         user.save()
     except MultiValueDictKeyError as e:
         print e.args
@@ -261,26 +272,26 @@ def update_permission(request):
 
     try:
         user = User.objects.get(username=request.POST["username"])
-    except MultiValueDictKeyError as e:
+    except MultiValueDictKeyError as e:  # ?
         return gen_json_response({"status": "failed", "msg": "Missing field 'username.'"})
 
     if "active" in request.POST:
-        new_status = request.POST["active"]=='true'
+        new_status = request.POST["active"] == 'true'
         if not new_status and user.is_superuser:
             return gen_json_response({"status": "failed", "msg": "Sorry, you can't deactivate a user with admin privileges."})
         else:
             user.is_active = new_status
             if user.is_active:
                 user.set_password(user.username)
-        
+
     if "admin" in request.POST:
-        new_status = request.POST["admin"]=='true'
+        new_status = request.POST["admin"] == 'true'
         if not new_status and User.objects.filter(is_superuser=True).count() < 2:
             return gen_json_response({"status": "failed", "msg": "Sorry, you can't remove admin privileges from the last administrator."})
         elif new_status and not user.is_active:
             return gen_json_response({"status": "failed", "msg": "Sorry, you can't grant admin privileges to an inactive user."})
         else:
-            user.is_superuser =  new_status
+            user.is_superuser = new_status
     user.save()
 
     return gen_json_response({"status": "success", "msg": "Successfully updated permissions.", "new_status": new_status})
@@ -316,10 +327,11 @@ def upload_collection(request):
     J['description'] = description
 
     conn = connections["default"]
-    result = conn.get_collection("tb_app_collection").insert(J)
+    result = conn.get_collection("tb_app_collection").insert(J)  # ?
 
 #    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
     return redirect('/shared-resources/')
+
 
 @login_required(login_url='/')
 def get_collection_docs(request):
@@ -327,17 +339,18 @@ def get_collection_docs(request):
     conn = connections["default"]
 
     try:
-        collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId(id_)})
+        collection = conn.get_collection("tb_app_collection").find_one({"_id": ObjectId(id_)})
 
     # Error checking for invalid Ids
-    except InvalidId as e:
+    except InvalidId as e:  # ?
         return gen_json_response({"status": "failed", "msg": "Not a valid collection ID."})
 
     return gen_json_response({
             "status": "success",
             "msg": "Everything all good AFAICT.",
-            "documents" : collection["documents"]
+            "documents": collection["documents"]
             })
+
 
 @login_required(login_url='/')
 def update_collection(request):
@@ -345,24 +358,23 @@ def update_collection(request):
     try:
         id_ = request.POST["id_"]
         name = request.POST["name"]
-        
         if len(request.POST["name"]) == 0:
             return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
 
         description = request.POST.get("description", '')
 
-    except MultiValueDictKeyError as e:
+    except MultiValueDictKeyError as e:  # ?
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
     conn = connections["default"]
     coll = conn.get_collection("tb_app_collection")
-    J = coll.find_one({"_id":ObjectId(id_)})
+    J = coll.find_one({"_id": ObjectId(id_)})
     J['name'] = name
     J['description'] = description
-    
-    result = conn.get_collection("tb_app_collection").update({"_id":ObjectId(id_)}, J)
+    result = conn.get_collection("tb_app_collection").update({"_id": ObjectId(id_)}, J)  # ?
 
     return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
+
 
 @login_required(login_url='/')
 def create_codebook(request):
@@ -392,46 +404,48 @@ def create_codebook(request):
     J['batches'] = []
     J['parent'] = None
     J['questions'] = [{
-            "question_type" : "Static text",
-            "var_name" : "default_question",
-            "params" : {
-                "header_text" : "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
+            "question_type": "Static text",
+            "var_name": "default_question",
+            "params": {
+                "header_text": "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
             }
         },
         {
-            "question_type" : "Multiple choice",
-            "var_name" : "mchoice",
-            "params" : {
-                "header_text" : "Here is an example of a multiple choice question.  Which answer do you like best?",
-                "answer_array" : ["This one","No, this one","A third option"],
+            "question_type": "Multiple choice",
+            "var_name": "mchoice",
+            "params": {
+                "header_text": "Here is an example of a multiple choice question.  Which answer do you like best?",
+                "answer_array": ["This one", "No, this one", "A third option"],
             }
         },
         {
-            "question_type" : "Short essay",
-            "var_name" : "essay",
-            "params" : {
-                "header_text" : "Here's a short essay question.",
+            "question_type": "Short essay",
+            "var_name": "essay",
+            "params": {
+                "header_text": "Here's a short essay question.",
             }
         }]
-    
+
     conn = connections["default"]
-    result = conn.get_collection("tb_app_codebook").insert(J)
+    result = conn.get_collection("tb_app_codebook").insert(J)  # ?
 
     return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
+
 
 @login_required(login_url='/')
 def get_codebook(request):
     id_ = request.POST["id"]
     conn = connections["default"]
-    codebook = conn.get_collection("tb_app_codebook").find_one({"_id":ObjectId(id_)})
+    codebook = conn.get_collection("tb_app_codebook").find_one({"_id": ObjectId(id_)})
 
     #! Need error checking for invalid Ids
 
     return gen_json_response({
             "status": "success",
             "msg": "Successfully retrieved codebook.",
-            "codebook" : codebook
+            "codebook": codebook
             })
+
 
 @login_required(login_url='/')
 def save_codebook(request):
@@ -441,20 +455,20 @@ def save_codebook(request):
     #Retrieve parent codebook
     conn = connections["default"]
     coll = conn.get_collection("tb_app_codebook")
-    parent_codebook = coll.find_one({"_id":ObjectId(parent_id)})
+    parent_codebook = coll.find_one({"_id": ObjectId(parent_id)})
     #!Handle parent_codebook == None
 
     #Create new codebook
     J = {}
 
     if parent_codebook["children"]:
-        J['name'] = parent_codebook["name"]+" (branch)"
+        J['name'] = parent_codebook["name"] + " (branch)"
     else:
         J['name'] = parent_codebook["name"]
 
     J['description'] = parent_codebook["description"]
     J['created_at'] = datetime.datetime.now()
-    J['version'] = parent_codebook["version"]+1
+    J['version'] = parent_codebook["version"] + 1
     J['children'] = []
     J['batches'] = []
     J['parent'] = ObjectId(parent_id)
@@ -463,7 +477,7 @@ def save_codebook(request):
     result_id = coll.insert(J)
 
     parent_codebook["children"].append(result_id)
-    result = coll.update({"_id":ObjectId(parent_id)}, parent_codebook)
+    result = coll.update({"_id": ObjectId(parent_id)}, parent_codebook)
     print result
     print parent_codebook
 
@@ -471,8 +485,35 @@ def save_codebook(request):
             "status": "success",
             "msg": "Successfully saved codebook.",
             "_id": result_id,
-            "codebook" : J,
+            "codebook": J,
             })
+
+
+@login_required(login_url='/')
+def update_codebook(request):
+    #Get name and description
+    try:
+        id_ = request.POST["id_"]
+        name = request.POST["name"]
+
+        if len(request.POST["name"]) == 0:
+            return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
+
+        description = request.POST.get("description", '')
+
+    except MultiValueDictKeyError as e:  # ?
+        return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    conn = connections["default"]
+    coll = conn.get_collection("tb_app_codebook")
+    J = coll.find_one({"_id": ObjectId(id_)})
+    J['name'] = name
+    J['description'] = description
+
+    result = conn.get_collection("tb_app_collection").update({"_id": ObjectId(id_)}, J)  # ?
+
+    return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
+
 
 @login_required(login_url='/')
 def start_batch(request):
@@ -508,7 +549,7 @@ def start_batch(request):
         assert pct_overlap >= 0
         assert pct_overlap <= 100
     except (AssertionError, ValueError) as e:
-        return gen_json_response({"status": "failed", "msg": "Overlap must be a percentage between 0 and 100."})    
+        return gen_json_response({"status": "failed", "msg": "Overlap must be a percentage between 0 and 100."})
 
     #Establish db connection
     conn = connections["default"]
@@ -518,17 +559,17 @@ def start_batch(request):
     count = coll.find().count()
 
     #Retrieve the codebook and collection
-    codebook = conn.get_collection("tb_app_codebook").find_one({"_id":ObjectId(codebook_id)})
-    collection = conn.get_collection("tb_app_collection").find_one({"_id":ObjectId(collection_id)})
+    codebook = conn.get_collection("tb_app_codebook").find_one({"_id": ObjectId(codebook_id)})
+    collection = conn.get_collection("tb_app_collection").find_one({"_id": ObjectId(collection_id)})
 
     #Construct assignments object
     k = len(collection["documents"])
-    overlap = int((k*pct_overlap)/100)
+    overlap = int((k * pct_overlap) / 100)
 
     doc_ids = range(k)
     if shuffle:
-        import random
-        random.shuffle( doc_ids )
+        import random  # ?
+        random.shuffle(doc_ids)
     shared = doc_ids[:overlap]
     unique = doc_ids[overlap:]
 
@@ -558,22 +599,22 @@ def start_batch(request):
 #            'content': collection["documents"][i]["content"],
 #            'labels': { coders[i%len(coders)] : None }
             #Populate the list with a random smattering of fake labels
-            'labels': { coders[i%len(coders)] : random.choice([None for x in range(2)]+range(20)) }
+            'labels': {coders[i % len(coders)]: random.choice([None for x in range(2)] + range(20))}
         })
     if shuffle:
-        random.shuffle( documents )
+        random.shuffle(documents)
 
     #Construct batch object
     batch = {
         'profile': {
-            'name': 'Batch '+str(count+1),
-            'description': collection["name"][:20]+" * "+ codebook["name"][:20]+" ("+str(codebook["version"])+")",
-            'index': str(count+1),
+            'name': 'Batch ' + str(count + 1),
+            'description': collection["name"][:20] + " * " + codebook["name"][:20] + " (" + str(codebook["version"]) + ")",
+            'index': str(count + 1),
             'codebook_id': codebook_id,
             'collection_id': collection_id,
-            'coders':coders,
+            'coders': coders,
             'pct_overlap': pct_overlap,
-            'shuffle':shuffle,
+            'shuffle': shuffle,
             'created_at': datetime.datetime.now(),
         },
         'documents': documents,
@@ -595,25 +636,16 @@ def update_batch_reliability(request):
     return gen_json_response({"status": "failed", "msg": "Nope.  You can't do this yet."})
 
 
-
-
-
-
-
-
-
-
-
-
 #########################
+
 
 def update_batch_progress(id_):
     #Connect to the DB
-    conn = connections["default"] 
+    conn = connections["default"]
     coll = conn.get_collection("tb_app_batch")
 
     #Retrieve the batch
-    batch = coll.find_one({"_id":ObjectId(id_)})
+    batch = coll.find_one({"_id": ObjectId(id_)})
 #    print json.dumps(batch, indent=2, cls=MongoEncoder)
 
     #Scaffold the progress object
@@ -637,20 +669,18 @@ def update_batch_progress(id_):
     #Calculate percentages
     for coder in progress["coders"]:
         c = progress["coders"][coder]
-        c["percent"] = round(float(100*c["complete"])/c["assigned"],1)
+        c["percent"] = round(float(100 * c["complete"]) / c["assigned"], 1)
 
     progress["summary"] = {
         "assigned": assigned,
         "complete": complete,
-        "percent": round(float(100*complete)/assigned,1),
+        "percent": round(float(100 * complete) / assigned, 1),
     }
 
     batch["reports"]["progress"] = progress
 #    print json.dumps(progress, indent=2, cls=MongoEncoder)
 
-    result = coll.update({"_id":ObjectId(id_)}, batch)
+    result = coll.update({"_id": ObjectId(id_)}, batch)  # ?
 #    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
 
-    #! Validate response
-
-
+    # Validate response

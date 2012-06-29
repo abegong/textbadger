@@ -84,7 +84,8 @@ $(function(){
 
 {% block title %}
 <!--<form method="POST" action="/ajax/save-codebook/">-->
-    <button id="save-codebook" class="btn btn-primary rightside" type="submit">Save changes</button>
+    <a class="btn btn-inverse open-modal rightside">Edit codebook info</a>
+    {% include "forms/edit-codebook.htm" %}
     <h3>{{codebook.name}} ({{codebook.version}})</h3>
 <!--</form>-->
 {% endblock %}
@@ -131,7 +132,7 @@ $(function(){
           <a class="btn" id="export-html"><i class="icon-download"></i> Export HTML</a>
       </div>
 -->
- 
+     <button id="save-codebook" class="btn btn-primary rightside" type="submit">Save changes</button>
     <h4>Question</h4>
   
         <div id="questionControls"></div>
