@@ -88,47 +88,45 @@ div.border{
 
 /*** Formatting for codebook questions ************************************************/
 
-.questionBox{ margin:5px; padding:10px; text-align:left; border:2px solid #fff; border-radius:10px;}
-.headerText,.answerText,.questionText{ width:95%; padding:2px;} /*background-color:#eee; */
-.answerText{ padding-left:22px; cursor:pointer; }
+#codebook .questionBox{ margin:5px; padding:10px; text-align:left; border:2px solid #fff; border-radius:10px;}
+#codebook .headerText,.answerText,.questionText{ width:95%; padding:2px;} /*background-color:#eee; */
+#codebook .answerText{ padding-left:22px; cursor:pointer; }
 
-.mouseoverCell{
+#codebook .mouseoverCell{
 	background-color:#ddf;
 	border-radius: 10px;
 }
-.hoverQuestion{ border:2px solid #ddf; }
-.targetQuestion{ border:2px solid #bbd; background-color:#ddf; }
+#codebook .hoverQuestion{ border:2px solid #ddf; }
+#codebook .targetQuestion{ border:2px solid #bbd; background-color:#ddf; }
 
-.questionBox p{ margin:0px 20px 0px 20px; }
-.questionBox input[type=text]{ margin-left:20px; }
-.questionBox textarea{ margin-left:20px; }
+#codebook .questionBox p{ margin:0px 20px 0px 20px; }
+#codebook .questionBox input[type=text]{ margin-left:20px; }
+#codebook .questionBox textarea{ margin-left:20px; }
 
 
-table.matrixQuestion{
+#codebook table.matrixQuestion{
 	border-collapse:collapse;
 	width: 90%;
 	margin:auto;
 	margin-bottom:20px;
 }
-thead{}
 
-tr{}
-.even{
+#codebook tr.even{
 	background-color:#eee;
 }
-.odd{
+#codebook tr.odd{
 	background-color:#ccc;
 }
 
-td{
+#codebook td{
 	text-align:center;
 	padding:5px;
 }
-.textCol{
+#codebook .textCol{
 	text-align:left;
 	padding-left:25px;
 	text-indent:-20px;
 }
-.leftCol{	text-align:right; }
-.rightCol{ text-align:left; }
+#codebook .leftCol{	text-align:right; }
+#codebook .rightCol{ text-align:left; }
 
