@@ -8,10 +8,38 @@
 
 <script src="{{ STATIC_URL }}informal/informalScripts.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}informal/informalEditor.js" type="text/javascript"></script>
+<!--<script src="{{ STATIC_URL }}informal/informalEditor.js" type="text/javascript"></script>-->
 <link href="{{ STATIC_URL }}informal/informal-styles.css" rel="stylesheet">
 
 <script type="text/javascript">
+var launchInformalEditor = function( codebook_json ){
+/*
+  //Create the default question
+    codebookModel.questions([
+        new cbQuestion("Static text", "", {} ),
+        new cbQuestion("Multiple choice", "", {} ),
+        new cbQuestion("Check all that apply", "", {} ),
+        new cbQuestion("Two-way scale", "", {} ),
+        new cbQuestion("Radio matrix", "", {} ),
+        new cbQuestion("Checkbox matrix", "", {} ),
+        new cbQuestion("Two-way matrix", "", {} ),
+        new cbQuestion("Text box", "", {} ),
+        new cbQuestion("Short essay", "", {} ),
+        new cbQuestion("Text matrix", "", {} )
+    ]);
+*/
+  
+    codebookModel.loadQuestions(codebook_json);
+    
+    //Load the template and knockout model dynamically.
+    $.get("/static/informal/_informalTemplateKO.htm", function(template){
+        $("body").append(template);
+        ko.applyBindings(codebookModel);
+        codebookModel.addStylesToCodebook();
+        codebookModel.attachControlsToQuestion(0);
+    }, "text");
+};
+	
 var codebook_id = "{{codebook|mongo_id}}";
 
 $(function(){

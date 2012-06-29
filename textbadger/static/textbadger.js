@@ -16,7 +16,6 @@ var DocManager = {
             function(data){
                 DocManager.doc_list = data.documents;
                 DocManager.showDocument(0);
-                //$('body').trigger('doc-load-list');
                 $("#doc-count").html(DocManager.doc_list.length);
             },
             'json'
@@ -24,6 +23,9 @@ var DocManager = {
     },
 
     showDocument : function(index){
+		//Update the index
+		DocManager.doc_index = 0;
+		
         //Show the document
         $("#doc-box").html(DocManager.doc_list[index].content);
 
@@ -44,6 +46,10 @@ var DocManager = {
             $("#doc-metadata").append("<dd>"+M[m]+"</dd>");
         }
     },
+    
+    showDocumentForm : function(index){
+		console.log(DocManager.doc_list[DocManager.doc_index]);
+	},
 
     loadPrevDoc : function(){
 	    if( DocManager.doc_index > 0 ){

@@ -8,10 +8,22 @@
 
 <script src="{{ STATIC_URL }}informal/informalScripts.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}informal/informalEditor.js" type="text/javascript"></script>
+<!--<script src="{{ STATIC_URL }}informal/informalEditor.js" type="text/javascript"></script>-->
 <link href="{{ STATIC_URL }}informal/informal-styles.css" rel="stylesheet">
 
 <script type="text/javascript">
+var launchInformalViewer = function( codebook_json ){
+    codebookModel.loadQuestions(codebook_json);
+    
+    //Load the template and knockout model dynamically.
+    $.get("/static/informal/_informalTemplateKO.htm", function(template){
+        $("body").append(template);
+        ko.applyBindings(codebookModel);
+    }, "text");
+
+};
+	
+	
 $(function(){
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
