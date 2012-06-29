@@ -7,8 +7,7 @@ $(function(){
     //Highlight "shared-rez" in nav bar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
 
-    DocManager.initialize();
-    DocManager.loadDocList("{{collection|mongo_id}}","{{csrf_token}}");
+    DocManager.initialize("{{collection|mongo_id}}","{{csrf_token}}");
 });
 </script>
 {% endblock %}
@@ -35,6 +34,19 @@ $(function(){
 {% endblock %}
 
 {% block control %}
+<div style="text-align:center">
+  <form>
+	<button id="prev-doc-button" class="btn"><span class="icon-arrow-left"></span></button>
+    &nbsp;&nbsp;
+    <input id="doc-index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"></input>
+    of <span id="doc-count">0</span>
+    &nbsp;&nbsp;
+	<button id="next-doc-button" class="btn"><span class="icon-arrow-right"></span></button>
+  </form>
+</div>
+
+
+<hr/>
 <a class="btn btn-primary open-modal rightside">Edit collection info</a>
 {% include "forms/edit-collection.htm" %}
 <h4>Collection</h4>
@@ -43,24 +55,10 @@ $(function(){
 <strong>Description</strong>
 <p>{{ collection.description }}</p>
 
-<h4>Document</h4>
-<dl id="meta-data" class="dl-horizontal"></dl>
-
-
-
 <hr/>
+<h4>Document</h4>
+<dl id="doc-metadata" class="dl-horizontal"></dl>
 
-<div style="text-align:center">
-<!--    --- Control ---<br/> -->
-  <form>
-	<button id="prevButton"><span class="icon-arrow-left"></span></button>
-    &nbsp;&nbsp;
-    <input id="doc_index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"></input>
-    of <span id="doc_count">0</span>
-    &nbsp;&nbsp;
-	<button id="nextButton"><span class="icon-arrow-right"></span></button>
-  </form>
-</div>
 
 {% endblock %}
 

@@ -1,3 +1,10 @@
+/*
+Manager document-related data and DOM manipulation.
+All pages that use documents should begin with a call to:
+    DocManager.initialize(collection_id, csrf_token)
+
+No other code is needed.
+*/
 var DocManager = {
     doc_list : [],
     doc_index : 0,
@@ -9,7 +16,8 @@ var DocManager = {
             function(data){
                 DocManager.doc_list = data.documents;
                 DocManager.showDocument(0);
-                $("#doc_count").html(DocManager.doc_list.length);
+                //$('body').trigger('doc-load-list');
+                $("#doc-count").html(DocManager.doc_list.length);
             },
             'json'
         )
@@ -20,14 +28,20 @@ var DocManager = {
         $("#doc-box").html(DocManager.doc_list[index].content);
 
         //Update navigation
-        $("#doc_index").val(index+1);
+        $("#doc-index").val(index+1);
+
+	    if( DocManager.doc_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
+	    else{ $("#prev-doc-button").removeClass("disabled"); }
+
+	    if( DocManager.doc_index == DocManager.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
+	    else{ $("#next-doc-button").removeClass("disabled"); }
 
         //Update metadata
         var M = DocManager.doc_list[index].metadata;
-        $("#meta-data").html("");
+        $("#doc-metadata").html("");
         for( m in M ){
-            $("#meta-data").append("<dt>"+m+"</dt>");
-            $("#meta-data").append("<dd>"+M[m]+"</dd>");
+            $("#doc-metadata").append("<dt>"+m+"</dt>");
+            $("#doc-metadata").append("<dd>"+M[m]+"</dd>");
         }
     },
 
@@ -36,8 +50,6 @@ var DocManager = {
 		    DocManager.doc_index -= 1;
 
 		    DocManager.showDocument( DocManager.doc_index );
-		    if( DocManager.doc_index == 0 ){ $("#prevButton").addClass("ui-state-disabled"); }
-		    $("#nextButton").removeClass("ui-state-disabled");
 	    }
 	    return( false );
     },
@@ -47,22 +59,22 @@ var DocManager = {
 		    DocManager.doc_index += 1;
 
 		    DocManager.showDocument( DocManager.doc_index );
-		    if( DocManager.doc_index == DocManager.doc_list.length-1 ){ $("#nextButton").addClass("ui-state-disabled"); }
-		    $("#prevButton").removeClass("ui-state-disabled");
 	    }
 	    return( false );
     },
 
-    initialize : function(){
-        $("#prevButton").click( DocManager.loadPrevDoc );
-        $("#nextButton").click( DocManager.loadNextDoc );
-        $("#doc_index").change(function(){
+    initialize : function( collection_id, csrf_token ){
+        $("#prev-doc-button").click( DocManager.loadPrevDoc );
+        $("#next-doc-button").click( DocManager.loadNextDoc );
+        $("#doc-index").change(function(){
             var x = $(this).val();
-
             //! Need to add input validation to this function
+
             DocManager.doc_index = x;
             DocManager.showDocument(x)
         });
+
+        DocManager.loadDocList( collection_id, csrf_token );
     }
 }
 
