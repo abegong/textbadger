@@ -50,18 +50,11 @@ $(function(){
 </div>
 {% endblock %}
 
-{% block title %}
-<h3>{{collection.name}}</h3>
-{% endblock %}
-
 {% block document %}
 --- Document ---
 {% endblock %}
 
 {% block control %}
-<h3>{{codebook.name}}</h3>
-
-<hr/>
 <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }"></div>
 
 <a class="btn btn-inverse rightside">Submit</a>

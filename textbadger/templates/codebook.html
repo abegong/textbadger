@@ -106,18 +106,9 @@ $(function(){
 </div>
 {% endblock %}
 
-{% block doc_classes %}
-    span3
-    well
-    offset3
-{% endblock %}
+{% block doc_classes %}span3 well offset3{% endblock %}
 
 {% block title %}
-<!--<form method="POST" action="/ajax/save-codebook/">-->
-    <a class="btn btn-inverse open-modal rightside">Edit codebook info</a>
-    {% include "forms/edit-codebook.htm" %}
-    <h3>{{codebook.name}} ({{codebook.version}})</h3>
-<!--</form>-->
 {% endblock %}
 
 {% block document %}
@@ -132,6 +123,12 @@ $(function(){
 {% endblock %}
 
 {% block control %}
+<!--<form method="POST" action="/ajax/save-codebook/">-->
+<a class="btn btn-inverse open-modal rightside">Edit codebook info</a>
+{% include "forms/edit-codebook.htm" %}
+<h3>{{codebook.name}} ({{codebook.version}})</h3>
+<!--</form>-->
+
 <h4>Codebook</h4>
 <strong>Name</strong>
 <p>{{ codebook.name }}</p>

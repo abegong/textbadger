@@ -25,15 +25,13 @@ $(function(){
 </div>
 {% endblock %}
 
-{% block title %}
-<h3>{{collection.name}}</h3>
-{% endblock %}
-
 {% block document %}
 --- Document ---
 {% endblock %}
 
 {% block control %}
+<h3>{{collection.name}}</h3>
+
 <div style="text-align:center">
   <form>
 	<button id="prev-doc-button" class="btn"><span class="icon-arrow-left"></span></button>
