@@ -175,7 +175,7 @@ def assignment(request, batch_index, username):
 
     result = {'batch': batch}
     print json.dumps(batch, cls=MongoEncoder, indent=2)
-    assignment = {}  # ?
+    assignment = {}  # ? This is not built yet.
 
     return render_to_response('assignment.html', result, context_instance=RequestContext(request))
 
@@ -233,8 +233,7 @@ def create_account(request):
         new_user.is_staff = "admin" in request.POST
         new_user.is_superuser = "admin" in request.POST
         new_user.save()
-    except MultiValueDictKeyError as e:  # ?
-#        print e.args
+    except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
     return gen_json_response({"status": "success", "msg": "Successfully created account."})
@@ -272,7 +271,7 @@ def update_permission(request):
 
     try:
         user = User.objects.get(username=request.POST["username"])
-    except MultiValueDictKeyError as e:  # ?
+    except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field 'username.'"})
 
     if "active" in request.POST:
@@ -327,7 +326,7 @@ def upload_collection(request):
     J['description'] = description
 
     conn = connections["default"]
-    result = conn.get_collection("tb_app_collection").insert(J)  # ?
+    conn.get_collection("tb_app_collection").insert(J)
 
 #    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
     return redirect('/shared-resources/')
@@ -342,7 +341,7 @@ def get_collection_docs(request):
         collection = conn.get_collection("tb_app_collection").find_one({"_id": ObjectId(id_)})
 
     # Error checking for invalid Ids
-    except InvalidId as e:  # ?
+    except InvalidId:
         return gen_json_response({"status": "failed", "msg": "Not a valid collection ID."})
 
     return gen_json_response({
@@ -363,7 +362,7 @@ def update_collection(request):
 
         description = request.POST.get("description", '')
 
-    except MultiValueDictKeyError as e:  # ?
+    except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
     conn = connections["default"]
@@ -371,7 +370,7 @@ def update_collection(request):
     J = coll.find_one({"_id": ObjectId(id_)})
     J['name'] = name
     J['description'] = description
-    result = conn.get_collection("tb_app_collection").update({"_id": ObjectId(id_)}, J)  # ?
+    conn.get_collection("tb_app_collection").update({"_id": ObjectId(id_)}, J)
 
     return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
 
@@ -427,7 +426,7 @@ def create_codebook(request):
         }]
 
     conn = connections["default"]
-    result = conn.get_collection("tb_app_codebook").insert(J)  # ?
+    conn.get_collection("tb_app_codebook").insert(J)
 
     return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
 
@@ -568,7 +567,7 @@ def start_batch(request):
 
     doc_ids = range(k)
     if shuffle:
-        import random  # ?
+        import random  # ? This can stay here until we do our DB refactor.
         random.shuffle(doc_ids)
     shared = doc_ids[:overlap]
     unique = doc_ids[overlap:]
@@ -680,7 +679,7 @@ def update_batch_progress(id_):
     batch["reports"]["progress"] = progress
 #    print json.dumps(progress, indent=2, cls=MongoEncoder)
 
-    result = coll.update({"_id": ObjectId(id_)}, batch)  # ?
+    coll.update({"_id": ObjectId(id_)}, batch)
 #    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
 
     # Validate response
