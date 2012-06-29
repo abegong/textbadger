@@ -1,8 +1,6 @@
 === On deck ===
 
-* Assignments page
-    * Scaffold
-    * ... ...
+* Scaffold assignments page
 
 === To do ===
 
@@ -16,16 +14,7 @@
     * Add sort by name/date functionality for codebooks, collections, and batches
     * Add filter by status functionality to batches
 
-* My account page
-
 * Codebook page
-    * Change codebook/question tabs to a simple stack.
-    * inFormal
-        * Comment code
-        * Clean up cruft
-        * Refactor as necessary
-        * Check for cross-browser compatibility
-
     * Shorten text-area to text input for integer values
 
     * Fix vertical alignment of radio/checkbox answer text
@@ -33,6 +22,7 @@
     * Make styles use bootstrap themes as much as possible.
 
     * Add slider question_type
+	* Check informal for cross-browser compatibility
 
 * Collections page
     * Change codebook/question tabs to a simple stack.
@@ -42,13 +32,15 @@
 * Batches page
     * Get "export results" button working
     * Get "review results" button working    
-    * Get "Work on my tasks" button working
     * Get reliability reports working
     * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
 
 * Review page
     * Scaffold
     * ... ...
+
+* My account page
+
 
 *** Technical debt ***
     * Add @admin_required decorator
@@ -127,4 +119,11 @@
 * Set up default fixture with "The Administrator"
 * Add descriptino field to batch.profile
 * Add "change account settings" button on my-account
+* Get "Work on my tasks" button working
+* Change codebook/question tabs to a simple stack.
+* inFormal
+	* Comment code
+	* Clean up cruft
+	* Refactor as necessary
+	* Check for cross-browser compatibility
 

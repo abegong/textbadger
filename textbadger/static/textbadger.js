@@ -24,7 +24,7 @@ var DocManager = {
 
     showDocument : function(index){
 		//Update the index
-		DocManager.doc_index = 0;
+		DocManager.doc_index = index;
 		
         //Show the document
         $("#doc-box").html(DocManager.doc_list[index].content);
@@ -53,18 +53,14 @@ var DocManager = {
 
     loadPrevDoc : function(){
 	    if( DocManager.doc_index > 0 ){
-		    DocManager.doc_index -= 1;
-
-		    DocManager.showDocument( DocManager.doc_index );
+		    DocManager.showDocument( DocManager.doc_index-1 );
 	    }
 	    return( false );
     },
 
     loadNextDoc : function(){
 	    if( DocManager.doc_index < DocManager.doc_list.length-1 ){
-		    DocManager.doc_index += 1;
-
-		    DocManager.showDocument( DocManager.doc_index );
+		    DocManager.showDocument( DocManager.doc_index+1 );
 	    }
 	    return( false );
     },

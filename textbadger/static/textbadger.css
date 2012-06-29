@@ -88,8 +88,16 @@ div.border{
 
 /*** Formatting for codebook questions ************************************************/
 
-#codebook .questionBox{ margin:5px; padding:10px; text-align:left; border:2px solid #fff; border-radius:10px;}
-#codebook .headerText,.answerText,.questionText{ width:95%; padding:2px;} /*background-color:#eee; */
+#codebook {
+	padding:10px;
+	text-align:left;
+	border:2px solid #fff;
+	border-radius:10px;
+}
+
+#codebook .questionBox{
+}
+#codebook .headerText,.answerText,.questionText{ width:95%; padding:0px;} /*background-color:#eee; */
 #codebook .answerText{ padding-left:22px; cursor:pointer; }
 
 #codebook .mouseoverCell{
@@ -108,7 +116,7 @@ div.border{
 	border-collapse:collapse;
 	width: 90%;
 	margin:auto;
-	margin-bottom:20px;
+	margin-bottom:10px;
 }
 
 #codebook tr.even{
