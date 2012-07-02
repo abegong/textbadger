@@ -89,52 +89,66 @@ div.border{
 /*** Formatting for codebook questions ************************************************/
 
 #codebook {
-	padding:10px;
+	/*padding:10px;*/
 	text-align:left;
 	border:2px solid #fff;
 	border-radius:10px;
 }
 
 #codebook .questionBox{
+	margin:0px;
+	padding:0px;
 	margin-bottom:10px;
+	border-right:5px solid #f5f5f5;
 }
-#codebook .headerText,.answerText,.questionText{ width:95%; padding:0px;} /*background-color:#eee; */
-#codebook .answerText{ padding-left:22px; cursor:pointer; }
-
-#codebook .mouseoverCell{
-	background-color:#dddddd;/*#ddf;*/
-	
+#codebook .questionContent{
+	margin:3px;
+	padding:7px;
 }
-#codebook .hoverQuestion{ border:2px solid #ddf; }
-#codebook .targetQuestion{ border:2px solid #bbd; background-color:#ddf; }
-
 #codebook .questionBox p{ margin:0px 20px 0px 20px; }
 #codebook .questionBox input[type=text]{ margin-left:20px; }
 #codebook .questionBox textarea{ margin-left:20px; }
+#codebook .questionBox table.matrixQuestion input[type=text]{
+	width:90%;
+	margin-left:0px;
+}
 
+#codebook .headerText,.answerText,.questionText{ width:95%; padding:0px;} /*background-color:#eee; */
+#codebook .answerText{ padding-left:22px; cursor:pointer; }
+#codebook .mouseoverCell{ background-color:#ccddbb; }
 
 #codebook table.matrixQuestion{
 	border-collapse:collapse;
-	width: 90%;
+	width: 100%;
 	margin:auto;
 }
 
 #codebook tr.even{
-	background-color:#eee;
+	background-color:#e8e8e8;
 }
+/*
 #codebook tr.odd{
 	background-color:#ccc;
 }
-
+*/
 #codebook td{
 	text-align:center;
 	padding:5px;
 }
 #codebook .textCol{
 	text-align:left;
-	padding-left:25px;
-	text-indent:-20px;
+	/* padding-left:15px; */
+	/*text-indent:20px;*/
 }
 #codebook .leftCol{	text-align:right; }
 #codebook .rightCol{ text-align:left; }
 
+/*** Formatting for editable codebook questions ************************************************/
+
+/*
+#codebook .hoverQuestion{ border:2px solid #ddf; }
+#codebook .targetQuestion{ border:2px solid #bbd; background-color:#ddf; }
+*/
+
+#codebook .hoverQuestion{ border-right:5px solid #ccddbb; background-color:#ccddbb; }
+#codebook .targetQuestion{ border-right:5px solid #669533; background-color:#ccddbb; }

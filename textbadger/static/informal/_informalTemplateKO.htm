@@ -1,6 +1,7 @@
 <script id="question-template" type="x-jquery-tmpl">
 
 <div class="questionBox{{if targeted}} targetQuestion{{/if}}">
+  <div class="questionContent">
 {{if question_type() == codebookModel.questionTypes()[0] /*Static text*/}}
 	<div class="headerText">{{html params.header_text}}</div>
 
@@ -88,6 +89,7 @@
 {{else}}
 	<h3>Question type not yet supported: ${question_type}</h3>
 {{/if}}
+  </div>
 </div>
 
 </script>

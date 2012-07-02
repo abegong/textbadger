@@ -32,6 +32,7 @@ $(function(){
         function(response){
             //! Need error checking for failed responses.
             launchInformalViewer(response.codebook.questions);
+            $("#codebook").append('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-inverse">Submit</a></div></div>');
         }
     );
 });
@@ -57,8 +58,6 @@ $(function(){
 
 {% block control %}
 <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }" tb-codebook-mode="viewer"></div>
-
-<a class="btn btn-inverse rightside">Submit</a>
 <br/>
 
 <!--
@@ -76,6 +75,7 @@ $(function(){
 <dl id="meta-data" class="dl-horizontal"></dl>
 -->
 
+<!--
 <hr/>
 <h4>Browse</h4>
 <div style="text-align:center">
@@ -88,6 +88,159 @@ $(function(){
 	<button id="next-doc-button" class="btn"><span class="icon-arrow-right"></span></button>
   </form>
 </div>
+-->
+
+<!--
+<div id="codebook" tb-codebook-mode="viewer"><form><fieldset>
+	<div class="questionBox">
+		<div class="headerText">Static text</div>
+	</div>
+
+	<div class="questionBox">
+		<div class="headerText">Slider</div>
+		<div class="answerSlider"></div>
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Multiple choice</div>
+			<div class="answerText"><input type="radio" name="Q2" value="1">Answer 1</div>
+			<div class="answerText"><input type="radio" name="Q2" value="2">Answer 2</div>
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Check all that apply</div>
+		<div class="answerText"><input type="checkbox" name="Q3" value="1">Answer 1</div>
+		<div class="answerText"><input type="checkbox" name="Q3" value="2">Answer 2</div>
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Two-way scale</div>
+		<table class="matrixQuestion"><tbody>
+			<tr>
+				<td></td>
+				<td>Answer 1</td>
+				<td>Answer 2</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="leftCol">Left statement</td>
+				<td><input type="radio" name="Q4" value="1"></td>
+				<td><input type="radio" name="Q4" value="2"></td>
+				<td class="rightCol">Right statement</td>
+			</tr>
+		</tbody></table>
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Radio matrix</div>
+		<table class="matrixQuestion">
+			<thead>
+				<tr>
+					<td></td>
+					<td>Answer 1</td>
+					<td>Answer 2</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="even">
+					<td class="textCol">Question 1</td>
+					<td><input type="radio" name="Q5_1" value="1"></td>
+					<td><input type="radio" name="Q5_1" value="2"></td>
+				</tr>
+				<tr class="odd">
+					<td class="textCol">Question 2</td>
+					<td><input type="radio" name="Q5_2" value="1"></td>
+					<td><input type="radio" name="Q5_2" value="2"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Checkbox matrix</div>
+		<table class="matrixQuestion">
+			<thead>
+				<tr>
+					<td></td>
+					<td>Answer 1</td>
+					<td>Answer 2</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="even">
+					<td class="textCol">Question 1</td>
+					<td><input type="checkbox" name="Q6_1" value="1"></td>
+					<td><input type="checkbox" name="Q6_1" value="2"></td>
+				</tr>
+				<tr class="odd">
+					<td class="textCol">Question 2</td>
+					<td><input type="checkbox" name="Q6_2" value="1"></td>
+					<td><input type="checkbox" name="Q6_2" value="2"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Two-way matrix</div>
+		<table class="matrixQuestion"><tbody>
+			<tr>
+				<td></td>
+				<td>Answer 1</td>
+				<td>Answer 2</td>
+				<td></td>
+			</tr>
+			<tr class="even">
+				<td class="leftCol">Statement 1</td>
+				<td><input type="radio" name="Q7_1" value="1"></td>
+				<td><input type="radio" name="Q7_1" value="2"></td>
+				<td class="rightCol">Statement 1</td>
+			</tr>
+			<tr class="odd">
+				<td class="leftCol">Statement 2</td>
+				<td><input type="radio" name="Q7_2" value="1"></td>
+				<td><input type="radio" name="Q7_2" value="2"></td>
+				<td class="rightCol">Statement 2</td>
+			</tr>
+		</tbody></table>
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Text box</div>
+		<input type="text" name="Q8" value="" size="20">
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Short essay</div>
+		<textarea name="Q9" cols="30" rows="5"></textarea>
+	</div>
+
+
+	<div class="questionBox">
+		<div class="headerText">Text matrix</div>
+			<table class="matrixQuestion"><tbody>
+				<tr class="even">
+					<td class="textCol">Answer 1</td>
+					<td><input type="text" name="Q10_1" size="20"/></td>
+				</tr>
+				<tr class="odd">
+					<td class="textCol">Answer 2</td>
+					<td><input type="text" name="Q10_2" size="20"/></td>
+				</tr>
+			</tbody></table>
+		</div>
+	</div>
+</fieldset></form></div>
+-->
+
 
 {% endblock %}
 

@@ -1,18 +1,16 @@
 === On deck ===
 
-* Scaffold assignments page
-
 === To do ===
 
-* About page
-    * Fill in FAQ
-
 * Shared resources page
-    * Activate "create sub-collection" button
-    * Make descriptions optional for codebooks and collections
-    * Add size, type, and created_at fields to collections
+    *** Activate "Create collection" button
+    ** Add size, type, and created_at fields to collections
     * Add sort by name/date functionality for codebooks, collections, and batches
+    * Add activate/deactive pills to codebooks, collections, and batchs
     * Add filter by status functionality to batches
+	* Add filter by status functionality to collections
+
+		* Make descriptions optional for codebooks and collections
 
 * Codebook page
     * Shorten text-area to text input for integer values
@@ -25,9 +23,10 @@
 	* Check informal for cross-browser compatibility
 
 * Collections page
-    * Change codebook/question tabs to a simple stack.
-    * Add "Update collection info" button
     * Make metadata editable
+
+	    * Change codebook/question tabs to a simple stack.
+		** Add "Edit collection info" button
 
 * Batches page
     * Get "export results" button working
@@ -35,12 +34,12 @@
     * Get reliability reports working
     * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
 
+* Assignments page
+		* Scaffold assignments page
+
 * Review page
     * Scaffold
     * ... ...
-
-* My account page
-
 
 *** Technical debt ***
     * Add @admin_required decorator
@@ -52,8 +51,15 @@
         * Implement "batches" functionality in codebooks
     * Add fixtures for codebooks, batches, and assignments
 
+*** Documentation ***
+
 * Home page
 * Administration page
+* My account page
+
+* About page
+    * Fill in FAQ
+
 
 
 === Punt ===

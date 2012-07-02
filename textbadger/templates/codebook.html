@@ -11,6 +11,7 @@
 var launchInformalEditor = function( codebook_json ){
 
   //Create the default question
+
     codebookModel.questions([
         new cbQuestion("Static text", "", {} ),
         new cbQuestion("Multiple choice", "", {} ),
@@ -23,8 +24,7 @@ var launchInformalEditor = function( codebook_json ){
         new cbQuestion("Short essay", "", {} ),
         new cbQuestion("Text matrix", "", {} )
     ]);
-  
-//    codebookModel.loadQuestions(codebook_json);
+    codebookModel.loadQuestions(codebook_json);
     
     //Load the template and knockout model dynamically.
     $.get("/static/informal/_informalTemplateKO.htm", function(template){

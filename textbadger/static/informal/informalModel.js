@@ -143,11 +143,12 @@ var codebookModel = {
     },
 
     addEditorStylesToQuestion : function(Q){
+		/*
         $("input[type=radio],input[type=checkbox]",Q).parent()
             .click( function(){    x = $('input',this); x.attr('checked',!x.attr('checked'));    })
             .mouseover( function(){ $(this).addClass('mouseoverCell'); })
             .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
-
+		*/
         Q
             .unbind('click mouseenter mouseleave')
             .hover( 
@@ -155,8 +156,6 @@ var codebookModel = {
                 function(){$(this).removeClass('hoverQuestion');}
             )
             .click( function(){
-                console.log("x");
-                console.log($(this).index(".questionBox"));
                 codebookModel.attachControlsToQuestion( $(this).index(".questionBox") );
             });
     },
