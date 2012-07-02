@@ -4,29 +4,19 @@
 
 * Shared resources page
     *** Activate "Create collection" button
-    ** Add size, type, and created_at fields to collections
+    * Add size, type, and created_at fields to collections
     * Add sort by name/date functionality for codebooks, collections, and batches
     * Add activate/deactive pills to codebooks, collections, and batchs
     * Add filter by status functionality to batches
 	* Add filter by status functionality to collections
 
-		* Make descriptions optional for codebooks and collections
-
 * Codebook page
     * Shorten text-area to text input for integer values
-
-    * Fix vertical alignment of radio/checkbox answer text
-    * Don't let hover pills overflow their boundaries
-    * Make styles use bootstrap themes as much as possible.
-
     * Add slider question_type
 	* Check informal for cross-browser compatibility
 
 * Collections page
     * Make metadata editable
-
-	    * Change codebook/question tabs to a simple stack.
-		** Add "Edit collection info" button
 
 * Batches page
     * Get "export results" button working
@@ -35,7 +25,7 @@
     * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
 
 * Assignments page
-		* Scaffold assignments page
+    * ... ...
 
 * Review page
     * Scaffold
@@ -114,10 +104,14 @@
     * Make "create new codebook" click-through and redirect work.
     * Make "upload collection" click-through and redirect work.    
     * Clean up codebook table in shared-rez page
+    * Make descriptions optional for codebooks and collections
+
 * Codebook page
     * Get question export working -- enough....
     * Build save-codebook routes, logic, and template
     * Figure out urls, back buttons, etc.
+    * Change codebook/question tabs to a simple stack.
+	** Add "Edit collection info" button
 * Build batch page
 * Add breadcrumb navigation to codebook/collection/batches
 * Figure out batch/coding DB structure
@@ -132,4 +126,10 @@
 	* Clean up cruft
 	* Refactor as necessary
 	* Check for cross-browser compatibility
+    * Fix vertical alignment of radio/checkbox answer text
+    * Don't let hover pills overflow their boundaries
+    * Make styles use bootstrap themes as much as possible.
+* Assignments page
+	* Scaffold assignments page
+
 
