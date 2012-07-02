@@ -45,7 +45,7 @@ $(function(){
 
 
 <hr/>
-<a class="btn btn-inverse open-modal rightside">Edit collection info</a>
+<a class="btn btn-primary open-modal rightside">Edit collection info</a>
 {% include "forms/edit-collection.htm" %}
 <h4>Collection</h4>
 <strong>Name</strong>
@@ -54,7 +54,8 @@ $(function(){
 <p>{{ collection.description }}</p>
 
 <hr/>
-<a class="btn btn-primary open-modal rightside">Edit meta-data</a>
+<a class="btn btn-inverse open-modal rightside">Edit meta-data</a>
+{% include "forms/edit-meta-data.htm" %}
 <h4>Document</h4>
 <dl id="doc-metadata" class="dl-horizontal"></dl>
 

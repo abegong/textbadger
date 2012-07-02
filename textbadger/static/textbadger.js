@@ -25,7 +25,7 @@ var DocManager = {
     showDocument : function(index){
 		//Update the index
 		DocManager.doc_index = index;
-		
+
         //Show the document
         $("#doc-box").html(DocManager.doc_list[index].content);
 
@@ -44,9 +44,14 @@ var DocManager = {
         for( m in M ){
             $("#doc-metadata").append("<dt>"+m+"</dt>");
             $("#doc-metadata").append("<dd>"+M[m]+"</dd>");
+
+            $("#edit-metadata").append("<div class=\"control-group\"><label class=\"control-label\" for=\"meta-"+m+"\">"+m+"</label><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\""+m+"\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button class=\"btn btn-mini\">&times;</button></div></div>");
         }
+
+
+
     },
-    
+
     showDocumentForm : function(index){
 		console.log(DocManager.doc_list[DocManager.doc_index]);
 	},
@@ -159,7 +164,7 @@ $(function(){
     //Clickable table rows have "href" attributes
     $('tr[href]')
         .hover(function(){
-            $(this).addClass("tb-hilight");        
+            $(this).addClass("tb-hilight");
         }, function(){
             $(this).removeClass("tb-hilight");
         })
@@ -178,4 +183,5 @@ $(function(){
 
     //This development snippet autorefreshes the page every 2 seconds
 //    autoRefresh(2000);
+
 });
