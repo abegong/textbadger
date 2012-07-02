@@ -303,15 +303,16 @@ def upload_collection(request):
         name = request.POST["name"]
         csv_file = request.FILES["fileInput"]
         filename = unicode(csv_file)
+        description = request.POST.get("description", '')
 
-        #! This isn't quite right.  Description shouldn't be required.
-        #description = get_argument(request,"description", "")
-        description = request.POST["description"]
-
-        print name, description
-    except MultiValueDictKeyError as e:
-        print e.args
+    except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    if len(name) == 0:
+        return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
+
+
+    J = {}
 
     #Detect filetype
     if re.search('\.csv$', filename.lower()):
@@ -380,18 +381,13 @@ def create_codebook(request):
     #Get name and description
     try:
         name = request.POST["name"]
+        description = request.POST["description"]
 
-        #! This isn't quite right.  Description shouldn't be required.
-        description = request.GET.get("description", "")
-        #description = request.POST["description"]
-
-        print name, description
-    except MultiValueDictKeyError as e:
-        print e.args
+    except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
-    if len(name) < 4:
-        return gen_json_response({"status": "failed", "msg": "This name is too short.  Please give a name at least 4 letters long."})
+    if len(name) == 0:
+        return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
 
     #Construct object
     J = {}
@@ -495,7 +491,7 @@ def update_codebook(request):
         id_ = request.POST["id_"]
         name = request.POST["name"]
 
-        if len(request.POST["name"]) == 0:
+        if len(name) == 0:
             return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
 
         description = request.POST.get("description", '')

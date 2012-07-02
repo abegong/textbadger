@@ -1,3 +1,4 @@
 *~
 *.pyc
 dev/scrap/
+/sftp-config.json

@@ -122,12 +122,12 @@ $(function(){
 {% endblock %}
 
 {% block control %}
-<!--<form method="POST" action="/ajax/save-codebook/">-->
-<a class="btn btn-inverse open-modal rightside">Edit codebook info</a>
-{% include "forms/edit-codebook.htm" %}
-<h3>{{codebook.name}} ({{codebook.version}})</h3>
-<!--</form>-->
 
+<button id="save-codebook" class="btn btn-primary rightside" type="submit">Save changes</button>
+<h3>{{codebook.name}} ({{codebook.version}})</h3>
+<hr />
+<a class="btn btn-primary open-modal rightside">Edit codebook info</a>
+{% include "forms/edit-codebook.htm" %}
 <h4>Codebook</h4>
 <strong>Name</strong>
 <p>{{ codebook.name }}</p>
@@ -158,7 +158,7 @@ $(function(){
           <a class="btn" id="export-html"><i class="icon-download"></i> Export HTML</a>
       </div>
 -->
-     <button id="save-codebook" class="btn btn-primary rightside" type="submit">Save changes</button>
+     <hr />
     <h4>Question</h4>
   
         <div id="questionControls"></div>
