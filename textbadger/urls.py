@@ -46,6 +46,7 @@ urlpatterns = patterns('',
     #url(r'^ajax/sample-collection/$', 'tb_app.views.sample_collection'),
     url(r'^ajax/get-collection-docs/$', 'tb_app.views.get_collection_docs'),
     url(r'^ajax/update-collection/$', 'tb_app.views.update_collection'),
+    url(r'^ajax/update-meta-data/$', 'tb_app.views.update_meta_data'),
 
     url(r'^ajax/start-batch/$', 'tb_app.views.start_batch'),
 #    url(r'^ajax/update-batch-progress/$', 'tb_app.views.update_batch_progress'),

@@ -377,6 +377,12 @@ def update_collection(request):
 
 
 @login_required(login_url='/')
+def update_meta_data(request):
+
+        return gen_json_response({"status": "success", "msg": "Successfully updated meta-data."})
+
+
+@login_required(login_url='/')
 def create_codebook(request):
     #Get name and description
     try:
