@@ -16,6 +16,10 @@ var launchInformalViewer = function( codebook_json ){
         $("body").append(template);
         ko.applyBindings(codebookModel);
         codebookModel.addStylesToCodebook();
+                            
+		//Add the "submit" button.
+		$("#codebook").append('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-inverse">Submit</a></div></div>');
+
     }, "text");
 
 };
@@ -31,8 +35,7 @@ $(function(){
         {'id': "{{batch.profile.codebook_id}}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
             //! Need error checking for failed responses.
-            launchInformalViewer(response.codebook.questions);
-            $("#codebook").append('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-inverse">Submit</a></div></div>');
+            launchInformalViewer(response.codebook.questions);       
         }
     );
 });

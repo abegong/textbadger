@@ -98,8 +98,8 @@ div.border{
 #codebook .questionBox{
 	margin:0px;
 	padding:0px;
-	margin-bottom:10px;
 	border-right:5px solid #f5f5f5;
+	position: relative;
 }
 #codebook .questionContent{
 	margin:3px;
@@ -113,7 +113,7 @@ div.border{
 	margin-left:0px;
 }
 
-#codebook .headerText,.answerText,.questionText{ width:95%; padding:0px;} /*background-color:#eee; */
+#codebook .headerText,.answerText,.questionText{ width:95%; padding:0px; } /*background-color:#eee; */
 #codebook .answerText{ padding-left:22px; cursor:pointer; }
 #codebook .mouseoverCell{ background-color:#ccddbb; }
 
@@ -126,11 +126,10 @@ div.border{
 #codebook tr.even{
 	background-color:#e8e8e8;
 }
-/*
 #codebook tr.odd{
-	background-color:#ccc;
+	background-color:##f5f5f5;
 }
-*/
+
 #codebook td{
 	text-align:center;
 	padding:5px;
@@ -145,10 +144,14 @@ div.border{
 
 /*** Formatting for editable codebook questions ************************************************/
 
-/*
-#codebook .hoverQuestion{ border:2px solid #ddf; }
-#codebook .targetQuestion{ border:2px solid #bbd; background-color:#ddf; }
-*/
-
 #codebook .hoverQuestion{ border-right:5px solid #ccddbb; background-color:#ccddbb; }
 #codebook .targetQuestion{ border-right:5px solid #669533; background-color:#ccddbb; }
+
+/*** Formatting for marked up codebook questions ************************************************/
+
+#codebook .questionMarkup{
+	position:absolute;
+	padding-top: 5px;
+	padding-bottom : 5px;
+/*	border:5px solid #669533; */
+}
