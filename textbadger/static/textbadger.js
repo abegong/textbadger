@@ -19,7 +19,7 @@ var DocManager = {
                 $("#doc-count").html(DocManager.doc_list.length);
             },
             'json'
-        )
+        );
     },
 
     showDocument : function(index){
@@ -32,11 +32,11 @@ var DocManager = {
         //Update navigation
         $("#doc-index").val(index+1);
 
-	    if( DocManager.doc_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
-	    else{ $("#prev-doc-button").removeClass("disabled"); }
+        if( DocManager.doc_index === 0 ){ $("#prev-doc-button").addClass("disabled"); }
+        else{ $("#prev-doc-button").removeClass("disabled"); }
 
-	    if( DocManager.doc_index == DocManager.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
-	    else{ $("#next-doc-button").removeClass("disabled"); }
+        if( DocManager.doc_index === DocManager.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
+        else{ $("#next-doc-button").removeClass("disabled"); }
 
         //Update metadata
         var M = DocManager.doc_list[index].metadata;
@@ -46,17 +46,21 @@ var DocManager = {
             $("#doc-metadata").append("<dt>"+m+"</dt>");
             $("#doc-metadata").append("<dd>"+M[m]+"</dd>");
 
-            $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\" name=\""+m+"\" placeholder='e.g. \"New York Times op-eds\"' value=\""+m+ "\"><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\""+m+"\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
+            $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\" name=\"label-"+elements+"\" placeholder='e.g. \"New York Times op-eds\"' value=\""+m+ "\"><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\"text-"+elements+"\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
             elements++;
         }
-
+        $(name[value="meta-data-elements"]).val(elements);
          $(".delete").live('click',function () {
-                $(this).parent().parent().remove();
+        //live is deprecated, using it for sake of expediancy, click doesn't work
+               // $(this).parent().parent().remove();
+                $(this).closest(".control-group").remove();
+                elements--;
             });
 
          $("#add").on('click',function () {
-                $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\"  placeholder='e.g. \"New York Times op-eds\"'><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\"  placeholder='e.g. \"New York Times op-eds\"'></textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
+                $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" name =\"label-"+elements+"\"class=\"input-xlarge\"  placeholder='e.g. \"New York Times op-eds\"'><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\"  name=\"text-"+elements+"\" placeholder='e.g. \"New York Times op-eds\"'></textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
                 elements++;
+                $(name[value="meta-data-elements"]).val(elements);
             });
 
     },
@@ -66,7 +70,7 @@ var DocManager = {
 	},
 
     loadPrevDoc : function(){
-	    if( DocManager.doc_index > 0 ){
+        if( DocManager.doc_index > 0 ){
 		    DocManager.showDocument( DocManager.doc_index-1 );
 	    }
 	    return( false );
@@ -87,12 +91,12 @@ var DocManager = {
             //! Need to add input validation to this function
 
             DocManager.doc_index = x;
-            DocManager.showDocument(x)
+            DocManager.showDocument(x);
         });
 
         DocManager.loadDocList( collection_id, csrf_token );
     }
-}
+};
 
 
 

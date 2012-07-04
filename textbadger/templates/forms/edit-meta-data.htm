@@ -9,7 +9,7 @@
                   {% csrf_token %}
         <input type="hidden" value="{{collection|mongo_id}}" name="id_">
         <div id="edit-metadata"> </div>
-
+<input type="hidden" value="0" name="meta-data-elements">
 
 
 <button id="add" class="btn leftside">Save &raquo;</button>
