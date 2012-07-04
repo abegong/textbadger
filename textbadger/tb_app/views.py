@@ -653,8 +653,8 @@ def update_batch_reliability(request):
 @login_required(login_url='/')
 def submit_batch_code(request):
     rpd = request.raw_post_data
-    for field in rpd:
-        print field, rpd[field]
+    for field in request.POST:
+        print field, request.POST[field]
     return gen_json_response({"status": "failed", "msg": "Nope.  You cannot do this yet."})
 
 
