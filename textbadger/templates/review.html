@@ -123,12 +123,17 @@ $(function(){
 {% block breadcrumbs %}
 <div class="container">
 <ul class="breadcrumb">
-  <li>
-    <a href="/my-account/#assignments">Assignments</a> <span class="divider">/</span>
-  </li>
-  <li>
-    <a href="#">Batch 1</a></span>
-  </li>
+    <li>
+        <a href="/shared-resources/#batches">Batches</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="/batch/{{ batch|mongo_id }}/">{{ batch.profile.name }}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="#">Review</a>
+    </li>
 </ul>
 </div>
 {% endblock %}
