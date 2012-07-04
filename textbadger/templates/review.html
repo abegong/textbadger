@@ -1,0 +1,67 @@
+{% extends "base/document-control.html" %}
+{% load tb_app_tags %}
+
+{% block start_scripts %}
+<script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}knockout-1.2.1.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+var launchInformalViewer = function( codebook_json ){
+    codebookModel.loadQuestions(codebook_json);
+    
+    //Load the template and knockout model dynamically.
+    $.get("/static/informal/_informalTemplateKO.htm", function(template){
+        $("body").append(template);
+        ko.applyBindings(codebookModel);
+        codebookModel.addStylesToCodebook();
+                            
+		//Add the "submit" button.
+		$("#codebook").append('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-inverse">Submit</a></div></div>');
+
+    }, "text");
+
+};
+	
+	
+$(function(){
+    //Highlight "my-account" in nav bar
+    $('a[href*="/my-account/"]').parent().addClass("active");
+
+    DocManager.initialize("{{batch.profile.collection_id}}","{{csrf_token}}");
+
+	$.post("/ajax/get-codebook/",
+        {'id': "{{batch.profile.codebook_id}}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        function(response){
+            //! Need error checking for failed responses.
+            launchInformalViewer(response.codebook.questions);       
+        }
+    );
+});
+</script>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+<ul class="breadcrumb">
+  <li>
+    <a href="/my-account/#assignments">Assignments</a> <span class="divider">/</span>
+  </li>
+  <li>
+    <a href="#">Batch 1</a></span>
+  </li>
+</ul>
+</div>
+{% endblock %}
+
+{% block document %}
+--- Document ---
+{% endblock %}
+
+{% block control %}
+<div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }" tb-codebook-mode="viewer"></div>
+<br/>
+
+{% endblock %}
+

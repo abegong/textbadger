@@ -179,6 +179,19 @@ def assignment(request, batch_index, username):
 
     return render_to_response('assignment.html', result, context_instance=RequestContext(request))
 
+
+@login_required(login_url='/')
+def review(request, batch_index):
+    conn = connections["default"]
+    batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
+
+    result = {'batch': batch}
+    print json.dumps(batch, cls=MongoEncoder, indent=2)
+    assignment = {}  # ? This is not built yet.
+
+    return render_to_response('review.html', result, context_instance=RequestContext(request))
+    
+    
 ### Ajax calls ###############################################################
 
 
