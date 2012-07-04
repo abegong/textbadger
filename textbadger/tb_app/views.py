@@ -409,37 +409,39 @@ def create_codebook(request):
         return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
 
     #Construct object
-    J = {}
-    J['name'] = name
-    J['description'] = description
-    J['created_at'] = datetime.datetime.now()
-    J['version'] = 1
-    J['children'] = []
-    J['batches'] = []
-    J['parent'] = None
-    J['questions'] = [{
-            "question_type": "Static text",
-            "var_name": "default_question",
-            "params": {
-                "header_text": "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
+    J = {
+        'name' : name,
+        'description' : description,
+        'created_at' : datetime.datetime.now(),
+        'version' : 1,
+        'children' : [],
+        'batches' : [],
+        'parent' : None,
+        'questions' : [
+            {
+                "question_type": "Static text",
+                "var_name": "default_question",
+                "params": {
+                    "header_text": "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
+                    }
+            },
+            {
+                "question_type": "Multiple choice",
+                "var_name": "mchoice",
+                "params": {
+                    "header_text": "Here is an example of a multiple choice question.  Which answer do you like best?",
+                    "answer_array": ["This one", "No, this one", "A third option"],
+                }
+            },
+            {
+                "question_type": "Short essay",
+                "var_name": "essay",
+                "params": {
+                    "header_text": "Here's a short essay question.",
+                }
             }
-        },
-        {
-            "question_type": "Multiple choice",
-            "var_name": "mchoice",
-            "params": {
-                "header_text": "Here is an example of a multiple choice question.  Which answer do you like best?",
-                "answer_array": ["This one", "No, this one", "A third option"],
-            }
-        },
-        {
-            "question_type": "Short essay",
-            "var_name": "essay",
-            "params": {
-                "header_text": "Here's a short essay question.",
-            }
-        }]
-
+        ]
+    }
     conn = connections["default"]
     conn.get_collection("tb_app_codebook").insert(J)
 
@@ -532,7 +534,6 @@ def update_codebook(request):
 @login_required(login_url='/')
 def start_batch(request):
     #Get fields from form
-    print request.raw_post_data
     for field in request.POST:
         print field, '\t', request.POST[field]
 
@@ -648,6 +649,13 @@ def start_batch(request):
 @login_required(login_url='/')
 def update_batch_reliability(request):
     return gen_json_response({"status": "failed", "msg": "Nope.  You can't do this yet."})
+
+@login_required(login_url='/')
+def submit_batch_code(request):
+    rpd = request.raw_post_data
+    for field in request.POST:
+        print field, request.POST[field]
+    return gen_json_response({"status": "failed", "msg": "Nope.  You cannot do this yet."})
 
 
 #########################

@@ -1,0 +1,140 @@
+footer{
+    text-align:center;
+}
+
+div.nav-collapse{
+/*    float:right; */
+/*    display:hidden; */
+}
+
+/*** Interactive stuff *******************************************************/
+
+div.faq-q{
+    margin:10px;
+    margin-left:40px;
+    cursor:pointer;
+    font-size:18px;
+    line-height:26px;
+}
+
+.rightside{
+    margin-left:5px;
+    float:right;
+    text-align:right;
+}
+
+ul.big-list li{
+    font-size:18px;
+    margin-top:10px;
+}
+
+div#faq p strong{
+    cursor:pointer;
+}
+
+#sign-in-btn{
+    cursor:pointer;
+}
+
+tr[href]{
+    cursor:pointer;
+}
+
+.tb-hilight{
+    background-color:#ddd;
+}
+
+
+/*** table.wide formatting ***************************************************/
+table.wide{
+    width:100%;
+}
+
+table.wide th{
+    text-align:left;
+    padding:5px 10px 5px 10px;
+}
+
+table.wide td{
+    padding:5px 10px 5px 10px;
+}
+
+
+/*** Misc ***/
+
+div.shaded{
+    background-color: #888;
+}
+
+div.border{
+    border: 2px solid #bbb;
+}
+
+
+/*** modal fomatting *********************************************************/
+.modal{
+    display:none;
+}
+
+@import "bootstrap";
+.modal-backdrop {
+  opacity:0.4;
+}
+
+/* Formatting for codebook controls *******************************************************/
+
+#sequenceControls{text-align:center; margin-top:6px; margin-bottom:4px;}
+#questionControls {text-align:left;}
+
+/*** Formatting for codebook questions ************************************************/
+
+#codebook {
+	padding:10px;
+	text-align:left;
+	border:2px solid #fff;
+	border-radius:10px;
+}
+
+#codebook .questionBox{
+	margin-bottom:10px;
+}
+#codebook .headerText,.answerText,.questionText{ width:95%; padding:0px;} /*background-color:#eee; */
+#codebook .answerText{ padding-left:22px; cursor:pointer; }
+
+#codebook .mouseoverCell{
+	background-color:#dddddd;/*#ddf;*/
+	
+}
+#codebook .hoverQuestion{ border:2px solid #ddf; }
+#codebook .targetQuestion{ border:2px solid #bbd; background-color:#ddf; }
+
+#codebook .questionBox p{ margin:0px 20px 0px 20px; }
+#codebook .questionBox input[type=text]{ margin-left:20px; }
+#codebook .questionBox textarea{ margin-left:20px; }
+
+
+#codebook table.matrixQuestion{
+	border-collapse:collapse;
+	width: 90%;
+	margin:auto;
+}
+
+#codebook tr.even{
+	background-color:#eee;
+}
+#codebook tr.odd{
+	background-color:#ccc;
+}
+
+#codebook td{
+	text-align:center;
+	padding:5px;
+}
+#codebook .textCol{
+	text-align:left;
+	padding-left:25px;
+	text-indent:-20px;
+}
+#codebook .leftCol{	text-align:right; }
+#codebook .rightCol{ text-align:left; }
+
