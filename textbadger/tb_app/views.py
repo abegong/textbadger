@@ -580,10 +580,11 @@ def start_batch(request):
     #Construct assignments object
     k = len(collection["documents"])
     overlap = int((k * pct_overlap) / 100)
-
+    
+    import random
     doc_ids = range(k)
     if shuffle:
-        import random  # ? This can stay here until we do our DB refactor.
+          # ? This can stay here until we do our DB refactor.
         random.shuffle(doc_ids)
     shared = doc_ids[:overlap]
     unique = doc_ids[overlap:]

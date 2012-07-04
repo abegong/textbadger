@@ -28,9 +28,9 @@ class Command(management.BaseCommand):
         management.call_command('syncdb', interactive=False)
 
         #Ensure indexes
-#        collection = mongo['database']['hosts']
-        #This is right...
+        #This is right to ensure an index *using* a subelement
         conn[db_name]['tb_app_batch'].ensure_index('profile.index', unique=True)
+        #Ensuring indexes *within* subelements is not possible
 
         #Get all fixtures
         print 'Loading fixtures from', settings.PROJECT_PATH+'/fixtures/*'
