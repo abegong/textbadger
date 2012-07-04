@@ -40,15 +40,24 @@ var DocManager = {
 
         //Update metadata
         var M = DocManager.doc_list[index].metadata;
+        var elements = 1;
         $("#doc-metadata").html("");
         for( m in M ){
             $("#doc-metadata").append("<dt>"+m+"</dt>");
             $("#doc-metadata").append("<dd>"+M[m]+"</dd>");
 
-            $("#edit-metadata").append("<div class=\"control-group\"><label class=\"control-label\" for=\"meta-"+m+"\">"+m+"</label><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\""+m+"\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button class=\"btn btn-mini\">&times;</button></div></div>");
+            $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\" name=\""+m+"\" placeholder='e.g. \"New York Times op-eds\"' value=\""+m+ "\"><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\""+m+"\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
+            elements++;
         }
 
+         $(".delete").live('click',function () {
+                $(this).parent().parent().remove();
+            });
 
+         $("#add").on('click',function () {
+                $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\"  placeholder='e.g. \"New York Times op-eds\"'><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\"  placeholder='e.g. \"New York Times op-eds\"'></textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
+                elements++;
+            });
 
     },
 
