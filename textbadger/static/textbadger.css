@@ -133,6 +133,7 @@ div.border{
 #codebook td{
 	text-align:center;
 	padding:5px;
+    height:100%;
 }
 #codebook .textCol{
 	text-align:left;
@@ -162,4 +163,12 @@ div.border{
 }
 .shim-graph-h img{
     padding:1px 1px 1px 0px;
+}
+
+.shim-graph-b{
+    text-align:right;
+    line-height:1px;
+}
+.shim-graph-b img{
+    padding:1px;
 }

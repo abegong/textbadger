@@ -43,23 +43,37 @@ var launchInformalViewer = function( codebook_json ){
             //Shim-graphs
             if( $d.hasClass("HAnchor") ){
                 $("input", $d).each(function(i,x){
+                    //Create shimgraph and content
+                    var $shimgraph = $('<div class="shim-graph-h"></div>');
+                    for( j=0; j<Math.random()*20; j++ ){
+                        $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                    }
+
                     //Save the location of the input, before it gets replaced.
                     var offset = $(x).offset();
 
-                    var $shimgraph = $('<div class="shim-graph-h"></div>');
-                    for( j=0; j<Math.random()*200; j++ ){
-                        $shimgraph.append('<img src="/static/tiny-shim-h.gif"></img>');
-                    }
-
+                    //Replace the input with the shimgraph
                     $(x).replaceWith($shimgraph);
 
-                    //Position shimgraph
+                    //Position shimgraph, after all the images load
                     $shimgraph.imagesLoaded( function(){
                         $shimgraph.offset({ top: offset.top-5, left: offset.left-$shimgraph.width()-4 });
                     });
                 });
+            }else{
+                $("input", $d).each(function(i,x){
+                    //Create shimgraph and content
+                    var $shimgraph = $('<div class="shim-graph-b"></div>');
+                    for( j=0; j<Math.random()*20; j++ ){
+                        $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                    }
 
+                    //Save the location of the input, before it gets replaced.
+                    var offset = $(x).offset();
 
+                    //Replace the input with the shimgraph
+                    $(x).replaceWith($shimgraph);                    
+                });
                 
 /*                $d.imagesLoaded( function(){
                     var w = Math.max.apply(Math, $('.shim-graph', $d).map(function(){ 
