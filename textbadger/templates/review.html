@@ -5,6 +5,7 @@
 <script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}knockout-1.2.1.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}jquery.imagesloaded.min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -16,9 +17,62 @@ var launchInformalViewer = function( codebook_json ){
         $("body").append(template);
         ko.applyBindings(codebookModel);
         codebookModel.addStylesToCodebook();
-                            
-		//Add the "submit" button.
-		$("#codebook").append('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-inverse">Submit</a></div></div>');
+
+		//Markup at random
+		$(".questionMarkupAnchor").each(function(i,d){
+			var $d = $(d);
+            //$d.css('background-color', '#d9d');
+
+            //Add badge
+			var $badge = $('<span class="questionMarkup badge badge-warning"></span>')
+                .prependTo($d.closest('.questionBox'));
+			
+            //Fill in badge contents
+			var r = Math.random()
+			$badge.append('<b>.'+Math.floor(r*1000)+'</b>');
+/*			if( r < .5 ){
+				$badge.addClass('badge-warning');
+			} else if( r < .7){
+				$badge.addClass('badge-info');
+			}
+*/
+            //Set badge location
+			var offset = $d.offset();
+			$badge.offset({ top: offset.top, left: offset.left-$badge.width()-22 });// + $d.width()-$qm.width() });
+
+            //Shim-graphs
+            if( $d.hasClass("HAnchor") ){
+                $("input", $d).each(function(i,x){
+                    //Save the location of the input, before it gets replaced.
+                    var offset = $(x).offset();
+
+                    var $shimgraph = $('<div class="shim-graph-h"></div>');
+                    for( j=0; j<Math.random()*200; j++ ){
+                        $shimgraph.append('<img src="/static/tiny-shim-h.gif"></img>');
+                    }
+
+                    $(x).replaceWith($shimgraph);
+
+                    //Position shimgraph
+                    $shimgraph.imagesLoaded( function(){
+                        $shimgraph.offset({ top: offset.top-5, left: offset.left-$shimgraph.width()-4 });
+                    });
+                });
+
+
+                
+/*                $d.imagesLoaded( function(){
+                    var w = Math.max.apply(Math, $('.shim-graph', $d).map(function(){ 
+                        return $(this).width(); 
+                    }).get());
+                    console.log(w);
+                    $('.shim-graph', $d).each(function(i,x){
+                        $(x).css("padding-left",w-$(x).width());
+                    });
+                });
+*/
+            }
+		});
 
     }, "text");
 
@@ -26,6 +80,16 @@ var launchInformalViewer = function( codebook_json ){
 	
 	
 $(function(){
+    
+    Array.max = function( array ){
+        return Math.max.apply( Math, array );
+    };
+
+    // Function to get the Min value in Array
+    Array.min = function( array ){
+       return Math.min.apply( Math, array );
+    };
+    
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 

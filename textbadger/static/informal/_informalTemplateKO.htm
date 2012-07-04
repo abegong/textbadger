@@ -6,11 +6,13 @@
 	<div class="headerText">{{html params.header_text}}</div>
 
 {{else question_type() == codebookModel.questionTypes()[1] /*Multiple choice*/}}
-	<div class="headerText">{{html params.header_text}}</div>
-	{{each(i,v) params.answer_array}}
-		<div class="answerText"><input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}">{{html v}}</input></div>
-	{{/each}}
-
+	<div class="questionMarkupAnchor HAnchor">
+        <div class="headerText">{{html params.header_text}}</div>
+        {{each(i,v) params.answer_array}}
+            <div class="answerText"><input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}">{{html v}}</input></div>
+        {{/each}}
+    </div>
+    
 {{else question_type() == codebookModel.questionTypes()[2] /*CATA*/}}
 	<div class="headerText">{{html params.header_text}}</div>
 	{{each(i, v) params.answer_array}}
@@ -25,7 +27,7 @@
 			{{each(i, v) params.answer_array}}<td>{{html v}}</td>{{/each}}
 			<td></td>
 		</tr>
-		<tr>
+		<tr class="questionMarkupAnchor">
 			<td class="leftCol">{{html params.left_statement}}</td>
 			{{each(i, v) params.answer_array}}<td><input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input></td>{{/each}}
 			<td class="rightCol">{{html params.right_statement}}</td>
@@ -37,7 +39,7 @@
 	<table class="matrixQuestion">
 		<thead><td></td>{{each(i, v) params.answer_array}}<td>${v}</td>{{/each}}</thead>
 		{{each(i, v) params.question_array}}
-			<tr {{if i%2}}class="odd"{{else}}class="even"{{/if}}><td class="textCol">{{html v}}</td>{{each(j, w) params.answer_array}}<td><input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input></td>{{/each}}</tr>
+			<tr class="questionMarkupAnchor{{if i%2}} odd{{else}} even{{/if}}"><td class="textCol">{{html v}}</td>{{each(j, w) params.answer_array}}<td><input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input></td>{{/each}}</tr>
 		{{/each}}
 	</table>
 
@@ -61,7 +63,7 @@
 
 		{{if !(typeof params.left_statements == 'undefined')}}
 		{{each(j,w) _.range(0,Math.max(params.left_statements().length,params.right_statements().length))}}
-			<tr {{if j%2}}class="odd"{{else}}class="even"{{/if}}>
+			<tr class="questionMarkupAnchor {{if j%2}}odd{{else}}even{{/if}}">
 				<td class="leftCol">{{html params.left_statements()[j]}}</td>
 				{{each(i, v) params.answer_array}}<td><input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${j+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input></td>{{/each}}
 				<td class="rightCol">{{html params.right_statements()[j]}}</td>

@@ -155,3 +155,11 @@ div.border{
 	padding-bottom : 5px;
 /*	border:5px solid #669533; */
 }
+
+.shim-graph-h{
+    text-align:right;
+    position:absolute;
+}
+.shim-graph-h img{
+    padding:1px 1px 1px 0px;
+}
