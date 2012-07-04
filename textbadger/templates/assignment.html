@@ -46,10 +46,15 @@ $(function(){
 <div class="container">
 <ul class="breadcrumb">
   <li>
-    <a href="/my-account/#assignments">Assignments</a> <span class="divider">/</span>
+    <a href="/my-account/#assignments">Assignments</a>
+    <span class="divider">/</span>
   </li>
   <li>
     <a href="#">Batch 1</a></span>
+  </li>
+  <li>
+    <span class="divider"> :: </span>
+    <a href="/batch/{{ batch|mongo_id }}/">Go to batch page</a></span>
   </li>
 </ul>
 </div>
@@ -62,36 +67,6 @@ $(function(){
 {% block control %}
 <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }" tb-codebook-mode="viewer"></div>
 <br/>
-
-<!--
-<hr/>
-<h4>Collection Info</h4>
-<strong>Name</strong>
-<p>{{ collection.name }}</p>
-
-<strong>Description</strong>
-<p>{{ collection.description }}</p>
-
-
-<hr/>
-<h4>Document Info</h4>
-<dl id="meta-data" class="dl-horizontal"></dl>
--->
-
-<!--
-<hr/>
-<h4>Browse</h4>
-<div style="text-align:center">
-  <form>
-	<button id="prev-doc-button" class="btn"><span class="icon-arrow-left"></span></button>
-    &nbsp;&nbsp;
-    <input id="doc-index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"></input>
-    of <span id="doc-count">0</span>
-    &nbsp;&nbsp;
-	<button id="next-doc-button" class="btn"><span class="icon-arrow-right"></span></button>
-  </form>
-</div>
--->
 
 <!--
 <div id="codebook" tb-codebook-mode="viewer"><form><fieldset>

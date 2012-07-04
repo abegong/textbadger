@@ -12,12 +12,19 @@ $(function(){
 {% block breadcrumbs %}
 <div class="container">
 <ul class="breadcrumb">
-  <li>
-    <a href="/shared-resources/#batches">Batches</a> <span class="divider">/</span>
-  </li>
-  <li>
-    <a href="#">{{batch.profile.name}}</a></span>
-  </li>
+    <li>
+        <a href="/shared-resources/#batches">Batches</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="#">{{batch.profile.name}}</a></span>
+    </li>
+    {% if user.username in batch.profile.coders %}
+    <li>
+        <span class="divider"> :: </span>
+        <a href="/assignment/{{ batch.profile.index }}/{{ user.username }}">Go to assignment page</a></span>
+    </li>
+    {% endif %}
 </ul>
 </div>
 {% endblock %}
@@ -25,7 +32,7 @@ $(function(){
 
 {% block content %}
 <!-- Overview --------------------->
-<a class="btn btn-inverse open-modal rightside" href="/review/{{ batch.profile.index }}/">Review results &raquo;</a>
+<a class="btn btn-inverse rightside" href="/review/{{ batch.profile.index }}/">Review results &raquo;</a>
 <a class="btn btn-inverse open-modal rightside"><i class="icon-download"></i> Export results</a>
 {% include "forms/under-construction.htm" %}
 <h2>{{batch.profile.name}}</h2>
@@ -41,7 +48,9 @@ $(function(){
 <br/>
 
 <!-- Assignments --------------------->
-<a class="btn btn-primary open-modal rightside" href="/assignment/{{ batch.profile.index }}/{{ user.username }}">Work on my tasks &raquo;</a>
+{% if user.username in batch.profile.coders %}
+<a class="btn btn-primary rightside" href="/assignment/{{ batch.profile.index }}/{{ user.username }}">Work on my tasks &raquo;</a>
+{% endif %}
 <h3>Assignments</h3>
 <table class="well wide">
   <thead>
