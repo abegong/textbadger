@@ -2,6 +2,7 @@ from django.db.models import Model, TextField
 from djangotoolbox.fields import ListField, EmbeddedModelField, DictField
 from django.contrib.auth.models import User
 
+"""
 #! Don't even bother.  We don't need this now.
 #class UserWrapper(User):
 #    user = TextField()
@@ -30,6 +31,8 @@ class Batch(Model):
     collection = TextField()
     assignments = DictField() #e.g. {'agong': [1,2,3,4,5], 'mrchampe': [3,4,5,6,7]}
     reports = DictField()
+
+"""
 
 ##############################################################################
 
