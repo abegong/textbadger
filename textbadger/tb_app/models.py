@@ -131,6 +131,7 @@ def get_new_codebook_json(name, description):
 
 
 def get_revised_codebook_json(parent_codebook, question_json):
+    print parent_codebook
     J = {
         'profile' : {
             'description' : parent_codebook['profile']["description"],
@@ -138,7 +139,7 @@ def get_revised_codebook_json(parent_codebook, question_json):
             'version' : parent_codebook['profile']["version"] + 1,
             'children' : [],
             'batches' : [],
-            'parent' : parent_codebook['profile']['_id'],#ObjectId(parent_id),
+            'parent' : parent_codebook['_id'],#ObjectId(parent_id),
         },
         'questions' : question_json,
     }

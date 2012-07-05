@@ -103,7 +103,7 @@ $(function(){
     <tr>
       <th>Name</th>
       <th>Created</th>
-      <th>Type</th>
+      <!--<th>Type</th>-->
       <th>Size</th>
     </tr>
   </thead>
@@ -113,7 +113,7 @@ $(function(){
     <tr href="/collection/{{ p|mongo_id }}">
       <td><a href="/collection/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
       <td>{{ p.profile.created_at|date_diff }}</td>
-      <td>{{ p.profile.type }}</td>
+      <!--<td>{{ p.profile.type }}</td> -->
       <td>{{ p.profile.size }}</td>
     </tr>
   {% empty %}

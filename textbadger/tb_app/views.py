@@ -385,8 +385,8 @@ def update_collection(request, mongo):
 
     coll = mongo.get_collection("tb_app_collection")
     J = coll.find_one({"_id": ObjectId(id_)})
-    J['name'] = name
-    J['description'] = description
+    J["profile"]['name'] = name
+    J["profile"]['description'] = description
     mongo.get_collection("tb_app_collection").update({"_id": ObjectId(id_)}, J)
 
     return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
@@ -450,7 +450,7 @@ def save_codebook(request, mongo):
     result_id = coll.insert(J)
 
     #Update parent codebook
-    parent_codebook["children"].append(result_id)
+    parent_codebook["profile"]["children"].append(result_id)
     result = coll.update({"_id": ObjectId(parent_id)}, parent_codebook)
 
     return gen_json_response({
@@ -479,8 +479,8 @@ def update_codebook(request, mongo):
 
     coll = mongo.get_collection("tb_app_codebook")
     J = coll.find_one({"_id": ObjectId(id_)})
-    J['name'] = name
-    J['description'] = description
+    J['profile']['name'] = name
+    J['profile']['description'] = description
 
     mongo.get_collection("tb_app_codebook").update({"_id": ObjectId(id_)}, J)
 
