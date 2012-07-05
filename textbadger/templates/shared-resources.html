@@ -112,7 +112,7 @@ $(function(){
   {% for p in collections %}
     <tr href="/collection/{{ p|mongo_id }}">
       <td><a href="/collection/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
-      <td>{{ p.profile.created_at }}</td>
+      <td>{{ p.profile.created_at|date_diff }}</td>
       <td>{{ p.profile.type }}</td>
       <td>{{ p.profile.size }}</td>
     </tr>

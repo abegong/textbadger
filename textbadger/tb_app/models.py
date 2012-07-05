@@ -72,6 +72,21 @@ def convert_document_csv_to_bson(csv_text):
 
 #    print json.dumps(documents_json, indent=2)
     return documents_json
+    
+def get_new_collection_json(name, description, documents):
+    J = {
+        'profile' : {
+            'name' : name,
+            'description' : description,
+            'created_at' : datetime.datetime.now(),
+            'size' : len(documents),
+        },
+        'documents' : documents,
+    }
+    
+    return J
+
+
 
 def get_default_codebook_questions():
     return [

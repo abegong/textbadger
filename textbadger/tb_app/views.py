@@ -341,14 +341,7 @@ def upload_collection(request, mongo):
         documents = json.load(file(filename, 'r'))
         #! Validate json object here
 
-    J = {
-        'profile' : {
-            'name' : name,
-            'description' : description,
-        },
-        'documents' : documents,
-    }
-
+    J = models.get_new_collection_json( name, description, documents )
     mongo.get_collection("tb_app_collection").insert(J)
 
 #    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
