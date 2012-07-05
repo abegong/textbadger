@@ -70,13 +70,13 @@ $(function(){
   {% endif %}
   <tbody>
   {% for p in codebooks %}
-    <tr class="{% if not p.children %}current{% endif %} {% if p.batches %}batches{% endif %}" href="/codebook/{{ p|mongo_id }}">
-      <td><a href="/codebook/{{ p|mongo_id }}">{{ p.name }}</a></td>
-      <td>{{ p.version }}</td>
-      <td>{{ p.created_at|date_diff }}</td>
+    <tr class="{% if not p.profile.children %}current{% endif %} {% if p.profile.batches %}batches{% endif %}" href="/codebook/{{ p|mongo_id }}">
+      <td><a href="/codebook/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
+      <td>{{ p.profile.version }}</td>
+      <td>{{ p.profile.created_at|date_diff }}</td>
       <td>
-        {% if not p.children %}<span class="badge badge-success">current</span>{% endif %}
-        {% if p.batches %}<span class="badge badge-success">batches</span>{% endif %}
+        {% if not p.profile.children %}<span class="badge badge-success">current</span>{% endif %}
+        {% if p.profile.batches %}<span class="badge badge-success">batches</span>{% endif %}
       </td>
     </tr>
   {% empty %}
@@ -111,10 +111,10 @@ $(function(){
   <tbody>
   {% for p in collections %}
     <tr href="/collection/{{ p|mongo_id }}">
-      <td><a href="/collection/{{ p|mongo_id }}">{{ p.name }}</a></td>
-      <td>{{ p.created_at }}</td>
-      <td>{{ p.type }}</td>
-      <td>{{ p.documents|length }}</td>
+      <td><a href="/collection/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
+      <td>{{ p.profile.created_at }}</td>
+      <td>{{ p.profile.type }}</td>
+      <td>{{ p.profile.size }}</td>
     </tr>
   {% empty %}
     <tr>

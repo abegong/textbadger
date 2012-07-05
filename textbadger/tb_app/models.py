@@ -73,58 +73,65 @@ def convert_document_csv_to_bson(csv_text):
 #    print json.dumps(documents_json, indent=2)
     return documents_json
 
+def get_default_codebook_questions():
+    return [
+        {
+            "question_type": "Static text",
+            "var_name": "default_question",
+            "params": {
+                "header_text": "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
+                }
+        },
+        {
+            "question_type": "Multiple choice",
+            "var_name": "mchoice",
+            "params": {
+                "header_text": "Here is an example of a multiple choice question.  Which answer do you like best?",
+                "answer_array": ["This one", "No, this one", "A third option"],
+            }
+        },
+        {
+            "question_type": "Short essay",
+            "var_name": "essay",
+            "params": {
+                "header_text": "Here's a short essay question.",
+            }
+        }
+    ]
+
 def get_new_codebook_json(name, description):
     #Construct object
     return {
-        'name' : name,
-        'description' : description,
-        'created_at' : datetime.datetime.now(),
-        'version' : 1,
-        'children' : [],
-        'batches' : [],
-        'parent' : None,
-        'questions' : [
-            {
-                "question_type": "Static text",
-                "var_name": "default_question",
-                "params": {
-                    "header_text": "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
-                    }
-            },
-            {
-                "question_type": "Multiple choice",
-                "var_name": "mchoice",
-                "params": {
-                    "header_text": "Here is an example of a multiple choice question.  Which answer do you like best?",
-                    "answer_array": ["This one", "No, this one", "A third option"],
-                }
-            },
-            {
-                "question_type": "Short essay",
-                "var_name": "essay",
-                "params": {
-                    "header_text": "Here's a short essay question.",
-                }
-            }
-        ]
+        'profile' : {
+            'name' : name,
+            'description' : description,
+            'created_at' : datetime.datetime.now(),
+            'version' : 1,
+            'children' : [],
+            'batches' : [],
+            'parent' : None,
+        },
+        'questions' : get_default_codebook_questions()
     }
 
 
 def get_revised_codebook_json(parent_codebook, question_json):
     J = {
-        'description' : parent_codebook["description"],
-        'created_at' : datetime.datetime.now(),
-        'version' : parent_codebook["version"] + 1,
-        'children' : [],
-        'batches' : [],
-        'parent' : parent_codebook['_id'],#ObjectId(parent_id),
+        'profile' : {
+            'description' : parent_codebook['profile']["description"],
+            'created_at' : datetime.datetime.now(),
+            'version' : parent_codebook['profile']["version"] + 1,
+            'children' : [],
+            'batches' : [],
+            'parent' : parent_codebook['profile']['_id'],#ObjectId(parent_id),
+        },
         'questions' : question_json,
     }
 
-    if parent_codebook["children"]:
-        J['name'] = parent_codebook["name"] + " (branch)"
+    if parent_codebook['profile']["children"]:
+        J['profile']['name'] = parent_codebook['profile']["name"] + " (branch)"
     else:
-        J['name'] = parent_codebook["name"]
+        J['profile']['name'] = parent_codebook['profile']["name"]
 
     return J
 
@@ -167,7 +174,7 @@ def get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection
     #construct profile object
     profile = {
         'name': 'Batch ' + str(count + 1),
-        'description': collection["name"][:20] + " * " + codebook["name"][:20] + " (" + str(codebook["version"]) + ")",
+        'description': collection["profile"]["name"][:20] + " * " + codebook["profile"]["name"][:20] + " (" + str(codebook["profile"]["version"]) + ")",
         'index': str(count + 1),
         'codebook_id': codebook['_id'],#codebook_id,
         'collection_id': collection['_id'],#collection_id,

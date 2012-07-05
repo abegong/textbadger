@@ -115,11 +115,13 @@ def shared_resources(request, mongo):
 
 #    print list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
-        'codebooks': list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at', 1)])),
-        'collections': list(mongo.get_collection("tb_app_collection").find(fields={"id": 1, "name": 1, "description": 1})),
+        'codebooks': list(mongo.get_collection("tb_app_codebook").find(sort=[('profile.created_at', 1)])),
+        'collections': list(mongo.get_collection("tb_app_collection").find(fields={"profile":1})),#fields={"id": 1, "name": 1, "description": 1})),
         'batches': batches,
         'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
+    
+    print json.dumps(result, indent=2, cls=MongoEncoder)
 
     return render_to_response('shared-resources.html', result, context_instance=RequestContext(request))
 
@@ -340,8 +342,10 @@ def upload_collection(request, mongo):
         #! Validate json object here
 
     J = {
-        'name' : name,
-        'description' : description,
+        'profile' : {
+            'name' : name,
+            'description' : description,
+        },
         'documents' : documents,
     }
 
