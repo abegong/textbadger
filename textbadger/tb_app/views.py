@@ -6,7 +6,6 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 import json
 import re
-import datetime
 
 from django.contrib.auth.models import User
 from django.conf import settings  # ?
@@ -15,7 +14,8 @@ from bson.objectid import ObjectId
 from pymongo.errors import InvalidId
 
 #from tb_app.models import Codebook, Collection, Batch
-from tb_app.models import convert_csv_to_bson
+#from tb_app.models import convert_csv_to_bson
+from tb_app import models
 
 
 def jsonifyRecord(obj, fields):
@@ -69,6 +69,15 @@ def superuser_only(function):
         return function(request, *args, **kwargs)
     return _inner
 '''
+
+'''
+def uses_mongo(function):
+    def _inner(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        return function(request, *args, **kwargs)
+    return _inner
+'''
 ### Object list pages ########################################################
 
 
@@ -104,7 +113,7 @@ def shared_resources(request):
     batches = list(conn.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('created_at', 1)]))
 
     for b in batches:
-        update_batch_progress(b["_id"])
+        models.update_batch_progress(b["_id"])
 
 #    print list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
@@ -153,7 +162,7 @@ def collection(request, id_):
 def batch(request, id_):
     conn = connections["default"]
 
-    update_batch_progress(id_)
+    models.update_batch_progress(id_)
     batch = conn.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1})
 
     result = {
@@ -324,20 +333,20 @@ def upload_collection(request):
     if len(name) == 0:
         return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
 
-
-    J = {}
-
     #Detect filetype
     if re.search('\.csv$', filename.lower()):
         csv_text = csv_file.read()
-        J = convert_csv_to_bson(csv_text)
+        documents = models.convert_document_csv_to_bson(csv_text)
 
     elif re.search('\.json$', filename.lower()):
-        J = json.load(file(filename, 'r'))
+        documents = json.load(file(filename, 'r'))
         #! Validate json object here
 
-    J['name'] = name
-    J['description'] = description
+    J = {
+        'name' : name,
+        'description' : description,
+        'documents' : documents,
+    }
 
     conn = connections["default"]
     conn.get_collection("tb_app_collection").insert(J)
@@ -408,40 +417,8 @@ def create_codebook(request):
     if len(name) == 0:
         return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
 
-    #Construct object
-    J = {
-        'name' : name,
-        'description' : description,
-        'created_at' : datetime.datetime.now(),
-        'version' : 1,
-        'children' : [],
-        'batches' : [],
-        'parent' : None,
-        'questions' : [
-            {
-                "question_type": "Static text",
-                "var_name": "default_question",
-                "params": {
-                    "header_text": "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
-                    }
-            },
-            {
-                "question_type": "Multiple choice",
-                "var_name": "mchoice",
-                "params": {
-                    "header_text": "Here is an example of a multiple choice question.  Which answer do you like best?",
-                    "answer_array": ["This one", "No, this one", "A third option"],
-                }
-            },
-            {
-                "question_type": "Short essay",
-                "var_name": "essay",
-                "params": {
-                    "header_text": "Here's a short essay question.",
-                }
-            }
-        ]
-    }
+    J = models.get_new_codebook_json( name, description )
+
     conn = connections["default"]
     conn.get_collection("tb_app_codebook").insert(J)
 
@@ -472,30 +449,16 @@ def save_codebook(request):
     conn = connections["default"]
     coll = conn.get_collection("tb_app_codebook")
     parent_codebook = coll.find_one({"_id": ObjectId(parent_id)})
+
     #!Handle parent_codebook == None
 
     #Create new codebook
-    J = {}
-
-    if parent_codebook["children"]:
-        J['name'] = parent_codebook["name"] + " (branch)"
-    else:
-        J['name'] = parent_codebook["name"]
-
-    J['description'] = parent_codebook["description"]
-    J['created_at'] = datetime.datetime.now()
-    J['version'] = parent_codebook["version"] + 1
-    J['children'] = []
-    J['batches'] = []
-    J['parent'] = ObjectId(parent_id)
-    J['questions'] = questions
-
+    J = models.get_revised_codebook_json(parent_codebook, questions)
     result_id = coll.insert(J)
 
+    #Update parent codebook
     parent_codebook["children"].append(result_id)
     result = coll.update({"_id": ObjectId(parent_id)}, parent_codebook)
-    print result
-    print parent_codebook
 
     return gen_json_response({
             "status": "success",
@@ -577,72 +540,10 @@ def start_batch(request):
     codebook = conn.get_collection("tb_app_codebook").find_one({"_id": ObjectId(codebook_id)})
     collection = conn.get_collection("tb_app_collection").find_one({"_id": ObjectId(collection_id)})
 
-    #Construct assignments object
-    k = len(collection["documents"])
-    overlap = int((k * pct_overlap) / 100)
-    
-    import random
-    doc_ids = range(k)
-    if shuffle:
-          # ? This can stay here until we do our DB refactor.
-        random.shuffle(doc_ids)
-    shared = doc_ids[:overlap]
-    unique = doc_ids[overlap:]
+    batch = models.get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection)
 
-    """
-    assignments = {}
-    splitsize = float(k-overlap)/len(coders)
-    assignments["ss"] = splitsize
-    for (i,coder) in enumerate(coders):
-        assignments[coder] = unique[int(round(i*splitsize)):int(round((i+1)*splitsize))]
-        if shuffle:
-            random.shuffle( assignments[coder] )
-    """
-
-    #Construct documents object
-    documents = []
-    empty_labels = dict([(x, None) for x in coders])
-    for i in shared:
-        documents.append({
-            'index': i,
-#            'content': collection["documents"][i]["content"],
-            'labels': empty_labels
-        })
-
-    for i in unique:
-        documents.append({
-            'index': i,
-#            'content': collection["documents"][i]["content"],
-#            'labels': { coders[i%len(coders)] : None }
-            #Populate the list with a random smattering of fake labels
-            'labels': {coders[i % len(coders)]: random.choice([None for x in range(2)] + range(20))}
-        })
-    if shuffle:
-        random.shuffle(documents)
-
-    #Construct batch object
-    batch = {
-        'profile': {
-            'name': 'Batch ' + str(count + 1),
-            'description': collection["name"][:20] + " * " + codebook["name"][:20] + " (" + str(codebook["version"]) + ")",
-            'index': str(count + 1),
-            'codebook_id': codebook_id,
-            'collection_id': collection_id,
-            'coders': coders,
-            'pct_overlap': pct_overlap,
-            'shuffle': shuffle,
-            'created_at': datetime.datetime.now(),
-        },
-        'documents': documents,
-        'reports': {
-            'progress': {},
-            'reliability': {},
-        },
-    }
-
-#    return gen_json_response({"status": "failed", "msg": json.dumps(batch, indent=2, cls=MongoEncoder), "json": batch })
     batch_id = coll.insert(batch)
-    update_batch_progress(batch_id)
+    models.update_batch_progress(batch_id)
 
     return gen_json_response({"status": "success", "msg": "New batch created."})
 
@@ -657,53 +558,3 @@ def submit_batch_code(request):
     for field in request.POST:
         print field, request.POST[field]
     return gen_json_response({"status": "failed", "msg": "Nope.  You cannot do this yet."})
-
-
-#########################
-
-
-def update_batch_progress(id_):
-    #Connect to the DB
-    conn = connections["default"]
-    coll = conn.get_collection("tb_app_batch")
-
-    #Retrieve the batch
-    batch = coll.find_one({"_id": ObjectId(id_)})
-#    print json.dumps(batch, indent=2, cls=MongoEncoder)
-
-    #Scaffold the progress object
-    coders = batch["profile"]["coders"]
-    progress = {
-        "coders": dict([(c, {"assigned":0, "complete":0}) for c in coders]),
-        "summary": {}
-    }
-
-    #Count total and complete document codes
-    assigned, complete = 0, 0
-    for doc in batch["documents"]:
-        for coder in doc["labels"]:
-            assigned += 1
-            progress["coders"][coder]["assigned"] += 1
-
-            if doc["labels"][coder] != None:
-                complete += 1
-                progress["coders"][coder]["complete"] += 1
-
-    #Calculate percentages
-    for coder in progress["coders"]:
-        c = progress["coders"][coder]
-        c["percent"] = round(float(100 * c["complete"]) / c["assigned"], 1)
-
-    progress["summary"] = {
-        "assigned": assigned,
-        "complete": complete,
-        "percent": round(float(100 * complete) / assigned, 1),
-    }
-
-    batch["reports"]["progress"] = progress
-#    print json.dumps(progress, indent=2, cls=MongoEncoder)
-
-    coll.update({"_id": ObjectId(id_)}, batch)
-#    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
-
-    # Validate response
