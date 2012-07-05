@@ -92,6 +92,7 @@ var DocManager = {
 
             DocManager.doc_index = x;
             DocManager.showDocument(x);
+            $(name[value="doc-index"]).val(x);
         });
 
         DocManager.loadDocList( collection_id, csrf_token );

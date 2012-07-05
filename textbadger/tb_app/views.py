@@ -190,8 +190,8 @@ def review(request, batch_index):
     assignment = {}  # ? This is not built yet.
 
     return render_to_response('review.html', result, context_instance=RequestContext(request))
-    
-    
+
+
 ### Ajax calls ###############################################################
 
 
@@ -391,6 +391,19 @@ def update_collection(request):
 
 @login_required(login_url='/')
 def update_meta_data(request):
+    try:
+        id_ = request.POST["id_"]
+        dindex = request.POST["doc-index"]
+        elements = request.POST["meta-data-elements"]
+        counter = 0
+        conn = connections["default"]
+        coll = conn.get_collection("tb_app_collection")
+        meta = coll.find_one("documents.dindex.metadata")
+
+        while (counter < elements):
+            meta[request.POST["label-" + counter]] = request.POST["text-" + counter]
+
+            conn.get_collection("tb_app_collection").save("documents.dindex.metadata", meta)
 
         return gen_json_response({"status": "success", "msg": "Successfully updated meta-data."})
 
