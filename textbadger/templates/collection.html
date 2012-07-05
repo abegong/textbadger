@@ -19,7 +19,7 @@ $(function(){
     <a href="/shared-resources/#collections">Collections</a> <span class="divider">/</span>
   </li>
   <li>
-    <a href="#">{{collection.name}}</a></span>
+    <a href="#">{{collection.profile.name}}</a></span>
   </li>
 </ul>
 </div>
@@ -30,7 +30,7 @@ $(function(){
 {% endblock %}
 
 {% block control %}
-<h3>{{collection.name}}</h3>
+<h3>{{collection.profile.name}}</h3>
 
 <div style="text-align:center">
   <form>
@@ -49,9 +49,9 @@ $(function(){
 {% include "forms/edit-collection.htm" %}
 <h4>Collection</h4>
 <strong>Name</strong>
-<p>{{ collection.name }}</p>
+<p>{{ collection.profile.name }}</p>
 <strong>Description</strong>
-<p>{{ collection.description }}</p>
+<p>{{ collection.profile.description }}</p>
 
 <hr/>
 <a class="btn btn-inverse open-modal rightside">Edit meta-data</a>

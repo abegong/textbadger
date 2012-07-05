@@ -140,10 +140,7 @@ def administration(request):
 @uses_mongo
 def codebook(request, mongo, id_):
     result = {
-        "codebook": mongo.get_collection("tb_app_codebook").find_one(
-            {"_id": ObjectId(id_)}
-#            {"name":1, "description": 1}
-        )}
+        "codebook": mongo.get_collection("tb_app_codebook").find_one( {"_id": ObjectId(id_)} )}
     return render_to_response('codebook.html', result, context_instance=RequestContext(request))
 
 
@@ -153,7 +150,7 @@ def collection(request, mongo, id_):
     result = {
         "collection": mongo.get_collection("tb_app_collection").find_one(
             {"_id": ObjectId(id_)},
-            {"name": 1, "description": 1}
+            {"profile": 1}
         )}
     return render_to_response('collection.html', result, context_instance=RequestContext(request))
 
