@@ -163,10 +163,13 @@ def batch(request, mongo, id_):
 
     result = {
         'batch': batch,
-        'codebook': mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])}),
+        'codebook': mongo.get_collection("tb_app_codebook").find_one(
+            {"_id": ObjectId(batch["profile"]["codebook_id"])},
+            {"profile":1}
+        ),
         'collection': mongo.get_collection("tb_app_collection").find_one(
-            {"_id": ObjectId(batch["profile"]["collection_id"])}#,
-#            fields={"name":1, "reports":1}
+            {"_id": ObjectId(batch["profile"]["collection_id"])},
+            {"profile":1}
         ),
         'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
