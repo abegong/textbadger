@@ -72,8 +72,8 @@ def superuser_only(function):
 
 def uses_mongo(function):
     def _inner(request, *args, **kwargs):
-        conn = connections["default"]
-        return function(request, conn, *args, **kwargs)
+        mongo = connections["default"]
+        return function(request, mongo, *args, **kwargs)
     return _inner
 
 ### Object list pages ########################################################
@@ -81,8 +81,8 @@ def uses_mongo(function):
 
 @login_required(login_url='/')
 @uses_mongo
-def my_account(request, conn):
-    batches = list(conn.get_collection("tb_app_batch").find(
+def my_account(request, mongo):
+    batches = list(mongo.get_collection("tb_app_batch").find(
         {"profile.coders": {"$in": [request.user.username]}},
         fields={"profile": 1, "reports.progress": 1},
     ))
@@ -107,16 +107,16 @@ def my_account(request, conn):
 
 @login_required(login_url='/')
 @uses_mongo
-def shared_resources(request, conn):
-    batches = list(conn.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('created_at', 1)]))
+def shared_resources(request, mongo):
+    batches = list(mongo.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('created_at', 1)]))
 
     for b in batches:
         models.update_batch_progress(b["_id"])
 
-#    print list(conn.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
+#    print list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
-        'codebooks': list(conn.get_collection("tb_app_codebook").find(sort=[('created_at', 1)])),
-        'collections': list(conn.get_collection("tb_app_collection").find(fields={"id": 1, "name": 1, "description": 1})),
+        'codebooks': list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at', 1)])),
+        'collections': list(mongo.get_collection("tb_app_collection").find(fields={"id": 1, "name": 1, "description": 1})),
         'batches': batches,
         'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
@@ -136,9 +136,9 @@ def administration(request):
 
 @login_required(login_url='/')
 @uses_mongo
-def codebook(request, conn, id_):
+def codebook(request, mongo, id_):
     result = {
-        "codebook": conn.get_collection("tb_app_codebook").find_one(
+        "codebook": mongo.get_collection("tb_app_codebook").find_one(
             {"_id": ObjectId(id_)}
 #            {"name":1, "description": 1}
         )}
@@ -147,9 +147,9 @@ def codebook(request, conn, id_):
 
 @login_required(login_url='/')
 @uses_mongo
-def collection(request, conn, id_):
+def collection(request, mongo, id_):
     result = {
-        "collection": conn.get_collection("tb_app_collection").find_one(
+        "collection": mongo.get_collection("tb_app_collection").find_one(
             {"_id": ObjectId(id_)},
             {"name": 1, "description": 1}
         )}
@@ -158,14 +158,14 @@ def collection(request, conn, id_):
 
 @login_required(login_url='/')
 @uses_mongo
-def batch(request, conn, id_):
+def batch(request, mongo, id_):
     models.update_batch_progress(id_)
-    batch = conn.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1})
+    batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1})
 
     result = {
         'batch': batch,
-        'codebook': conn.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])}),
-        'collection': conn.get_collection("tb_app_collection").find_one(
+        'codebook': mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])}),
+        'collection': mongo.get_collection("tb_app_collection").find_one(
             {"_id": ObjectId(batch["profile"]["collection_id"])}#,
 #            fields={"name":1, "reports":1}
         ),
@@ -176,8 +176,8 @@ def batch(request, conn, id_):
 
 @login_required(login_url='/')
 @uses_mongo
-def assignment(request, conn, batch_index, username):
-    batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
+def assignment(request, mongo, batch_index, username):
+    batch = mongo.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
 
     result = {'batch': batch}
     print json.dumps(batch, cls=MongoEncoder, indent=2)
@@ -188,8 +188,8 @@ def assignment(request, conn, batch_index, username):
 
 @login_required(login_url='/')
 @uses_mongo
-def review(request, conn, batch_index):
-    batch = conn.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
+def review(request, mongo, batch_index):
+    batch = mongo.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
 
     result = {'batch': batch}
     print json.dumps(batch, cls=MongoEncoder, indent=2)
@@ -316,7 +316,7 @@ def update_permission(request):
 
 @login_required(login_url='/')
 @uses_mongo
-def upload_collection(request, conn):
+def upload_collection(request, mongo):
     #Get name and description
     try:
         name = request.POST["name"]
@@ -345,7 +345,7 @@ def upload_collection(request, conn):
         'documents' : documents,
     }
 
-    conn.get_collection("tb_app_collection").insert(J)
+    mongo.get_collection("tb_app_collection").insert(J)
 
 #    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
     return redirect('/shared-resources/')
@@ -353,12 +353,12 @@ def upload_collection(request, conn):
 
 @login_required(login_url='/')
 @uses_mongo
-def get_collection_docs(request, conn):
+def get_collection_docs(request, mongo):
+    #! Check for missing id
     id_ = request.POST["id"]
-    conn = connections["default"]
 
     try:
-        collection = conn.get_collection("tb_app_collection").find_one({"_id": ObjectId(id_)})
+        collection = mongo.get_collection("tb_app_collection").find_one({"_id": ObjectId(id_)})
 
     # Error checking for invalid Ids
     except InvalidId:
@@ -373,7 +373,7 @@ def get_collection_docs(request, conn):
 
 @login_required(login_url='/')
 @uses_mongo
-def update_collection(request, conn):
+def update_collection(request, mongo):
     #Get name and description
     try:
         id_ = request.POST["id_"]
@@ -386,11 +386,11 @@ def update_collection(request, conn):
     except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
-    coll = conn.get_collection("tb_app_collection")
+    coll = mongo.get_collection("tb_app_collection")
     J = coll.find_one({"_id": ObjectId(id_)})
     J['name'] = name
     J['description'] = description
-    conn.get_collection("tb_app_collection").update({"_id": ObjectId(id_)}, J)
+    mongo.get_collection("tb_app_collection").update({"_id": ObjectId(id_)}, J)
 
     return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
 
@@ -403,7 +403,7 @@ def update_meta_data(request):
 
 @login_required(login_url='/')
 @uses_mongo
-def create_codebook(request, conn):
+def create_codebook(request, mongo):
     #Get name and description
     try:
         name = request.POST["name"]
@@ -416,16 +416,16 @@ def create_codebook(request, conn):
         return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
 
     J = models.get_new_codebook_json( name, description )
-    conn.get_collection("tb_app_codebook").insert(J)
+    mongo.get_collection("tb_app_codebook").insert(J)
 
     return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
 
 
 @login_required(login_url='/')
 @uses_mongo
-def get_codebook(request, conn):
+def get_codebook(request, mongo):
     id_ = request.POST["id"]
-    codebook = conn.get_collection("tb_app_codebook").find_one({"_id": ObjectId(id_)})
+    codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(id_)})
 
     #! Need error checking for invalid Ids
 
@@ -438,12 +438,12 @@ def get_codebook(request, conn):
 
 @login_required(login_url='/')
 @uses_mongo
-def save_codebook(request, conn):
+def save_codebook(request, mongo):
     parent_id = request.POST["parent_id"]
     questions = json.loads(request.POST["questions"])["questions"]
 
     #Retrieve parent codebook
-    coll = conn.get_collection("tb_app_codebook")
+    coll = mongo.get_collection("tb_app_codebook")
     parent_codebook = coll.find_one({"_id": ObjectId(parent_id)})
 
     #!Handle parent_codebook == None
@@ -466,7 +466,7 @@ def save_codebook(request, conn):
 
 @login_required(login_url='/')
 @uses_mongo
-def update_codebook(request, conn):
+def update_codebook(request, mongo):
     #Get name and description
     try:
         id_ = request.POST["id_"]
@@ -480,19 +480,19 @@ def update_codebook(request, conn):
     except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
-    coll = conn.get_collection("tb_app_codebook")
+    coll = mongo.get_collection("tb_app_codebook")
     J = coll.find_one({"_id": ObjectId(id_)})
     J['name'] = name
     J['description'] = description
 
-    conn.get_collection("tb_app_codebook").update({"_id": ObjectId(id_)}, J)
+    mongo.get_collection("tb_app_codebook").update({"_id": ObjectId(id_)}, J)
 
     return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
 
 
 @login_required(login_url='/')
 @uses_mongo
-def start_batch(request, conn):
+def start_batch(request, mongo):
     #Get fields from form
     for field in request.POST:
         print field, '\t', request.POST[field]
@@ -525,15 +525,15 @@ def start_batch(request, conn):
     except (AssertionError, ValueError) as e:
         return gen_json_response({"status": "failed", "msg": "Overlap must be a percentage between 0 and 100."})
 
-    #Establish db connection
-    coll = conn.get_collection("tb_app_batch")
+    #Get a handle to the batch collection in mongo
+    coll = mongo.get_collection("tb_app_batch")
 
     #Count existing batches
     count = coll.find().count()
 
     #Retrieve the codebook and collection
-    codebook = conn.get_collection("tb_app_codebook").find_one({"_id": ObjectId(codebook_id)})
-    collection = conn.get_collection("tb_app_collection").find_one({"_id": ObjectId(collection_id)})
+    codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(codebook_id)})
+    collection = mongo.get_collection("tb_app_collection").find_one({"_id": ObjectId(collection_id)})
 
     batch = models.get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection)
 
