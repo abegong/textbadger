@@ -391,21 +391,23 @@ def update_collection(request):
 
 @login_required(login_url='/')
 def update_meta_data(request):
-    try:
-        id_ = request.POST["id_"]
-        dindex = request.POST["doc-index"]
-        elements = request.POST["meta-data-elements"]
-        counter = 0
+
+    if request.method == 'POST':
+        q = request.POST
+        coll_id = q.get("id_")
+        doc_indx = q.get("doc-index")
+        keys = q.getlist("key")
+        values = q.getlist("value")
+
         conn = connections["default"]
         coll = conn.get_collection("tb_app_collection")
-        meta = coll.find_one("documents.dindex.metadata")
+        t_coll = coll.find_one({"_id": ObjectId(coll_id)}, {"documents.metadata": 1, "documents": {"$slice": [doc_indx, 1]}})
+        for key, value in zip(keys, values):
+            t_coll["documents"][0]["metadata"][key] = value
 
-        while (counter < elements):
-            meta[request.POST["label-" + counter]] = request.POST["text-" + counter]
+        coll.update({"_id": ObjectId(coll_id)}, {"documents.metadata": 1, "documents": {"$slice": [doc_indx, 1]}}, {"documents.$.metadata": t_coll})
 
-            conn.get_collection("tb_app_collection").save("documents.dindex.metadata", meta)
-
-        return gen_json_response({"status": "success", "msg": "Successfully updated meta-data."})
+        return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
 
 
 @login_required(login_url='/')
