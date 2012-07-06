@@ -87,7 +87,7 @@ def my_account(request, mongo):
         {"profile.coders": {"$in": [request.user.username]}},
         fields={"profile": 1, "reports.progress": 1},
     ))
-    
+
     #Find all the batches that have assignments for this use, and repackage the object for templates
     #This is sort of a hassle.  Something we would *not* have to do in cyclone.
     assignments = []
@@ -123,7 +123,7 @@ def shared_resources(request, mongo):
         'batches': batches,
         'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
-    
+
     print json.dumps(result, indent=2, cls=MongoEncoder)
 
     return render_to_response('shared-resources.html', result, context_instance=RequestContext(request))
@@ -185,13 +185,13 @@ def batch(request, mongo, id_):
 def assignment(request, mongo, batch_index, username):
     query = {"profile.index": int(batch_index)}
     #fields =  { "profile": 1, "documents.labels."+username: [], "documents.index": 1 }
-    
+
     #print query
     #print fields
-    
+
     batch = mongo.get_collection("tb_app_batch").find_one(query, {"profile": 1})
     docs = mongo.get_collection("tb_app_batch").find_one(query, {"documents": 1})["documents"]
-    
+
     seq_list = []
     for d in docs:
         if username in d["labels"]:
@@ -409,25 +409,27 @@ def update_collection(request, mongo):
 
 
 @login_required(login_url='/')
-def update_meta_data(request):
-    """
-    try:
-        id_ = request.POST["id_"]
-        dindex = request.POST["doc-index"]
-        elements = request.POST["meta-data-elements"]
-        counter = 0
-        conn = connections["default"]
-        coll = conn.get_collection("tb_app_collection")
-        meta = coll.find_one("documents.dindex.metadata")
+@uses_mongo
+def update_meta_data(request, mongo):
+    #updates collection meta data
+    if request.method == 'POST':
+        try:
+            q = request.POST
+            id_ = q.get("id_")
+            doc_index = q.get("doc-index")
+            keys = q.getlist("key")
+            values = q.getlist("value")
+        except MultiValueDictKeyError:
+            return gen_json_response({"status": "failed", "msg": "Missing field."})
 
-        while (counter < elements):
-            meta[request.POST["label-" + counter]] = request.POST["text-" + counter]
+        coll = mongo.get_collection("tb_app_collection")
+        t_coll = coll.find_one({"id_": ObjectId(id_)}, {"documents.metadata": 1, "documents": {"$slice": [doc_index, 1]}})
+        for key, value in zip(keys, values):
+            t_coll["documents"][0]["metadata"][key] = value
 
-            conn.get_collection("tb_app_collection").save("documents.dindex.metadata", meta)
+        coll.update({"id_": ObjectId(id_)}, {"documents.metadata": 1, "documents": {"$slice": [doc_index, 1]}}, {"documents.$.metadata": t_coll})
 
-        return gen_json_response({"status": "success", "msg": "Successfully updated meta-data."})
-    """
-    return gen_json_response({"status": "failed", "msg": "Not even *trying* to update meta-data."})
+        return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
 
 @login_required(login_url='/')
 @uses_mongo
@@ -588,16 +590,16 @@ def submit_batch_code(request, mongo):
         return gen_json_response({"status": "failed", "msg": "Missing field."})
 
     username = request.user.username
-    
+
     #Construct labels object
     labels = { 'created_at' : datetime.datetime.now() }
     for field in request.POST:
         #print '\t', field, '\t', request.POST[field], '\t', re.match("Q[0-9]+", field) != None
         if re.match("Q[0-9]+", field):
             labels[field] = request.POST[field]
-    
+
     #print labels
-    
+
     #!? Validate responses against codebook questions
 
     #Update DB
@@ -610,7 +612,7 @@ def submit_batch_code(request, mongo):
         }
     )
     batch["documents"][0]["labels"][username].append( labels )
-    
+
     query1 = {"_id": ObjectId(batch_id), "documents.index": doc_index}
     query2 = "documents.$.labels."+username
     mongo.get_collection("tb_app_batch").update(
