@@ -234,6 +234,7 @@ def review(request, mongo, batch_index):
                     most_recent_answer_set = answer_set
                     most_recent_date = answer_set["created_at"]
             
+            #Append question labels to the label_set object
             for question in most_recent_answer_set:
                 label_set[question][coder] = most_recent_answer_set[question]
             
@@ -246,7 +247,6 @@ def review(request, mongo, batch_index):
         'label_list': json.dumps(label_list, cls=MongoEncoder, indent=2),
     }
     #print json.dumps(batch, cls=MongoEncoder, indent=2)
-    #assignment = {}  # ? This is not built yet.
 
     return render_to_response('review.html', result, context_instance=RequestContext(request))
 
