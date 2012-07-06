@@ -34,13 +34,40 @@ var launchInformalViewer = function( codebook_json ){
 			var offset = $d.offset();
 			$badge.offset({ top: offset.top, left: offset.left-$badge.width()-22 });
 
+            var labels = label_list[DocManager.doc_index];
+
             //Shim-graphs
             if( $d.hasClass("HAnchor") ){
                 $("input", $d).each(function(i,x){
-                    //Create shimgraph and content
+                    //Find the appropriate label for this graph
+                    for( q in labels ){
+                        if( q.match("Q"+i+"_")){
+                            var question = q;
+                            break;
+                        }
+                    }
+                    
+                    //Create shimgraph
                     var $shimgraph = $('<div class="shim-graph-h"></div>');
-                    for( j=0; j<Math.random()*20; j++ ){
-                        $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+
+                    if( typeof(question) != "undefined" ){
+                        //console.log(labels);
+                        //console.log(question);
+                        //console.log(labels[question]);
+                        
+                        //Append shimgraph content
+                        for( j in labels[question] ){
+                            console.log("\t"+j+"\t:\t"+$(x).val());
+                            if( labels[question][j] == $(x).val() ){
+                                $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                            }
+                        }
+
+                        /*
+                        for( j=0; j<Math.random()*20; j++ ){
+                            $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                        }
+                        */
                     }
 
                     //Save the location of the input, before it gets replaced.
@@ -48,10 +75,14 @@ var launchInformalViewer = function( codebook_json ){
 
                     //Replace the input with the shimgraph
                     $(x).replaceWith($shimgraph);
+                    $shimgraph.hide();
 
                     //Position shimgraph, after all the images load
                     $shimgraph.imagesLoaded( function(){
-                        $shimgraph.offset({ top: offset.top-5, left: offset.left-$shimgraph.width()-4 });
+                        $shimgraph
+                            .fadeIn("fast")
+                            .offset({ top: offset.top-5, left: offset.left-$shimgraph.width()-4 })
+
                     });
                 });
             }else{
@@ -74,12 +105,11 @@ var launchInformalViewer = function( codebook_json ){
     }, "text");
 
 };
+
+var label_list = {{ label_list|safe }};
 	
 	
-$(function(){
-    var label_list = {{ label_list|safe }};
-    console.log( label_list );
-    
+$(function(){    
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 
