@@ -71,11 +71,12 @@ var launchInformalViewer = function( codebook_json ){
                     //Save the location of the input, before it gets replaced.
                     var offset = $(x).offset();
 
-                    //Replace the input with the shimgraph
+                    //Replace the input with the shim-graph
                     $(x).replaceWith($shimgraph);                    
                 });
                 
-/*                $d.imagesLoaded( function(){
+/*
+                $d.imagesLoaded( function(){
                     var w = Math.max.apply(Math, $('.shim-graph', $d).map(function(){ 
                         return $(this).width(); 
                     }).get());
@@ -94,15 +95,8 @@ var launchInformalViewer = function( codebook_json ){
 	
 	
 $(function(){
-    
-    Array.max = function( array ){
-        return Math.max.apply( Math, array );
-    };
-
-    // Function to get the Min value in Array
-    Array.min = function( array ){
-       return Math.min.apply( Math, array );
-    };
+    var label_list = {{ label_list|safe }};
+    console.log( label_list );
     
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
@@ -140,6 +134,8 @@ $(function(){
 
 {% block document %}
 --- Document ---
+{{batch}}
+asdf
 {% endblock %}
 
 {% block control %}

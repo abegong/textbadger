@@ -124,7 +124,7 @@ def shared_resources(request, mongo):
         'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
     }
     
-    print json.dumps(result, indent=2, cls=MongoEncoder)
+    #print json.dumps(result, indent=2, cls=MongoEncoder)
 
     return render_to_response('shared-resources.html', result, context_instance=RequestContext(request))
 
@@ -163,7 +163,7 @@ def collection(request, mongo, id_):
 def batch(request, mongo, id_):
     models.update_batch_progress(id_)
     batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1, "documents": 1})
-    print json.dumps(batch, cls=MongoEncoder, indent=1)
+    #print json.dumps(batch, cls=MongoEncoder, indent=1)
 
     result = {
         'batch': batch,
@@ -200,7 +200,7 @@ def assignment(request, mongo, batch_index, username):
     #print doc_list
 
     result = {'batch': batch, 'seq_list': seq_list}
-    print json.dumps(batch, cls=MongoEncoder, indent=2)
+    #print json.dumps(batch, cls=MongoEncoder, indent=2)
 
     return render_to_response('assignment.html', result, context_instance=RequestContext(request))
 
@@ -208,11 +208,45 @@ def assignment(request, mongo, batch_index, username):
 @login_required(login_url='/')
 @uses_mongo
 def review(request, mongo, batch_index):
-    batch = mongo.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
+    batch = mongo.get_collection("tb_app_batch").find_one(
+        {"profile.index": int(batch_index)},
+        {"profile":1, "reports":1, "documents":1}
+    )
+    codebook = mongo.get_collection("tb_app_collection").find_one(
+        {"_id": ObjectId(batch["profile"]["codebook_id"])},
+        {}
+    )
 
-    result = {'batch': batch}
-    print json.dumps(batch, cls=MongoEncoder, indent=2)
-    assignment = {}  # ? This is not built yet.
+    from collections import defaultdict
+
+    label_list = []
+    for doc in batch["documents"]:
+        label_set = defaultdict(dict)
+        
+        for coder in doc["labels"]:
+            #print "\t", coder
+
+            #Get the most recent answer set for this coder (important if the coder used did an "undo")
+            most_recent_answer_set = {}
+            most_recent_date = None
+            for answer_set in doc["labels"][coder]:
+                if not most_recent_date or answer_set["created_at"] > most_recent_date:
+                    most_recent_answer_set = answer_set
+                    most_recent_date = answer_set["created_at"]
+            
+            for question in most_recent_answer_set:
+                label_set[question][coder] = most_recent_answer_set[question]
+            
+        label_list.append(label_set)
+
+    print json.dumps(label_list, cls=MongoEncoder, indent=2)
+
+    result = {
+        'batch': batch,
+        'label_list': json.dumps(label_list, cls=MongoEncoder, indent=2),
+    }
+    #print json.dumps(batch, cls=MongoEncoder, indent=2)
+    #assignment = {}  # ? This is not built yet.
 
     return render_to_response('review.html', result, context_instance=RequestContext(request))
 
@@ -453,7 +487,6 @@ def create_codebook(request, mongo):
 @uses_mongo
 def get_codebook(request, mongo):
     id_ = request.POST["id"]
-    print id_, '*****'
     codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(id_)})
 
     #! Need error checking for invalid Ids
@@ -523,9 +556,6 @@ def update_codebook(request, mongo):
 @uses_mongo
 def start_batch(request, mongo):
     #Get fields from form
-    for field in request.POST:
-        print field, '\t', request.POST[field]
-
     try:
         codebook_id = request.POST["codebook_id"]
         collection_id = request.POST["collection_id"]
@@ -599,6 +629,7 @@ def submit_batch_code(request, mongo):
     #print labels
     
     #!? Validate responses against codebook questions
+    #! Not for now.  This would be medium hard.
 
     #Update DB
     coll = mongo.get_collection("tb_app_batch")
