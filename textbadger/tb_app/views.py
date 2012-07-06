@@ -584,7 +584,9 @@ def submit_batch_code(request, mongo):
         {"$push": {
             "documents.labels."+username:1,
             "documents.labels":{"$slice":[doc_index,1]}
-        })
+            }
+        }
+    )
     print json.dumps(batch, cls=MongoEncoder, indent=2)
     return gen_json_response({"status": "failed", "msg": "Nope.  You cannot do this yet."})
 
