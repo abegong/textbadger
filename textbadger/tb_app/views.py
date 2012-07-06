@@ -87,8 +87,9 @@ def my_account(request, mongo):
         {"profile.coders": {"$in": [request.user.username]}},
         fields={"profile": 1, "reports.progress": 1},
     ))
-
+    
     #Find all the batches that have assignments for this use, and repackage the object for templates
+    #This is sort of a hassle.  Something we would *not* have to do in cyclone.
     assignments = []
     for b in batches:
         assignments.append({
@@ -99,11 +100,11 @@ def my_account(request, mongo):
             },
             "progress": b["reports"]["progress"]["coders"][request.user.username],
         })
-#    print json.dumps(assignments, indent=2, cls=MongoEncoder)
 
     result = {
         'assignments': assignments,
     }
+
     return render_to_response('my-account.html', result, context_instance=RequestContext(request))
 
 
