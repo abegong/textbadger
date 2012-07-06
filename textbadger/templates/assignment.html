@@ -8,6 +8,38 @@
 <script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+var finalInit = function(){
+    //Add hidden csrf token and other hidden fields
+
+    //Add the "submit" button.
+    $('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-primary">Submit</a></div></div>')
+        .appendTo("#codebook")
+        .click(function(){
+            //! Make sure codebook is filled in
+            //! (Optional) warning before submitting incomplete forms
+            
+            //Submite the result
+            $.post(
+                "/ajax/submit-batch-code/",
+                $('#codebook-form').serialize(),
+                function(result){
+                    if( result.status == "success" ){
+                        //Clear codebook answers
+                        $form = $("#codebook-form");
+                        $form.find('input:text, input:password, input:file, select, textarea').val('');
+                        $form.find('input:radio, input:checkbox')
+                             .removeAttr('checked').removeAttr('selected');
+                        
+                        //Load the next document
+                        DocManager.loadNextDoc();
+                    }else{
+                        alert( result.msg );
+                    }
+                }
+            );
+        });
+
+}
 var launchInformalViewer = function( codebook_json ){
     codebookModel.loadQuestions(codebook_json);
     
@@ -16,42 +48,24 @@ var launchInformalViewer = function( codebook_json ){
         $("body").append(template);
         ko.applyBindings(codebookModel);
         codebookModel.addStylesToCodebook();
-
-        //Add hidden csrf token
-        $("#codebook").append("{% csrf_token %}");
-
-		//Add the "submit" button.
-		$('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-inverse">Submit</a></div></div>')
-            .appendTo("#codebook")
-            .click(function(){
-                console.log($('#codebook-form').serialize());
-                $.post(
-                    "/ajax/submit-batch-code/",
-                    $('#codebook-form').serialize(),
-                    function(result){
-                        if( result.status == "success" ){
-                            //! Clear codebook answers
-                            DocManager.loadNextDoc();
-                        }else{
-                            alert( result.msg );
-                        }
-                    }
-                );
-            });
-
+        finalInit();
     }, "text");
 
 };
 	
 	
 $(function(){
+    var seq_list = {{seq_list}};
+    
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 
-    DocManager.initialize("{{batch.profile.collection_id}}","{{csrf_token}}");
+    //Load collection
+    DocManager.initialize("{{batch.profile.collection_id}}","{{csrf_token}}", seq_list);
 
+    //Load codebook
 	$.post("/ajax/get-codebook/",
-        {'id': "{{batch.profile.codebook_id}}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        {'id': "{{ batch.profile.codebook_id }}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
             //! Need error checking for failed responses.
             launchInformalViewer(response.codebook.questions);       
@@ -69,7 +83,7 @@ $(function(){
     <span class="divider">/</span>
   </li>
   <li>
-    <a href="#">Batch 1</a></span>
+    <a href="#">{{ batch.profile.name }}</a></span>
   </li>
   <li>
     <span class="divider"> :: </span>
@@ -86,7 +100,9 @@ $(function(){
 {% block control %}
 <form id="codebook-form">
     <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }" tb-codebook-mode="viewer"></div>
-    <br/>
+    {% csrf_token %}
+    <input id='batch-id-hidden' type='hidden' name='batch_id' value='{{ batch|mongo_id }}'></input>
+    <input id='doc-index-hidden' type='hidden' name='doc_index' value='0'></input>
 </form>
 
 {% endblock %}

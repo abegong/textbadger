@@ -1,41 +1,16 @@
-from django.db.models import Model, TextField
-from djangotoolbox.fields import ListField, EmbeddedModelField, DictField
+#from django.db.models import Model, TextField
+#from djangotoolbox.fields import ListField, EmbeddedModelField, DictField
 from django.contrib.auth.models import User
+from django.db import connections
+from bson.objectid import ObjectId
+from pymongo.errors import InvalidId
 
-#! Don't even bother.  We don't need this now.
-#class UserWrapper(User):
-#    user = TextField()
-#    owned_projects = ListField()
-##    account = EmbeddedModelField('Account')
-#    permissions = ListField()
-
-#class ObjectProfile(Model):
-#    owner = TextField()
-#    name = TextField()
-#    description = TextField()
-
-class Codebook(Model):
-    name = TextField()
-    description = TextField()
-    questions = ListField()
-
-class Collection(Model):
-#    profile = EmbeddedModelField(ObjectProfile)
-    name = TextField()
-    description = TextField()
-    documents = ListField()
-
-class Batch(Model):
-    codebook = TextField()
-    collection = TextField()
-    assignments = DictField() #e.g. {'agong': [1,2,3,4,5], 'mrchampe': [3,4,5,6,7]}
-    reports = DictField()
+import csv, re, json, datetime
 
 ##############################################################################
 
-import csv, re, json
-
-def convert_csv_to_bson(csv_text):
+#This is one way new collections are created
+def convert_document_csv_to_bson(csv_text):
     C = csv.reader(csv.StringIO(csv_text))
 
     #Parse the header row
@@ -63,11 +38,12 @@ def convert_csv_to_bson(csv_text):
 
 #    print json.dumps(meta_fields, indent=2)
 
-    J = {
-#        'name' : None,
-#        'description': None,
-        'documents' : []
-    }
+#    J = {
+##        'name' : None,
+##        'description': None,
+#        'documents' : []
+#    }
+    documents_json = []
 
     #For each row in the collection
     for row in C:
@@ -92,46 +68,196 @@ def convert_csv_to_bson(csv_text):
         if m != {}:
             j["metadata"] = m
 
-        J['documents'].append(j)
+        documents_json.append(j)
 
-#    print json.dumps(J, indent=2)
+#    print json.dumps(documents_json, indent=2)
+    return documents_json
+    
+def get_new_collection_json(name, description, documents):
+    J = {
+        'profile' : {
+            'name' : name,
+            'description' : description,
+            'created_at' : datetime.datetime.now(),
+            'size' : len(documents),
+        },
+        'documents' : documents,
+    }
+    
     return J
 
 
-"""
-Codebook:{
-    "profile": {
-        "owner": "",
-        "description": "",
-        "sharing": "",
-    },
-    "question_array":[]
-}
 
-Collection:{
-    "profile": {
-        "owner": user_id,
-        "description": "",
-        "sharing": "",
-    },
-    "question_array":[]
-}
+def get_default_codebook_questions():
+    return [
+        {
+            "question_type": "Static text",
+            "var_name": "default_question",
+            "params": {
+                "header_text": "<h2> New codebook </h2><p><strong>Use the controls at right to add questions.</strong></p>",
+                }
+        },
+        {
+            "question_type": "Multiple choice",
+            "var_name": "mchoice",
+            "params": {
+                "header_text": "Here is an example of a multiple choice question.  Which answer do you like best?",
+                "answer_array": ["This one", "No, this one", "A third option"],
+            }
+        },
+        {
+            "question_type": "Short essay",
+            "var_name": "essay",
+            "params": {
+                "header_text": "Here's a short essay question.",
+            }
+        }
+    ]
 
-Batch: {
-    "profile": {
-        "description": "",
-        "workforce" : public/private,
-        "codebook" : codebook_id, 
-        "collection" : collection_id,
-        "sharing": "",
-    },
-    "results": [{
-        "user_id":,
-        "doc_id":,
-        "value": {}
-        "timestamp"
-    }],
-    "reports": {}
-}
+def get_new_codebook_json(name, description):
+    #Construct object
+    return {
+        'profile' : {
+            'name' : name,
+            'description' : description,
+            'created_at' : datetime.datetime.now(),
+            'version' : 1,
+            'children' : [],
+            'batches' : [],
+            'parent' : None,
+        },
+        'questions' : get_default_codebook_questions()
+    }
 
-"""
+
+def get_revised_codebook_json(parent_codebook, question_json):
+    print parent_codebook
+    J = {
+        'profile' : {
+            'description' : parent_codebook['profile']["description"],
+            'created_at' : datetime.datetime.now(),
+            'version' : parent_codebook['profile']["version"] + 1,
+            'children' : [],
+            'batches' : [],
+            'parent' : parent_codebook['_id'],#ObjectId(parent_id),
+        },
+        'questions' : question_json,
+    }
+
+    if parent_codebook['profile']["children"]:
+        J['profile']['name'] = parent_codebook['profile']["name"] + " (branch)"
+    else:
+        J['profile']['name'] = parent_codebook['profile']["name"]
+
+    return J
+
+def get_batch_documents_json(coders, pct_overlap, shuffle, collection):
+    k = len(collection["documents"])
+    overlap = int((k * pct_overlap) / 100)
+    
+    import random
+    doc_ids = range(k)
+    if shuffle:
+          # ? This can stay here until we do our DB refactor.
+        random.shuffle(doc_ids)
+    shared = doc_ids[:overlap]
+    unique = doc_ids[overlap:]
+
+    #Construct documents object
+    documents = []
+    empty_labels = dict([(x, []) for x in coders])
+    for i in shared:
+        documents.append({
+            'index': i,
+#            'content': collection["documents"][i]["content"],
+            'labels': empty_labels
+        })
+
+    for i in unique:
+        documents.append({
+            'index': i,
+#            'content': collection["documents"][i]["content"],
+            'labels': { coders[i%len(coders)] : None }
+            #Populate the list with a random smattering of fake labels
+            #'labels': {coders[i % len(coders)]: random.choice([None for x in range(2)] + range(20))}
+        })
+    if shuffle:
+        random.shuffle(documents)
+
+    return documents
+
+def get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection):
+    #construct profile object
+    profile = {
+        'name': 'Batch ' + str(count + 1),
+        'description': collection["profile"]["name"][:20] + " * " + codebook["profile"]["name"][:20] + " (" + str(codebook["profile"]["version"]) + ")",
+        'index': count + 1,
+        'codebook_id': codebook['_id'],#codebook_id,
+        'collection_id': collection['_id'],#collection_id,
+        'coders': coders,
+        'pct_overlap': pct_overlap,
+        'shuffle': shuffle,
+        'created_at': datetime.datetime.now(),
+    }
+    
+    documents = get_batch_documents_json(coders, pct_overlap, shuffle, collection)
+
+    #Construct batch object
+    batch = {
+        'profile' : profile,
+        'documents': documents,
+        'reports': {
+            'progress': {},
+            'reliability': {},
+        },
+    }
+    
+    return batch
+
+#! This is the only method that includes a DB connection right now.
+#! Eventually, we might want to do more like this
+def update_batch_progress(id_):
+    #Connect to the DB
+    conn = connections["default"]
+    coll = conn.get_collection("tb_app_batch")
+
+    #Retrieve the batch
+    batch = coll.find_one({"_id": ObjectId(id_)})
+#    print json.dumps(batch, indent=2, cls=MongoEncoder)
+
+    #Scaffold the progress object
+    coders = batch["profile"]["coders"]
+    progress = {
+        "coders": dict([(c, {"assigned":0, "complete":0}) for c in coders]),
+        "summary": {}
+    }
+
+    #Count total and complete document codes
+    assigned, complete = 0, 0
+    for doc in batch["documents"]:
+        for coder in doc["labels"]:
+            assigned += 1
+            progress["coders"][coder]["assigned"] += 1
+
+            if doc["labels"][coder] != []:
+                complete += 1
+                progress["coders"][coder]["complete"] += 1
+
+    #Calculate percentages
+    for coder in progress["coders"]:
+        c = progress["coders"][coder]
+        c["percent"] = round(float(100 * c["complete"]) / c["assigned"], 1)
+
+    progress["summary"] = {
+        "assigned": assigned,
+        "complete": complete,
+        "percent": round(float(100 * complete) / assigned, 1),
+    }
+
+    batch["reports"]["progress"] = progress
+#    print json.dumps(progress, indent=2, cls=MongoEncoder)
+
+    coll.update({"_id": ObjectId(id_)}, batch)
+#    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
+
+    # Validate response
