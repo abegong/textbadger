@@ -54,6 +54,9 @@ var DocManager = {
         
         //Update hidden field
         $("#doc-index-hidden").val(DocManager.doc_index);
+        
+        //Update codebook markup
+        codebookModel.markupCodebook();
 
         //Update metadata
         var M = DocManager.doc_list[DocManager.doc_index].metadata;

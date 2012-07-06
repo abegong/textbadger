@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 import json
 import re
 import datetime
+from collections import defaultdict
 
 from django.contrib.auth.models import User
 from django.conf import settings  # ?
@@ -217,8 +218,9 @@ def review(request, mongo, batch_index):
         {}
     )
 
-    from collections import defaultdict
+    #print json.dumps(batch, cls=MongoEncoder, indent=2)
 
+    #Reshape label dictionaries for display
     label_list = []
     for doc in batch["documents"]:
         label_set = defaultdict(dict)
@@ -240,7 +242,7 @@ def review(request, mongo, batch_index):
             
         label_list.append(label_set)
 
-    print json.dumps(label_list, cls=MongoEncoder, indent=2)
+    #print json.dumps(label_list, cls=MongoEncoder, indent=2)
 
     result = {
         'batch': batch,
@@ -633,6 +635,7 @@ def submit_batch_code(request, mongo):
 
     #Update DB
     coll = mongo.get_collection("tb_app_batch")
+    """
     batch = coll.find_one(
         {"_id":ObjectId(batch_id)},
         {
@@ -641,6 +644,7 @@ def submit_batch_code(request, mongo):
         }
     )
     batch["documents"][0]["labels"][username].append( labels )
+    """
     
     query1 = {"_id": ObjectId(batch_id), "documents.index": doc_index}
     query2 = "documents.$.labels."+username

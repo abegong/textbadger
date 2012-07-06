@@ -220,5 +220,107 @@ var codebookModel = {
 
 		//Re-bind questionControls
 		ko.applyBindings(codebookModel, qC[0]);
-	}
+	},
+    
+    markupCodebook : function(labels){
+        var labels = label_list[DocManager.doc_index];
+        console.log("====================================================");
+        console.log("label_list");
+        console.log(label_list);
+        console.log("DocManager.doc_index");
+        console.log(DocManager.doc_index);
+        console.log("labels");
+        console.log(labels);
+
+        //Markup
+		$(".questionMarkupAnchor").each(function(i,d){
+			var $d = $(d);
+
+            //Remove any previous badges
+            $('span.questionMarkup', $d.closest('.questionBox')).remove();
+
+            //Add new badge
+			var r = Math.random();
+            var $badge = $('<span class="questionMarkup badge badge-warning"></span>')
+                .append('<b>.'+Math.floor(r*1000)+'</b>')
+                .prependTo($d.closest('.questionBox'));
+
+            //Set badge location
+			var offset = $d.offset();
+			$badge.offset({ top: offset.top, left: offset.left-$badge.width()-22 });
+
+            //Shim-graphs
+            if( $d.hasClass("HAnchor") ){
+                //Label inputs/old shim-graphs for removal
+                $("#codebook input, div.shim-graph-h")
+                    .addClass("old-codebook-obj");
+                    
+                $(".old-codebook-obj", $d).each(function(i,x){
+                    //console.log(x);
+                    //console.log(labels);
+                    
+                    //Find the appropriate label for this graph
+                    //! This code is brittle because it depends on the sequences matching up exactly.
+                    for( q in labels ){
+                        if( q.match("Q"+i+"_")){
+                            var question = q;
+                            break;
+                        }
+                    }
+                    console.log(question);
+                    
+                    //Create shimgraph
+                    var $shimgraph = $('<div class="shim-graph-h"></div>');
+
+                    if( typeof(question) != "undefined" ){
+                        //console.log(labels);
+                        //console.log(question);
+                        
+                        //Append shimgraph content
+                        for( j in labels[question] ){
+                            console.log("\t"+j+"\t:\t"+$(x).val()+"\t:\t"+labels[question][j]);
+                            if( labels[question][j] == $(x).val() ){
+                                $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                            }
+                        }
+
+                        /*
+                        for( j=0; j<Math.random()*20; j++ ){
+                            $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                        }
+                        */
+                    }
+
+                    //Save the location of the input, before it gets replaced.
+                    var offset = $(x).offset();
+
+                    //Replace the input with the shimgraph
+                    $(x).replaceWith($shimgraph);
+                    //$shimgraph.hide();
+
+                    //Position shimgraph, after all the images load
+                    $shimgraph.imagesLoaded( function(){
+                        $shimgraph
+                            .fadeIn("fast")
+                            .offset({ top: offset.top-5, left: offset.left-$shimgraph.width()-4 })
+
+                    });
+                });
+            }else{
+                $("input", $d).each(function(i,x){
+                    //Create shimgraph and content
+                    var $shimgraph = $('<div class="shim-graph-b"></div>');
+                    for( j=0; j<Math.random()*20; j++ ){
+                        $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                    }
+
+                    //Save the location of the input, before it gets replaced.
+                    var offset = $(x).offset();
+
+                    //Replace the input with the shim-graph
+                    $(x).replaceWith($shimgraph);                    
+                });
+            }
+		});
+    }
 };

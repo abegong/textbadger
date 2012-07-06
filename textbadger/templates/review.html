@@ -17,91 +17,9 @@ var launchInformalViewer = function( codebook_json ){
         $("body").append(template);
         ko.applyBindings(codebookModel);
         codebookModel.addStylesToCodebook();
-
-		//Markup at random
-		$(".questionMarkupAnchor").each(function(i,d){
-			var $d = $(d);
-
-            //Add badge
-			var $badge = $('<span class="questionMarkup badge badge-warning"></span>')
-                .prependTo($d.closest('.questionBox'));
-			
-            //Fill in badge contents
-			var r = Math.random()
-			$badge.append('<b>.'+Math.floor(r*1000)+'</b>');
-
-            //Set badge location
-			var offset = $d.offset();
-			$badge.offset({ top: offset.top, left: offset.left-$badge.width()-22 });
-
-            var labels = label_list[DocManager.doc_index];
-
-            //Shim-graphs
-            if( $d.hasClass("HAnchor") ){
-                $("input", $d).each(function(i,x){
-                    //Find the appropriate label for this graph
-                    for( q in labels ){
-                        if( q.match("Q"+i+"_")){
-                            var question = q;
-                            break;
-                        }
-                    }
-                    
-                    //Create shimgraph
-                    var $shimgraph = $('<div class="shim-graph-h"></div>');
-
-                    if( typeof(question) != "undefined" ){
-                        //console.log(labels);
-                        //console.log(question);
-                        //console.log(labels[question]);
-                        
-                        //Append shimgraph content
-                        for( j in labels[question] ){
-                            console.log("\t"+j+"\t:\t"+$(x).val());
-                            if( labels[question][j] == $(x).val() ){
-                                $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
-                            }
-                        }
-
-                        /*
-                        for( j=0; j<Math.random()*20; j++ ){
-                            $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
-                        }
-                        */
-                    }
-
-                    //Save the location of the input, before it gets replaced.
-                    var offset = $(x).offset();
-
-                    //Replace the input with the shimgraph
-                    $(x).replaceWith($shimgraph);
-                    $shimgraph.hide();
-
-                    //Position shimgraph, after all the images load
-                    $shimgraph.imagesLoaded( function(){
-                        $shimgraph
-                            .fadeIn("fast")
-                            .offset({ top: offset.top-5, left: offset.left-$shimgraph.width()-4 })
-
-                    });
-                });
-            }else{
-                $("input", $d).each(function(i,x){
-                    //Create shimgraph and content
-                    var $shimgraph = $('<div class="shim-graph-b"></div>');
-                    for( j=0; j<Math.random()*20; j++ ){
-                        $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
-                    }
-
-                    //Save the location of the input, before it gets replaced.
-                    var offset = $(x).offset();
-
-                    //Replace the input with the shim-graph
-                    $(x).replaceWith($shimgraph);                    
-                });
-            }
-		});
-
+        
+        //Marking up the codebook here (as well as in loadDocument) prevents a race condition when loading the collection and codebook
+        codebookModel.markupCodebook();
     }, "text");
 
 };
@@ -151,6 +69,17 @@ asdf
 {% endblock %}
 
 {% block control %}
+<div style="text-align:center">
+  <form>
+	<button id="prev-doc-button" class="btn"><span class="icon-arrow-left"></span></button>
+    &nbsp;&nbsp;
+    <input id="doc-index" type="text" value="0" style="margin-top:9px; width:40px; text-align:center;"></input>
+    of <span id="doc-count">0</span>
+    &nbsp;&nbsp;
+	<button id="next-doc-button" class="btn"><span class="icon-arrow-right"></span></button>
+  </form>
+</div>
+
 <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }" tb-codebook-mode="viewer"></div>
 <br/>
 

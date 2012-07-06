@@ -38,11 +38,6 @@ def convert_document_csv_to_bson(csv_text):
 
 #    print json.dumps(meta_fields, indent=2)
 
-#    J = {
-##        'name' : None,
-##        'description': None,
-#        'documents' : []
-#    }
     documents_json = []
 
     #For each row in the collection
@@ -177,7 +172,7 @@ def get_batch_documents_json(coders, pct_overlap, shuffle, collection):
         documents.append({
             'index': i,
 #            'content': collection["documents"][i]["content"],
-            'labels': { coders[i%len(coders)] : None }
+            'labels': { coders[i%len(coders)] : [] }
             #Populate the list with a random smattering of fake labels
             #'labels': {coders[i % len(coders)]: random.choice([None for x in range(2)] + range(20))}
         })
