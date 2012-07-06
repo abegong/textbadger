@@ -17,8 +17,10 @@ var launchInformalViewer = function( codebook_json ){
         ko.applyBindings(codebookModel);
         codebookModel.addStylesToCodebook();
 
-        //Add hidden csrf token
+        //Add hidden csrf token and other hidden fields
         $("#codebook").append("{% csrf_token %}");
+        $("#codebook").append("<input type='hidden' name='batch_id' value='{{ batch|mongo_id }}'></input>");
+        $("#codebook").append("<input type='hidden' name='doc_index' value='0'></input>");
 
 		//Add the "submit" button.
 		$('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-inverse">Submit</a></div></div>')
@@ -69,7 +71,7 @@ $(function(){
     <span class="divider">/</span>
   </li>
   <li>
-    <a href="#">Batch 1</a></span>
+    <a href="#">{{ batch.profile.name }}</a></span>
   </li>
   <li>
     <span class="divider"> :: </span>

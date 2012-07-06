@@ -165,7 +165,7 @@ def get_batch_documents_json(coders, pct_overlap, shuffle, collection):
 
     #Construct documents object
     documents = []
-    empty_labels = dict([(x, None) for x in coders])
+    empty_labels = dict([(x, []) for x in coders])
     for i in shared:
         documents.append({
             'index': i,
@@ -214,6 +214,8 @@ def get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection
     
     return batch
 
+#! This is the only method that includes a DB connection right now.
+#! Eventually, we should probably move conn back over to views.
 def update_batch_progress(id_):
     #Connect to the DB
     conn = connections["default"]

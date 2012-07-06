@@ -159,7 +159,8 @@ def collection(request, mongo, id_):
 @uses_mongo
 def batch(request, mongo, id_):
     models.update_batch_progress(id_)
-    batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1})
+    batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1, "documents": 1})
+    print json.dumps(batch, cls=MongoEncoder, indent=1)
 
     result = {
         'batch': batch,
@@ -201,7 +202,6 @@ def review(request, mongo, batch_index):
     
     
 ### Ajax calls ###############################################################
-
 
 def signin(request):
     try:
@@ -545,8 +545,47 @@ def update_batch_reliability(request):
     return gen_json_response({"status": "failed", "msg": "Nope.  You can't do this yet."})
 
 @login_required(login_url='/')
-def submit_batch_code(request):
-    rpd = request.raw_post_data
+@uses_mongo
+def submit_batch_code(request, mongo):
+    #Get indexes
+    try:
+        batch_id = request.POST["batch_id"]
+        doc_index = request.POST["doc_index"]
+
+    except MultiValueDictKeyError:
+        return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    username = request.user.username
+    
+    #Construct labels object
+    labels = {}
     for field in request.POST:
-        print field, request.POST[field]
+        print '\t', field, '\t', request.POST[field], '\t',
+        if re.match("Q[0-9]+", field):
+            labels[field] = request.POST[field]
+    
+    print labels
+    
+    #"profile.index": batch_index
+    #Validate responses against codebook questions
+    #Update
+    coll = mongo.get_collection("tb_app_batch")
+    batch = coll.find_one(
+        {"_id":ObjectId(batch_id)},
+        {
+            "documents.labels."+username:1,
+            "documents":{"$slice":[doc_index,1]}
+        }
+    )
+    batch["documents"][0]["labels"][username].append( labels )
+    #coll.save({"_id":ObjectId(batch_id)}, batch)
+    coll.update(
+        {"_id": ObjectId(batch_id)},
+        {"$push": {
+            "documents.labels."+username:1,
+            "documents.labels":{"$slice":[doc_index,1]}
+        })
+    print json.dumps(batch, cls=MongoEncoder, indent=2)
     return gen_json_response({"status": "failed", "msg": "Nope.  You cannot do this yet."})
+
+
