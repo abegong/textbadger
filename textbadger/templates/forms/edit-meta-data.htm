@@ -5,7 +5,7 @@
       <h3>Edit meta-data</h3>
   </div>
    <div class="modal-body">
-        <form id="edit-meta-data-form" class="form-horizontal" tb-href="/ajax/edit-meta-data/" tb-redirect="/collection/{{collection|mongo_id}}"><fieldset>
+        <form id="edit-meta-data-form" class="form-horizontal" tb-href="/ajax/update-meta-data/" tb-redirect="/collection/{{collection|mongo_id}}"><fieldset>
                   {% csrf_token %}
         <input type="hidden" value="{{collection|mongo_id}}" name="id_">
         <div id="edit-metadata"> </div>
