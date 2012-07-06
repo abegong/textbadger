@@ -21,6 +21,8 @@ urlpatterns = patterns('',
     #Object view pages
     url(r'^codebook/(.*)/$', 'textbadger.tb_app.views.codebook' ),
     url(r'^collection/(.*)/$', 'textbadger.tb_app.views.collection' ),
+    
+    url(r'^batch/(.*)/export/$', 'tb_app.views.export_batch'),
     url(r'^batch/(.*)/$', 'textbadger.tb_app.views.batch' ),
 
     #Assignment and review page(s)

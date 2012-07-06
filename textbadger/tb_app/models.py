@@ -7,6 +7,12 @@ from pymongo.errors import InvalidId
 
 import csv, re, json, datetime
 
+def uses_mongo(function):
+    def _inner(*args, **kwargs):
+        mongo = connections["default"]
+        return function(mongo, *args, **kwargs)
+    return _inner
+
 ##############################################################################
 
 #This is one way new collections are created
@@ -256,3 +262,6 @@ def update_batch_progress(id_):
 #    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
 
     # Validate response
+
+#@uses_mongo
+#def gen_batch_csv(mongo, batch_id):

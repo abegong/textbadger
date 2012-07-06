@@ -1,4 +1,5 @@
 {% extends "base/single-column.html" %}
+{% load tb_app_tags %}
 
 {% block start_scripts %}
 <script type="text/javascript">
@@ -33,8 +34,7 @@ $(function(){
 {% block content %}
 <!-- Overview --------------------->
 <a class="btn btn-primary rightside" href="/review/{{ batch.profile.index }}/">Review results &raquo;</a>
-<a class="btn btn-inverse open-modal rightside"><i class="icon-download"></i> Export results</a>
-{% include "forms/under-construction.htm" %}
+<a class="btn btn-primary rightside" href="/batch/{{ batch|mongo_id }}/export/"><i class="icon-download"></i> Export results</a>
 <h2>{{batch.profile.name}}</h2>
 
 <dl class="dl-horizontal">

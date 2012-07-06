@@ -4,9 +4,8 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import render_to_response, get_object_or_404, redirect  # ?
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-import json
-import re
-import datetime
+
+import json, re, datetime, csv
 from collections import defaultdict
 
 from django.contrib.auth.models import User
@@ -656,4 +655,101 @@ def submit_batch_code(request, mongo):
 #    print json.dumps(batch, cls=MongoEncoder, indent=2)
     return gen_json_response({"status": "success", "msg": "Added code to batch."})
 
+#@login_required(login_url='/')
+@uses_mongo
+def export_batch(request, mongo, batch_id):
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=somefilename.csv'
 
+    batch = mongo.get_collection("tb_app_batch").find_one( {"_id": ObjectId(batch_id)} )
+    documents = batch["documents"]
+    collection = mongo.get_collection("tb_app_collection").find_one({"_id": ObjectId(batch["profile"]["collection_id"])} )
+    codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])} )
+    
+    #Generate column names...
+    col_names = []
+    for i,q in enumerate(codebook["questions"]):
+        if q["var_name"]:
+            var_name = "_"+q["var_name"]
+        else:
+            var_name = ''
+
+        if q["question_type"] in ['Static text', 'Multiple choice', 'Check all that apply', 'Two-way scale', 'Text box', 'Short essay']:
+            col_names.append("Q"+str(i)+var_name)
+
+        elif q["question_type"] == 'Radio matrix':
+            for j,p in enumerate(q["params"]["question_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+            
+        elif q["question_type"] == 'Checkbox matrix':
+            for j,p in enumerate(q["params"]["question_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+
+        elif q["question_type"] == 'Two-way matrix':
+            for j,p in enumerate(q["params"]["left_statements"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+
+        elif q["question_type"] == 'Text matrix':
+            for j,p in enumerate(q["params"]["answer_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+
+        """    
+        if q["question_type"] == 'Static text':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Multiple choice':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Check all that apply':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Two-way scale':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Radio matrix':
+            for j,p in enumerate(q["params"]["question_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+            
+        elif q["question_type"] == 'Checkbox matrix':
+            for j,p in enumerate(q["params"]["question_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+
+        elif q["question_type"] == 'Two-way matrix':
+            for j,p in enumerate(q["params"]["left_statements"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+
+        elif q["question_type"] == 'Text box':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Short essay':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Text matrix':
+            for j,p in enumerate(q["params"]["answer_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+        """
+
+    writer = csv.writer(response)
+    writer.writerow(col_names)
+    
+    for d in documents:
+        print d
+    
+    writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+
+    return gen_json_response({"status": "success", "msg": "Added code to batch.", "cols": col_names})
+    return response
+    
+def test_test_update_collection_metadata():
+    collection_id = '4ff63d5d2fa6cd211b000001'
+    doc_index = 0
+    
+    #"documents.$": int(doc_index)}#
+    query1 = {"_id": ObjectId(collection_id), "documents": {"$slice":[int(doc_index),1]}}
+    query2 = "documents"
+    mongo.get_collection("tb_app_collection").update(
+        query1,
+        {"$set": {query2: "ZAP!"}}
+    )
+
+    result = mongo.get_collection("tb_app_collection").find_one(
+        {"_id": ObjectId(collection_id)},
+        #"documents":{"$slice":[doc_index,1]}}
+    )    
+    
+    return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
+    
