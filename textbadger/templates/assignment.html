@@ -53,7 +53,7 @@ $(function(){
     DocManager.initialize("{{batch.profile.collection_id}}","{{csrf_token}}");
 
 	$.post("/ajax/get-codebook/",
-        {'id': "{{batch.profile.codebook_id}}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        {'id': "{{ batch.profile.codebook_id }}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
             //! Need error checking for failed responses.
             launchInformalViewer(response.codebook.questions);       

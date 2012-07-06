@@ -177,9 +177,9 @@ def get_batch_documents_json(coders, pct_overlap, shuffle, collection):
         documents.append({
             'index': i,
 #            'content': collection["documents"][i]["content"],
-#            'labels': { coders[i%len(coders)] : None }
+            'labels': { coders[i%len(coders)] : None }
             #Populate the list with a random smattering of fake labels
-            'labels': {coders[i % len(coders)]: random.choice([None for x in range(2)] + range(20))}
+            #'labels': {coders[i % len(coders)]: random.choice([None for x in range(2)] + range(20))}
         })
     if shuffle:
         random.shuffle(documents)
@@ -191,7 +191,7 @@ def get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection
     profile = {
         'name': 'Batch ' + str(count + 1),
         'description': collection["profile"]["name"][:20] + " * " + codebook["profile"]["name"][:20] + " (" + str(codebook["profile"]["version"]) + ")",
-        'index': str(count + 1),
+        'index': count + 1,
         'codebook_id': codebook['_id'],#codebook_id,
         'collection_id': collection['_id'],#collection_id,
         'coders': coders,

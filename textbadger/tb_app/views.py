@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 import json
 import re
+import datetime
 
 from django.contrib.auth.models import User
 from django.conf import settings  # ?
@@ -87,6 +88,7 @@ def my_account(request, mongo):
         fields={"profile": 1, "reports.progress": 1},
     ))
 
+    #Find all the batches that have assignments for this use, and repackage the object for templates
     assignments = []
     for b in batches:
         assignments.append({
@@ -100,7 +102,7 @@ def my_account(request, mongo):
 #    print json.dumps(assignments, indent=2, cls=MongoEncoder)
 
     result = {
-        'assignments': assignments,  # Get assignments from DB
+        'assignments': assignments,
     }
     return render_to_response('my-account.html', result, context_instance=RequestContext(request))
 
@@ -180,11 +182,11 @@ def batch(request, mongo, id_):
 @login_required(login_url='/')
 @uses_mongo
 def assignment(request, mongo, batch_index, username):
-    batch = mongo.get_collection("tb_app_batch").find_one({"profile.index":batch_index})#,fields={"profile":1, "reports.progress":1})
+    batch_index = int(batch_index)
+    batch = mongo.get_collection("tb_app_batch").find_one({"profile.index":batch_index},{"profile":1})#,fields={"profile":1, "reports.progress":1})
 
     result = {'batch': batch}
     print json.dumps(batch, cls=MongoEncoder, indent=2)
-    assignment = {}  # ? This is not built yet.
 
     return render_to_response('assignment.html', result, context_instance=RequestContext(request))
 
@@ -422,6 +424,7 @@ def create_codebook(request, mongo):
 @uses_mongo
 def get_codebook(request, mongo):
     id_ = request.POST["id"]
+    print id_, '*****'
     codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(id_)})
 
     #! Need error checking for invalid Ids
@@ -550,7 +553,7 @@ def submit_batch_code(request, mongo):
     #Get indexes
     try:
         batch_id = request.POST["batch_id"]
-        doc_index = request.POST["doc_index"]
+        doc_index = int(request.POST["doc_index"])
 
     except MultiValueDictKeyError:
         return gen_json_response({"status": "failed", "msg": "Missing field."})
@@ -558,17 +561,17 @@ def submit_batch_code(request, mongo):
     username = request.user.username
     
     #Construct labels object
-    labels = {}
+    labels = { 'created_at' : datetime.datetime.now() }
     for field in request.POST:
-        print '\t', field, '\t', request.POST[field], '\t',
+        print '\t', field, '\t', request.POST[field], '\t', re.match("Q[0-9]+", field) != None
         if re.match("Q[0-9]+", field):
             labels[field] = request.POST[field]
     
-    print labels
+    #print labels
     
-    #"profile.index": batch_index
-    #Validate responses against codebook questions
-    #Update
+    #!? Validate responses against codebook questions
+
+    #Update DB
     coll = mongo.get_collection("tb_app_batch")
     batch = coll.find_one(
         {"_id":ObjectId(batch_id)},
@@ -578,16 +581,19 @@ def submit_batch_code(request, mongo):
         }
     )
     batch["documents"][0]["labels"][username].append( labels )
-    #coll.save({"_id":ObjectId(batch_id)}, batch)
-    coll.update(
-        {"_id": ObjectId(batch_id)},
-        {"$push": {
-            "documents.labels."+username:1,
-            "documents.labels":{"$slice":[doc_index,1]}
-            }
-        }
+    print '='*80
+    #print batch
+    print doc_index
+    
+    query1 = {"_id": ObjectId(batch_id), "documents.index": doc_index}
+    query2 = "documents.$.labels."+username
+    print query1
+    print query2
+    mongo.get_collection("tb_app_batch").update(
+        query1,
+        {"$push": {query2: labels}}
     )
-    print json.dumps(batch, cls=MongoEncoder, indent=2)
+#    print json.dumps(batch, cls=MongoEncoder, indent=2)
     return gen_json_response({"status": "failed", "msg": "Nope.  You cannot do this yet."})
 
 
