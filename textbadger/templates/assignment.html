@@ -12,12 +12,13 @@ var finalInit = function(){
     //Add hidden csrf token and other hidden fields
 
     //Add the "submit" button.
-    $('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-inverse">Submit</a></div></div>')
+    $('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-primary">Submit</a></div></div>')
         .appendTo("#codebook")
         .click(function(){
-//            console.log(DocManager.seq_list);
-//            console.log(DocManager.seq_index);
-//            console.log(DocManager.doc_index);
+            //! Make sure codebook is filled in
+            //! (Optional) warning before submitting incomplete forms
+            
+            //Submite the result
             $.post(
                 "/ajax/submit-batch-code/",
                 $('#codebook-form').serialize(),
@@ -102,7 +103,6 @@ $(function(){
     {% csrf_token %}
     <input id='batch-id-hidden' type='hidden' name='batch_id' value='{{ batch|mongo_id }}'></input>
     <input id='doc-index-hidden' type='hidden' name='doc_index' value='0'></input>
-    <br/>
 </form>
 
 {% endblock %}
