@@ -10,8 +10,8 @@
 <script type="text/javascript">
 var launchInformalEditor = function( codebook_json ){
 
-  //Create the default question
-
+    /*
+    //Create the default question
     codebookModel.questions([
         new cbQuestion("Static text", "", {} ),
         new cbQuestion("Multiple choice", "", {} ),
@@ -24,6 +24,7 @@ var launchInformalEditor = function( codebook_json ){
         new cbQuestion("Short essay", "", {} ),
         new cbQuestion("Text matrix", "", {} )
     ]);
+    */
     codebookModel.loadQuestions(codebook_json);
     
     //Load the template and knockout model dynamically.
@@ -99,7 +100,7 @@ $(function(){
     <a href="/shared-resources/#codebooks">Codebooks</a> <span class="divider">/</span>
   </li>
   <li>
-    <a href="#">{{codebook.name}} ({{codebook.version}})</a></span>
+    <a href="#">{{codebook.profile.name}} ({{codebook.profile.version}})</a></span>
   </li>
 </ul>
 </div>
@@ -124,19 +125,19 @@ $(function(){
 {% block control %}
 
 <button id="save-codebook" class="btn btn-primary rightside" type="submit">Save changes</button>
-<h3>{{codebook.name}} ({{codebook.version}})</h3>
+<h3>{{codebook.profile.name}} ({{codebook.profile.version}})</h3>
 <hr />
 <a class="btn btn-primary open-modal rightside">Edit codebook info</a>
 {% include "forms/edit-codebook.htm" %}
 <h4>Codebook</h4>
 <strong>Name</strong>
-<p>{{ codebook.name }}</p>
+<p>{{ codebook.profile.name }}</p>
 
 <strong>Description</strong>
-<p>{{ codebook.description }}</p>
+<p>{{ codebook.profile.description }}</p>
 
 <strong>Version</strong>
-<p>{{ codebook.version }}</p>
+<p>{{ codebook.profile.version }}</p>
 
 
 

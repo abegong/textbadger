@@ -30,7 +30,7 @@
           <!-- Hack: this selector holds all the codebooks -->
           <select id="hidden-codebook-selector" style="display:none">
           {% for c in codebooks %}
-            <option value="{{ c|mongo_id }}" class="{% if not c.children %}current{% endif %} {% if p.batches %}batches{% endif %}">{{ c.name }} ({{ c.version }})</option>
+            <option value="{{ c|mongo_id }}" class="{% if not c.profile.children %}current{% endif %} {% if p.profile.batches %}batches{% endif %}">{{ c.profile.name }} ({{ c.profile.version }})</option>
           {% endfor %}
           </select>
         </div>
@@ -41,7 +41,7 @@
         <div class="controls">
           <select id="collection" name="collection_id">
           {% for c in collections %}
-            <option value="{{ c|mongo_id }}">{{ c.name }}</option>
+            <option value="{{ c|mongo_id }}">{{ c.profile.name }}</option>
           {% endfor %}
           </select>
         </div>
@@ -62,7 +62,7 @@
         <label class="control-label" for="pct_overlap">Overlap</label>
         <div class="controls">
           <div class="input-prepend">
-            <input class="span2" id="pct_overlap" size="16" type="text" name="pct_overlap"><span class="add-on">%</span>
+            <input class="span2" id="pct_overlap" size="16" type="text" name="pct_overlap" value="100"><span class="add-on">%</span>
           </div>
         </div>
       </div>

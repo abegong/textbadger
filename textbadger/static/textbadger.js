@@ -1,20 +1,33 @@
 /*
 Manager document-related data and DOM manipulation.
 All pages that use documents should begin with a call to:
-    DocManager.initialize(collection_id, csrf_token)
+    DocManager.initialize(collection_id, csrf_token, seq_list)
 
 No other code is needed.
 */
 var DocManager = {
-    doc_list : [],
-    doc_index : 0,
-
-    loadDocList : function( collection_id, csrf_token ){
+    doc_list : [],  //Array of documents containing {content, metadata}
+    seq_list : [],   //Array of document indexes, e.g. [8,5,3,2].  May be shuffled and incomplete.
+    doc_index : 0,  //Index of the currently visible document
+    seq_index : 0,  //Current index in the sequence array
+    
+    loadDocList : function( collection_id, csrf_token, seq_list ){
         $.post(
             '/ajax/get-collection-docs/',
             {'id': collection_id, 'csrfmiddlewaretoken': csrf_token },
             function(data){
                 DocManager.doc_list = data.documents;
+                if(seq_list){
+                    DocManager.seq_list = seq_list;
+                }else{
+                    //If seq_list isn't specified, create an array of indexes in boring counting order
+                    DocManager.seq_list = new Array(DocManager.doc_list.length);
+                    for( var i=0; i<DocManager.doc_list.length; i++ ){
+                        DocManager.seq_list[i] = i;
+                    }
+                }
+
+                
                 DocManager.showDocument(0);
                 $("#doc-count").html(DocManager.doc_list.length);
             },
@@ -22,24 +35,28 @@ var DocManager = {
         );
     },
 
-    showDocument : function(index){
-		//Update the index
-		DocManager.doc_index = index;
+    showDocument : function(seq_index){
+		//Update both indexes
+		DocManager.seq_index = seq_index;
+        DocManager.doc_index = DocManager.seq_list[seq_index];
 
         //Show the document
-        $("#doc-box").html(DocManager.doc_list[index].content);
+        $("#doc-box").html(DocManager.doc_list[DocManager.doc_index].content);
 
         //Update navigation
-        $("#doc-index").val(index+1);
+        $("#doc-index").val(DocManager.doc_index+1);
 
-        if( DocManager.doc_index === 0 ){ $("#prev-doc-button").addClass("disabled"); }
-        else{ $("#prev-doc-button").removeClass("disabled"); }
+	    if( DocManager.seq_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
+	    else{ $("#prev-doc-button").removeClass("disabled"); }
 
-        if( DocManager.doc_index === DocManager.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
-        else{ $("#next-doc-button").removeClass("disabled"); }
+	    if( DocManager.seq_index == DocManager.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
+	    else{ $("#next-doc-button").removeClass("disabled"); }
+        
+        //Update hidden field
+        $("#doc-index-hidden").val(DocManager.doc_index);
 
         //Update metadata
-        var M = DocManager.doc_list[index].metadata;
+        var M = DocManager.doc_list[DocManager.doc_index].metadata;
         var elements = 1;
         $("#doc-metadata").html("");
         for( m in M ){
@@ -62,7 +79,6 @@ var DocManager = {
                 elements++;
                 //$(name[value="meta-data-elements"]).val(elements);
             });
-
     },
 
     showDocumentForm : function(index){
@@ -70,32 +86,31 @@ var DocManager = {
 	},
 
     loadPrevDoc : function(){
-        if( DocManager.doc_index > 0 ){
-		    DocManager.showDocument( DocManager.doc_index-1 );
+	    if( DocManager.seq_index > 0 ){
+		    DocManager.showDocument( DocManager.seq_index-1 );
 	    }
 	    return( false );
     },
 
     loadNextDoc : function(){
-	    if( DocManager.doc_index < DocManager.doc_list.length-1 ){
-		    DocManager.showDocument( DocManager.doc_index+1 );
+	    if( DocManager.seq_index < DocManager.seq_list.length-1 ){
+		    DocManager.showDocument( DocManager.seq_index+1 );
 	    }
 	    return( false );
     },
 
-    initialize : function( collection_id, csrf_token ){
+    initialize : function( collection_id, csrf_token, seq_list ){
         $("#prev-doc-button").click( DocManager.loadPrevDoc );
         $("#next-doc-button").click( DocManager.loadNextDoc );
         $("#doc-index").change(function(){
             var x = $(this).val();
             //! Need to add input validation to this function
 
-            DocManager.doc_index = x;
-            DocManager.showDocument(x);
-            $(name[value="doc-index"]).val(x);
+            DocManager.seq_index = x;
+            DocManager.showDocument(x)
         });
 
-        DocManager.loadDocList( collection_id, csrf_token );
+        DocManager.loadDocList( collection_id, csrf_token, seq_list );        
     }
 };
 
