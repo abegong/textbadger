@@ -215,7 +215,7 @@ def get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection
     return batch
 
 #! This is the only method that includes a DB connection right now.
-#! Eventually, we should probably move conn back over to views.
+#! Eventually, we might want to do more like this
 def update_batch_progress(id_):
     #Connect to the DB
     conn = connections["default"]
@@ -239,7 +239,7 @@ def update_batch_progress(id_):
             assigned += 1
             progress["coders"][coder]["assigned"] += 1
 
-            if doc["labels"][coder] != None:
+            if doc["labels"][coder] != []:
                 complete += 1
                 progress["coders"][coder]["complete"] += 1
 

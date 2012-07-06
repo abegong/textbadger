@@ -183,10 +183,23 @@ def batch(request, mongo, id_):
 @login_required(login_url='/')
 @uses_mongo
 def assignment(request, mongo, batch_index, username):
-    batch_index = int(batch_index)
-    batch = mongo.get_collection("tb_app_batch").find_one({"profile.index":batch_index},{"profile":1})#,fields={"profile":1, "reports.progress":1})
+    query = {"profile.index": int(batch_index)}
+    #fields =  { "profile": 1, "documents.labels."+username: [], "documents.index": 1 }
+    
+    #print query
+    #print fields
+    
+    batch = mongo.get_collection("tb_app_batch").find_one(query, {"profile": 1})
+    docs = mongo.get_collection("tb_app_batch").find_one(query, {"documents": 1})["documents"]
+    
+    seq_list = []
+    for d in docs:
+        if username in d["labels"]:
+            if d["labels"][username] == []:
+                seq_list.append(d["index"])
+    #print doc_list
 
-    result = {'batch': batch}
+    result = {'batch': batch, 'seq_list': seq_list}
     print json.dumps(batch, cls=MongoEncoder, indent=2)
 
     return render_to_response('assignment.html', result, context_instance=RequestContext(request))
@@ -564,7 +577,7 @@ def submit_batch_code(request, mongo):
     #Construct labels object
     labels = { 'created_at' : datetime.datetime.now() }
     for field in request.POST:
-        print '\t', field, '\t', request.POST[field], '\t', re.match("Q[0-9]+", field) != None
+        #print '\t', field, '\t', request.POST[field], '\t', re.match("Q[0-9]+", field) != None
         if re.match("Q[0-9]+", field):
             labels[field] = request.POST[field]
     
@@ -582,19 +595,14 @@ def submit_batch_code(request, mongo):
         }
     )
     batch["documents"][0]["labels"][username].append( labels )
-    print '='*80
-    #print batch
-    print doc_index
     
     query1 = {"_id": ObjectId(batch_id), "documents.index": doc_index}
     query2 = "documents.$.labels."+username
-    print query1
-    print query2
     mongo.get_collection("tb_app_batch").update(
         query1,
         {"$push": {query2: labels}}
     )
 #    print json.dumps(batch, cls=MongoEncoder, indent=2)
-    return gen_json_response({"status": "failed", "msg": "Nope.  You cannot do this yet."})
+    return gen_json_response({"status": "success", "msg": "Added code to batch."})
 
 
