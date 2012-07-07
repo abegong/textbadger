@@ -45,6 +45,10 @@ class MongoEncoder(json.JSONEncoder):
 def gen_json_response(result):
     return HttpResponse(json.dumps(result, indent=2, cls=MongoEncoder), mimetype='application/json')
 
+def sluggify(string):
+    ustring = unicode.decode(string).lower()
+    return re.sub(r'\W+','-',ustring)
+
 '''
 from django.core.exceptions import PermissionDenied
 
@@ -226,13 +230,7 @@ def review(request, mongo, batch_index):
         for coder in doc["labels"]:
             #print "\t", coder
 
-            #Get the most recent answer set for this coder (important if the coder used did an "undo")
-            most_recent_answer_set = {}
-            most_recent_date = None
-            for answer_set in doc["labels"][coder]:
-                if not most_recent_date or answer_set["created_at"] > most_recent_date:
-                    most_recent_answer_set = answer_set
-                    most_recent_date = answer_set["created_at"]
+            answer_set = models.get_most_recent_answer_set(doc["labels"][coder])
             
             #Append question labels to the label_set object
             for question in most_recent_answer_set:
@@ -635,16 +633,6 @@ def submit_batch_code(request, mongo):
 
     #Update DB
     coll = mongo.get_collection("tb_app_batch")
-    """
-    batch = coll.find_one(
-        {"_id":ObjectId(batch_id)},
-        {
-            "documents.labels."+username:1,
-            "documents":{"$slice":[doc_index,1]}
-        }
-    )
-    batch["documents"][0]["labels"][username].append( labels )
-    """
 
     query1 = {"_id": ObjectId(batch_id), "documents.index": doc_index}
     query2 = "documents.$.labels."+username
@@ -658,80 +646,46 @@ def submit_batch_code(request, mongo):
 @login_required(login_url='/')
 @uses_mongo
 def export_batch(request, mongo, batch_id):
-    response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=somefilename.csv'
-
+    #! These should be populated from a form, but said form doesn't exist yet.
+    include_empty_rows = False
+    include_doc_content = False
+    
+    #Retrieve the relevant objects
     batch = mongo.get_collection("tb_app_batch").find_one( {"_id": ObjectId(batch_id)} )
     documents = batch["documents"]
     collection = mongo.get_collection("tb_app_collection").find_one({"_id": ObjectId(batch["profile"]["collection_id"])} )
     codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])} )
     
-    #Generate column names...
-    col_names = []
-    for i,q in enumerate(codebook["questions"]):
-        if q["var_name"]:
-            var_name = "_"+q["var_name"]
-        else:
-            var_name = ''
+    #Get column names...
+    col_names = models.gen_codebook_column_names(codebook)
+    col_index = models.gen_col_index_from_col_names(col_names)
 
-        if q["question_type"] in ['Static text', 'Multiple choice', 'Check all that apply', 'Two-way scale', 'Text box', 'Short essay']:
-            col_names.append("Q"+str(i)+var_name)
+    #Generate filename
+    filename = sluggify(collection["profile"]["name"])+"-"+datetime.datetime.now().strftime("%Y-%M-%d-%H-%M-%S")+".csv"
 
-        elif q["question_type"] == 'Radio matrix':
-            for j,p in enumerate(q["params"]["question_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-            
-        elif q["question_type"] == 'Checkbox matrix':
-            for j,p in enumerate(q["params"]["question_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-
-        elif q["question_type"] == 'Two-way matrix':
-            for j,p in enumerate(q["params"]["left_statements"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-
-        elif q["question_type"] == 'Text matrix':
-            for j,p in enumerate(q["params"]["answer_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-
-        """    
-        if q["question_type"] == 'Static text':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Multiple choice':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Check all that apply':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Two-way scale':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Radio matrix':
-            for j,p in enumerate(q["params"]["question_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-            
-        elif q["question_type"] == 'Checkbox matrix':
-            for j,p in enumerate(q["params"]["question_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-
-        elif q["question_type"] == 'Two-way matrix':
-            for j,p in enumerate(q["params"]["left_statements"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-
-        elif q["question_type"] == 'Text box':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Short essay':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Text matrix':
-            for j,p in enumerate(q["params"]["answer_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-        """
-
+    #Begin constructing a response
+    response = HttpResponse(mimetype='text')
+    #response = HttpResponse(mimetype='text/csv')
+    #response['Content-Disposition'] = 'attachment; filename='+filename+'.csv'
     writer = csv.writer(response)
-    writer.writerow(col_names)
     
-    for d in documents:
-        print d
+    #Generate and write column headers
+    header = ['index', 'username']
+    if include_doc_content:
+        header += ['document']
+    header += col_names
+    writer.writerow(header)
     
-    writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+    for i,doc in enumerate(documents):
+        for coder in doc["labels"]:
+            answer_set = models.get_most_recent_answer_set(doc["labels"][coder])
+            if answer_set != {} or include_empty_rows:
+                row = [i, coder]
+                if include_doc_content:
+                    row += [collection["documents"][i]["content"]]
+                row += models.gen_csv_column_from_batch_labels(answer_set, col_index)
+                writer.writerow(row)
 
-    return gen_json_response({"status": "success", "msg": "Added code to batch.", "cols": col_names})
     return response
 
 @uses_mongo

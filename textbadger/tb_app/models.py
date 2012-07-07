@@ -152,6 +152,78 @@ def get_revised_codebook_json(parent_codebook, question_json):
 
     return J
 
+def gen_codebook_column_names(codebook):
+    """
+        codebook should be in json format, hot off a mongodb query
+    """
+    
+    col_names = ['created_at']
+    
+    for i,q in enumerate(codebook["questions"]):
+        if q["var_name"]:
+            var_name = "_"+q["var_name"]
+        else:
+            var_name = ''
+
+        if q["question_type"] in ['Static text', 'Multiple choice', 'Check all that apply', 'Two-way scale', 'Text box', 'Short essay']:
+            col_names.append("Q"+str(i+1)+var_name)
+
+        elif q["question_type"] in ['Radio matrix', 'Checkbox matrix']:
+            for j,p in enumerate(q["params"]["question_array"]):
+                col_names.append("Q"+str(i+1)+"_"+str(j+1)+var_name)
+
+        elif q["question_type"] == 'Two-way matrix':
+            for j,p in enumerate(q["params"]["left_statements"]):
+                col_names.append("Q"+str(i+1)+"_"+str(j+1)+var_name)
+
+        elif q["question_type"] == 'Text matrix':
+            for j,p in enumerate(q["params"]["answer_array"]):
+                col_names.append("Q"+str(i+1)+"_"+str(j+1)+var_name)
+
+        """    
+        if q["question_type"] == 'Static text':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Multiple choice':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Check all that apply':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Two-way scale':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Radio matrix':
+            for j,p in enumerate(q["params"]["question_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+            
+        elif q["question_type"] == 'Checkbox matrix':
+            for j,p in enumerate(q["params"]["question_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+
+        elif q["question_type"] == 'Two-way matrix':
+            for j,p in enumerate(q["params"]["left_statements"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+
+        elif q["question_type"] == 'Text box':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Short essay':
+            col_names.append("Q"+str(i)+var_name)
+        elif q["question_type"] == 'Text matrix':
+            for j,p in enumerate(q["params"]["answer_array"]):
+                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
+        """
+
+    return col_names
+
+def gen_col_index_from_col_names(col_names):
+    return dict([(v,k) for (k,v) in enumerate(col_names)])
+
+def gen_csv_column_from_batch_labels(labels, col_index):
+    csv_col = [None for i in range(len(col_index))]
+    print labels
+    for q in labels:
+        csv_col[col_index[q]] = labels[q]
+    return csv_col
+
+### Batches ###################################################################
+
 def get_batch_documents_json(coders, pct_overlap, shuffle, collection):
     k = len(collection["documents"])
     overlap = int((k * pct_overlap) / 100)
@@ -215,6 +287,18 @@ def get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection
     
     return batch
 
+def get_most_recent_answer_set(answer_set_list):
+    #Get the most recent answer set for this coder (important if the coder used did an "undo")
+    
+    most_recent_answer_set = {}
+    most_recent_date = None
+    for answer_set in answer_set_list:
+        if not most_recent_date or answer_set["created_at"] > most_recent_date:
+            most_recent_answer_set = answer_set
+            most_recent_date = answer_set["created_at"]
+
+    return most_recent_answer_set
+
 #! This is the only method that includes a DB connection right now.
 #! Eventually, we might want to do more like this
 def update_batch_progress(id_):
@@ -263,5 +347,3 @@ def update_batch_progress(id_):
 
     # Validate response
 
-#@uses_mongo
-#def gen_batch_csv(mongo, batch_id):
