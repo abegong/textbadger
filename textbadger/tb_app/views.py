@@ -664,9 +664,10 @@ def export_batch(request, mongo, batch_id):
     filename = sluggify(collection["profile"]["name"])+"-"+datetime.datetime.now().strftime("%Y-%M-%d-%H-%M-%S")+".csv"
 
     #Begin constructing a response
-    response = HttpResponse(mimetype='text')
-    #response = HttpResponse(mimetype='text/csv')
-    #response['Content-Disposition'] = 'attachment; filename='+filename+'.csv'
+    #response = HttpResponse(mimetype='text')
+
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename='+filename+'.csv'
     writer = csv.writer(response)
     
     #Generate and write column headers
