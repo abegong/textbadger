@@ -655,7 +655,7 @@ def submit_batch_code(request, mongo):
 #    print json.dumps(batch, cls=MongoEncoder, indent=2)
     return gen_json_response({"status": "success", "msg": "Added code to batch."})
 
-#@login_required(login_url='/')
+@login_required(login_url='/')
 @uses_mongo
 def export_batch(request, mongo, batch_id):
     response = HttpResponse(mimetype='text/csv')
@@ -733,23 +733,22 @@ def export_batch(request, mongo, batch_id):
 
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "cols": col_names})
     return response
-    
-def test_test_update_collection_metadata():
+
+@uses_mongo
+def test_update_collection_metadata(request, mongo):
     collection_id = '4ff63d5d2fa6cd211b000001'
     doc_index = 0
-    
-    #"documents.$": int(doc_index)}#
-    query1 = {"_id": ObjectId(collection_id), "documents": {"$slice":[int(doc_index),1]}}
-    query2 = "documents"
+    new_metadata = {"foo":"blahblah", "bar":7}
+        
     mongo.get_collection("tb_app_collection").update(
-        query1,
-        {"$set": {query2: "ZAP!"}}
+        { "_id": ObjectId(collection_id) },
+        { "$set": { 'documents.'+str(doc_index)+'.metadata' : new_metadata}}
     )
 
     result = mongo.get_collection("tb_app_collection").find_one(
         {"_id": ObjectId(collection_id)},
-        #"documents":{"$slice":[doc_index,1]}}
-    )    
+        {"documents":{"$slice":[doc_index,1]}}
+    )
     
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
     

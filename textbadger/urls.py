@@ -8,6 +8,7 @@ import settings
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+
     #Pre-login screens
     url(r'^$', TemplateView.as_view(template_name="home.html")),
     url(r'^sign-in/$', TemplateView.as_view(template_name="sign-in.html")),
@@ -56,6 +57,9 @@ urlpatterns = patterns('',
 #    url(r'^ajax/update-batch-reliability/$', 'tb_app.views.update_batch_reliability'),
 
     url(r'^ajax/submit-batch-code/$', 'tb_app.views.submit_batch_code'),
+
+
+    url(r'^tester/$', 'tb_app.views.test_update_collection_metadata'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
