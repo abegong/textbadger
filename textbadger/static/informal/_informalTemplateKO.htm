@@ -8,24 +8,34 @@
 {{else question_type() == codebookModel.questionTypes()[1] /*Multiple choice*/}}
     <div class="questionMarkupAnchor">
         <div class="headerText">{{html params.header_text}}</div>
+        <table class="MatrixQuestion">
         {{each(i,v) params.answer_array}}
-            <div class="answerText">
-                <div class="shim-graph" style="width:20px;"></div>
-                <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
-                {{html v}}
-            </div>
+            <tr>
+                <td class="leftCol">
+                    <div class="shim-graph"></div>
+                    <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
+                </td>
+                <td>{{html v}}</td>
+            </tr>
         {{/each}}
+        </table>
     </div>
     
 {{else question_type() == codebookModel.questionTypes()[2] /*CATA*/}}
-	<div class="headerText">{{html params.header_text}}</div>
-	{{each(i, v) params.answer_array}}
-		<div class="answerText questionMarkupAnchor">
-            <div class="shim-graph"></div>
-            <input type="checkbox" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
-            {{html v}}
-        </div>
-	{{/each}}
+    <div class="questionMarkupAnchor">
+        <div class="headerText">{{html params.header_text}}</div>
+        <table class="MatrixQuestion">
+        {{each(i,v) params.answer_array}}
+            <tr>
+                <td class="leftCol">
+                    <div class="shim-graph"></div>
+                    <input type="checkbox" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
+                </td>
+                <td>{{html v}}</td>
+            </tr>
+        {{/each}}
+        </table>
+    </div>
 
 {{else question_type() == codebookModel.questionTypes()[3] /*Two-way scale*/}}
 	<div class="headerText">{{html params.header_text}}</div>

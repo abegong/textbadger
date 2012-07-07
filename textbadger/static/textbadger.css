@@ -160,10 +160,11 @@ div.border{
 /*	border:5px solid #669533; */
 }
 
+    /* border: 2px solid green; */
 .shim-graph{
-    border: 2px solid green;
     text-align:right;
     line-height:1px;
+    margin-left:auto;
     width:20px;
     display:inline;
 }
