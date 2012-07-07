@@ -224,6 +224,7 @@ var codebookModel = {
     
     markupCodebook : function(labels){
         var labels = label_list[DocManager.doc_index];
+        /*
         console.log("====================================================");
         console.log("label_list");
         console.log(label_list);
@@ -231,32 +232,49 @@ var codebookModel = {
         console.log(DocManager.doc_index);
         console.log("labels");
         console.log(labels);
-
+        */
+        
         //Markup
 		$(".questionMarkupAnchor").each(function(i,d){
-			var $d = $(d);
+			var $d = $(d),
+                show_badges = false;
 
-            //Remove any previous badges
-            //$('span.questionMarkup', $d.closest('.questionBox')).remove();
-            $('span.questionMarkup', $d).remove();
+            //Create and show badges
+            if( show_badges ){
+                //Remove any previous badges
+                //$('span.questionMarkup', $d.closest('.questionBox')).remove();
+                $('span.questionMarkup', $d).remove();
 
-            //Add new badge
-			var r = Math.random();
-            var $badge = $('<span class="questionMarkup badge badge-warning"></span>')
-                .append('<b>.'+Math.floor(r*1000)+'</b>')
-                //.prependTo($d.closest('.questionBox'));
-                .prependTo($d);
+                //Add new badge
+                var r = Math.random();
+                var $badge = $('<span class="questionMarkup badge badge-warning"></span>')
+                    .append('<b>.'+Math.floor(r*1000)+'</b>')
+                    .prependTo($d.closest('.questionBox'));
+                    //.prependTo($d);
 
-            //Set badge location
-			var offset = $d.offset();
-			$badge.offset({ top: offset.top, left: offset.left-$badge.width()-22 });
-
-            $(".shim-graph").each(function(i,g){
+                //Set badge location
+                var offset = $d.offset();
+                $badge.offset({ top: offset.top, left: offset.left-$badge.width()-22 });
+            }
+            
+            //Create and show shim-graphs
+            $(".shim-graph", $d).each(function(i,g){
+                var var_name = $(this).next().attr("name"),
+                    $shimgraph = $(g),
+                    val = $shimgraph.next().val();
+                
+                if( var_name in labels ){
+                    for( j in labels[var_name] ){
+                        //console.log(var_name+"\t"+j+"\t:\t"+val+"\t:\t"+labels[var_name][j]);
+                        if( labels[var_name][j] == val ){
+                            $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                        }
+                    }
+                }
                 $(this)
-                    .data("var_name", $(this).next().attr("name"))
-                    .html($(this).next().attr("name"));
+                    .data("var_name", var_name)
+                    .next().hide();
             });
-
-		});
+        });
     }
 };

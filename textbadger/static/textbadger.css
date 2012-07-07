@@ -114,7 +114,10 @@ div.border{
 }
 
 #codebook .headerText,.answerText,.questionText{ width:95%; padding:0px; } /*background-color:#eee; */
-#codebook .answerText{ padding-left:22px; cursor:pointer; }
+#codebook .answerText{
+/*    padding-left:22px;*/
+    cursor:pointer;
+}
 #codebook .mouseoverCell{ background-color:#ccddbb; }
 
 #codebook table.matrixQuestion{
@@ -159,20 +162,11 @@ div.border{
 
 .shim-graph{
     border: 2px solid green;
-}
-
-.shim-graph-h{
-    text-align:right;
-    position:absolute;
-}
-.shim-graph-h img{
-    padding:1px 1px 1px 0px;
-}
-
-.shim-graph-b{
     text-align:right;
     line-height:1px;
+    width:20px;
+    display:inline;
 }
-.shim-graph-b img{
+.shim-graph img{
     padding:1px;
 }

@@ -223,13 +223,13 @@ def review(request, mongo, batch_index):
     #print json.dumps(batch, cls=MongoEncoder, indent=2)
 
     #Reshape label dictionaries for display
+    #! This should go in mondels.py
     label_list = []
     for doc in batch["documents"]:
         label_set = defaultdict(dict)
         
         for coder in doc["labels"]:
             #print "\t", coder
-
             answer_set = models.get_most_recent_answer_set(doc["labels"][coder])
             
             #Append question labels to the label_set object
@@ -239,10 +239,10 @@ def review(request, mongo, batch_index):
         label_list.append(label_set)
 
     #print json.dumps(label_list, cls=MongoEncoder, indent=2)
-
     result = {
         'batch': batch,
         'label_list': json.dumps(label_list, cls=MongoEncoder, indent=2),
+        'label_list_2': json.dumps(batch["documents"], cls=MongoEncoder, indent=2),
     }
     #print json.dumps(batch, cls=MongoEncoder, indent=2)
 
