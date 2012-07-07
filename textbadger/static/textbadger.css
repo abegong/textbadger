@@ -157,6 +157,10 @@ div.border{
 /*	border:5px solid #669533; */
 }
 
+.shim-graph{
+    border: 2px solid green;
+}
+
 .shim-graph-h{
     text-align:right;
     position:absolute;

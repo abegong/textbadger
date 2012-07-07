@@ -233,8 +233,8 @@ def review(request, mongo, batch_index):
             answer_set = models.get_most_recent_answer_set(doc["labels"][coder])
             
             #Append question labels to the label_set object
-            for question in most_recent_answer_set:
-                label_set[question][coder] = most_recent_answer_set[question]
+            for question in answer_set:
+                label_set[question][coder] = answer_set[question]
             
         label_list.append(label_set)
 
