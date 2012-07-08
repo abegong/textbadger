@@ -119,14 +119,14 @@ def shared_resources(request, mongo):
 
     for b in batches:
         models.update_batch_progress(b["_id"])
-        
+
 #    print list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
         'codebooks': list(mongo.get_collection("tb_app_codebook").find(sort=[('profile.created_at', 1)])),
         'collections': list(mongo.get_collection("tb_app_collection").find(fields={"profile":1})),#fields={"id": 1, "name": 1, "description": 1})),
         'batches': batches,
         'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
-    }    
+    }
     #print json.dumps(result, indent=2, cls=MongoEncoder)
 
     return render_to_response('shared-resources.html', result, context_instance=RequestContext(request))
@@ -227,15 +227,15 @@ def review(request, mongo, batch_index):
     label_list = []
     for doc in batch["documents"]:
         label_set = defaultdict(dict)
-        
+
         for coder in doc["labels"]:
             #print "\t", coder
             answer_set = models.get_most_recent_answer_set(doc["labels"][coder])
-            
+
             #Append question labels to the label_set object
             for question in answer_set:
                 label_set[question][coder] = answer_set[question]
-            
+
         label_list.append(label_set)
 
     #print json.dumps(label_list, cls=MongoEncoder, indent=2)
@@ -459,7 +459,11 @@ def update_meta_data(request, mongo):
         for key, value in zip(keys, values):
             t_coll["documents"][0]["metadata"][key] = value
 
-        coll.update({"id_": ObjectId(id_)}, {"documents.metadata": 1, "documents": {"$slice": [doc_index, 1]}}, {"documents.$.metadata": t_coll})
+        #coll.update({"id_": ObjectId(id_)}, {"documents.metadata": 1, "documents": {"$slice": [doc_index, 1]}}, {"documents.$.metadata": t_coll})
+        mongo.get_collection("tb_app_collection").update(
+        {"_id": ObjectId(id_)},
+        {"$set": {'documents.' + str(doc_index) + '.metadata': t_coll}}
+    )
 
         return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
 
@@ -649,13 +653,13 @@ def export_batch(request, mongo, batch_id):
     #! These should be populated from a form, but said form doesn't exist yet.
     include_empty_rows = False
     include_doc_content = False
-    
+
     #Retrieve the relevant objects
     batch = mongo.get_collection("tb_app_batch").find_one( {"_id": ObjectId(batch_id)} )
     documents = batch["documents"]
     collection = mongo.get_collection("tb_app_collection").find_one({"_id": ObjectId(batch["profile"]["collection_id"])} )
     codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])} )
-    
+
     #Get column names...
     col_names = models.gen_codebook_column_names(codebook)
     col_index = models.gen_col_index_from_col_names(col_names)
@@ -669,14 +673,14 @@ def export_batch(request, mongo, batch_id):
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename='+filename+'.csv'
     writer = csv.writer(response)
-    
+
     #Generate and write column headers
     header = ['index', 'username']
     if include_doc_content:
         header += ['document']
     header += col_names
     writer.writerow(header)
-    
+
     for i,doc in enumerate(documents):
         for coder in doc["labels"]:
             answer_set = models.get_most_recent_answer_set(doc["labels"][coder])
@@ -694,7 +698,7 @@ def test_update_collection_metadata(request, mongo):
     collection_id = '4ff63d5d2fa6cd211b000001'
     doc_index = 0
     new_metadata = {"foo":"blahblah", "bar":7}
-        
+
     mongo.get_collection("tb_app_collection").update(
         { "_id": ObjectId(collection_id) },
         { "$set": { 'documents.'+str(doc_index)+'.metadata' : new_metadata}}
@@ -704,6 +708,6 @@ def test_update_collection_metadata(request, mongo):
         {"_id": ObjectId(collection_id)},
         {"documents":{"$slice":[doc_index,1]}}
     )
-    
+
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
-    
+

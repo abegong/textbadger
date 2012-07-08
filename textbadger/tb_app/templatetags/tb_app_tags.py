@@ -1,19 +1,21 @@
 from django import template
 register = template.Library()
- 
+
+
 @register.filter("mongo_id")
 def mongo_id(value):
     # Retrieve _id value
     if type(value) == type({}):
-        if value.has_key('_id'):
+        if value.has_key('_id'):  #should be "in", not "has_key"
             value = value['_id']
-   
+
     # Return value
     return unicode(value)
 
 from django import template
 from django.utils.translation import ungettext, ugettext as _
 import datetime
+
 
 @register.filter
 def date_diff(d):
@@ -27,10 +29,10 @@ def date_diff(d):
     chunks = (
         (365.0, lambda n: ungettext('year', 'years', n)),
         (30.0, lambda n: ungettext('month', 'months', n)),
-        (7.0, lambda n : ungettext('week', 'weeks', n)),
-        (1.0, lambda n : ungettext('day', 'days', n)),
+        (7.0, lambda n: ungettext('week', 'weeks', n)),
+        (1.0, lambda n: ungettext('day', 'days', n)),
     )
-    
+
     if days == 0:
         if hours == 0:
             if minutes > 0:
@@ -41,7 +43,7 @@ def date_diff(d):
                 return _("less than 1 minute ago")
         else:
             return ungettext('1 hour ago', '%(hours)d hours ago', hours) \
-            % {'hours':hours}
+            % {'hours': hours}
 
     if delta_midnight.days == 0:
         return _("yesterday at %s") % d.strftime("%H:%M")
@@ -49,7 +51,7 @@ def date_diff(d):
     count = 0
     for i, (chunk, name) in enumerate(chunks):
         if days >= chunk:
-            count = round((delta_midnight.days + 1)/chunk, 0)
+            count = round((delta_midnight.days + 1) / chunk, 0)
             break
 
     return _('%(number)d %(type)s ago') % \
