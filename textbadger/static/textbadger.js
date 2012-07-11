@@ -45,6 +45,7 @@ var DocManager = {
 
         //Update navigation
         $("#doc-index").val(DocManager.doc_index+1);
+        $("#docs-remaining").html(DocManager.seq_list.length-DocManager.seq_index);
 
 	    if( DocManager.seq_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
 	    else{ $("#prev-doc-button").removeClass("disabled"); }

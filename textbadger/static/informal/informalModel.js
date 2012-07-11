@@ -167,20 +167,6 @@ var codebookModel = {
                     x = $('input', this).trigger("click");
                 }
             });
-
-/*.each(function(i,c){
-            $("input", c)
-                .mouseover( function(){ $(this).addClass('mouseoverCell'); })
-                .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
-        });
-/*
-        $("input[type=radio],input[type=checkbox]",Q).parent()
-            .css("cursor", "pointer")
-            .click( function(){ x = $('input',this); x.attr('checked',!x.attr('checked')); });
-
-            .mouseover( function(){ $(this).addClass('mouseoverCell'); })
-            .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
-*/
     },
 
     addStylesToCodebook: function(){

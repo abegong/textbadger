@@ -1,11 +1,7 @@
 === On deck ===
 * Assignments page
-    ** Add "x docs remaining" field below codebook
-
-    *** Clean up codebook display (too much room and some funny display around mchoice and CATA answers)
-    ** Add cursor to rollover fields
-    ** Add mouseover fields to InformalTemplate
-    ** Make inputs withint table cells clickable.
+    *** Add termination logic for empty batches.
+    *** Add loading logic for empty batches.
 
 === To do ===
 
@@ -47,15 +43,11 @@
 
 *** Technical debt ***
     * Add @admin_required decorator
-    * Add @mongo_connection decorator
     * Document and refactor all javascript/jquery
     * Document and refactor all database code
-        *?  Add "profile" fields to codebooks, collections, and batches
         * Add "type" field to questions in codebooks
         * Implement "batches" functionality in codebooks
     * Add fixtures for codebooks, batches, and assignments
-
-*** Documentation ***
     ** Document import formats for collections
     ** Document expected objects, methods, and internal logic of codebookManager
     ** Document expected objects, methods, and internal logic of docManager
@@ -147,8 +139,13 @@
     * Fix vertical alignment of radio/checkbox answer text
     * Don't let hover pills overflow their boundaries
     * Make styles use bootstrap themes as much as possible.
+
 * Assignments page
 	* Scaffold assignments page
+    *** Clean up codebook display (too much room and some funny display around mchoice and CATA answers)
+    ** Add cursor to rollover fields
+    ** Add mouseover fields to InformalTemplate
+    ** Make inputs withint table cells clickable.
 
 * Batch page
     *** Get "export results" button working
@@ -157,3 +154,5 @@
 * Review page
     * Scaffold
 
+* Add @mongo_connection decorator
+* Add "profile" fields to codebooks, collections, and batches
