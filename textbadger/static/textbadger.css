@@ -116,9 +116,13 @@ div.border{
 #codebook .headerText,.answerText,.questionText{ width:95%; padding:0px; } /*background-color:#eee; */
 #codebook .answerText{
 /*    padding-left:22px;*/
-    cursor:pointer;
+/*    cursor:pointer; */
 }
 #codebook .mouseoverCell{ background-color:#ccddbb; }
+
+#codebook .clickable{
+    cursor: pointer;
+}
 
 #codebook table.matrixQuestion{
 	border-collapse:collapse;
@@ -148,7 +152,10 @@ div.border{
 
 /*** Formatting for editable codebook questions ************************************************/
 
-#codebook .hoverQuestion{ border-right:5px solid #ccddbb; background-color:#ccddbb; }
+#codebook .hoverQuestion{
+    border-right:5px solid #ccddbb;
+    background-color:#ccddbb;
+}
 #codebook .targetQuestion{ border-right:5px solid #669533; background-color:#ccddbb; }
 
 /*** Formatting for marked up codebook questions ************************************************/
@@ -160,12 +167,12 @@ div.border{
 /*	border:5px solid #669533; */
 }
 
-    /* border: 2px solid green; */
 .shim-graph{
+    border: 2px solid green;
     text-align:right;
     line-height:1px;
-    margin-left:auto;
-    width:20px;
+    /* margin-left:auto; */
+    /* width:20px; */
     display:inline;
 }
 .shim-graph img{

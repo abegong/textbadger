@@ -10,12 +10,12 @@
         <div class="headerText">{{html params.header_text}}</div>
         <table class="MatrixQuestion">
         {{each(i,v) params.answer_array}}
-            <tr>
+            <tr class="clickable">
                 <td class="leftCol">
                     <div class="shim-graph"></div>
                     <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
                 </td>
-                <td>{{html v}}</td>
+                <td class="rightCol">{{html v}}</td>
             </tr>
         {{/each}}
         </table>
@@ -26,12 +26,12 @@
         <div class="headerText">{{html params.header_text}}</div>
         <table class="MatrixQuestion">
         {{each(i,v) params.answer_array}}
-            <tr>
+            <tr class="clickable">
                 <td class="leftCol">
                     <div class="shim-graph"></div>
                     <input type="checkbox" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
                 </td>
-                <td>{{html v}}</td>
+                <td class="rightCol">{{html v}}</td>
             </tr>
         {{/each}}
         </table>
@@ -47,7 +47,7 @@
 		</tr>
 		<tr class="questionMarkupAnchor">
 			<td class="leftCol">{{html params.left_statement}}</td>
-			{{each(i, v) params.answer_array}}<td>
+			{{each(i, v) params.answer_array}}<td class="clickable">
                 <div class="shim-graph"></div>
                 <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
             </td>{{/each}}
@@ -62,7 +62,7 @@
 		{{each(i, v) params.question_array}}
 			<tr class="questionMarkupAnchor {{if i%2}}odd{{else}}even{{/if}}">
                 <td class="textCol">{{html v}}</td>
-                {{each(j, w) params.answer_array}}<td>
+                {{each(j, w) params.answer_array}}<td class="clickable">
                     <div class="shim-graph"></div>
                     <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input>
                 </td>{{/each}}
@@ -77,7 +77,7 @@
 		{{each(i, v) params.question_array}}
 			<tr {{if i%2}}class="odd"{{else}}class="even"{{/if}}>
                 <td class="textCol">{{html v}}</td>
-                {{each(j, w) params.answer_array}}<td class="questionMarkupAnchor">
+                {{each(j, w) params.answer_array}}<td class="questionMarkupAnchor clickable">
                     <div class="shim-graph"></div>
                     <input type="checkbox" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input>
                 </td>{{/each}}
@@ -98,7 +98,7 @@
 		{{each(j,w) _.range(0,Math.max(params.left_statements().length,params.right_statements().length))}}
 			<tr class="questionMarkupAnchor {{if j%2}}odd{{else}}even{{/if}}">
 				<td class="leftCol">{{html params.left_statements()[j]}}</td>
-				{{each(i, v) params.answer_array}}<td>
+				{{each(i, v) params.answer_array}}<td class="clickable">
                     <div class="shim-graph"></div>
                     <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${j+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
                 </td>{{/each}}

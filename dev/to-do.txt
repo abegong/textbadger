@@ -1,9 +1,17 @@
 === On deck ===
+* Assignments page
+    ** Add "x docs remaining" field below codebook
+
+    *** Clean up codebook display (too much room and some funny display around mchoice and CATA answers)
+    ** Add cursor to rollover fields
+    ** Add mouseover fields to InformalTemplate
+    ** Make inputs withint table cells clickable.
 
 === To do ===
 
 * Shared resources page
     *** Activate "Create collection" button
+    ** Add anchors for codebooks, collections, and batches
     * Add size, type, and created_at fields to collections
     * Add sort by name/date functionality for codebooks, collections, and batches
     * Add activate/deactive pills to codebooks, collections, and batchs
@@ -11,25 +19,31 @@
 	* Add filter by status functionality to collections
 
 * Codebook page
+    *** Add header to codebook controls "Sequence"; move to 2nd position.
+    ** Change informal to codebookManager
     * Shorten text-area to text input for integer values
     * Add slider question_type
 	* Check informal for cross-browser compatibility
 
 * Collections page
-    * Make metadata editable
+    *** Show metadata
+    *** Get nav buttons fully working again
+    ** Make metadata editable
+    ** Get import json working
 
 * Batches page
-    * Get "export results" button working
-    * Get "review results" button working    
-    * Get reliability reports working
+    *** Get reliability reports working
+    *** Add krippendorff's alpha functions: nominal, ordinal, interval
+    *** Add variable type to codebook page
     * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
 
 * Assignments page
-    * ... ...
 
 * Review page
-    * Scaffold
-    * ... ...
+    *** Add answer details on rollover
+    *** Make shim-graphs work for text fields
+    *** Clear shim-graphs on new doc load
+    *** Tie codebookManager events into DOM objects properly
 
 *** Technical debt ***
     * Add @admin_required decorator
@@ -42,6 +56,10 @@
     * Add fixtures for codebooks, batches, and assignments
 
 *** Documentation ***
+    ** Document import formats for collections
+    ** Document expected objects, methods, and internal logic of codebookManager
+    ** Document expected objects, methods, and internal logic of docManager
+    
 
 * Home page
 * Administration page
@@ -132,4 +150,10 @@
 * Assignments page
 	* Scaffold assignments page
 
+* Batch page
+    *** Get "export results" button working
+    *** Get "review results" button working    
+
+* Review page
+    * Scaffold
 

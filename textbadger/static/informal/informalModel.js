@@ -143,12 +143,7 @@ var codebookModel = {
     },
 
     addEditorStylesToQuestion : function(Q){
-		/*
-        $("input[type=radio],input[type=checkbox]",Q).parent()
-            .click( function(){    x = $('input',this); x.attr('checked',!x.attr('checked'));    })
-            .mouseover( function(){ $(this).addClass('mouseoverCell'); })
-            .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
-		*/
+		$(".shim-graph").hide();
         Q
             .unbind('click mouseenter mouseleave')
             .hover( 
@@ -161,10 +156,31 @@ var codebookModel = {
     },
 
     addViewerStylesToQuestion : function(Q){
+        $(".shim-graph").hide();
+        
+        $(".clickable", Q)
+            .mouseover( function(){ $(this).addClass('mouseoverCell'); })
+            .mouseout( function(){ $(this).removeClass('mouseoverCell'); })
+            .click( function(event){
+                console.log(event.target);
+                if( event.target.type != 'checkbox' && event.target.type != 'radio' ){
+                    x = $('input', this).trigger("click");
+                }
+            });
+
+/*.each(function(i,c){
+            $("input", c)
+                .mouseover( function(){ $(this).addClass('mouseoverCell'); })
+                .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
+        });
+/*
         $("input[type=radio],input[type=checkbox]",Q).parent()
-            .click( function(){    x = $('input',this); x.attr('checked',!x.attr('checked'));    })
+            .css("cursor", "pointer")
+            .click( function(){ x = $('input',this); x.attr('checked',!x.attr('checked')); });
+
             .mouseover( function(){ $(this).addClass('mouseoverCell'); })
             .mouseout( function(){ $(this).removeClass('mouseoverCell'); });
+*/
     },
 
     addStylesToCodebook: function(){
