@@ -1,7 +1,6 @@
 === On deck ===
-* Assignments page
-    *** Add termination logic for empty batches.
-    *** Add loading logic for empty batches.
+** Refactor codebookManager
+** Document expected objects, methods, and internal logic of codebookManager
 
 === To do ===
 
@@ -34,6 +33,8 @@
     * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
 
 * Assignments page
+    *** Add termination logic for empty batches.
+    *** Add loading logic for empty batches.
 
 * Review page
     *** Add answer details on rollover
@@ -49,8 +50,8 @@
         * Implement "batches" functionality in codebooks
     * Add fixtures for codebooks, batches, and assignments
     ** Document import formats for collections
-    ** Document expected objects, methods, and internal logic of codebookManager
     ** Document expected objects, methods, and internal logic of docManager
+    *** Figure out triggers for update-batch-progress-report (create models method; call whenever we need to get the object)
     
 
 * Home page
