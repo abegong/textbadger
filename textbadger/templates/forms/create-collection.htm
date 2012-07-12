@@ -1,0 +1,95 @@
+{% load tb_app_tags %}
+
+<div class="modal" id="myModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3>Create new collection</h3>
+  </div>
+  <div class="modal-body">
+<!--    <form id="create-project-form" class="form-horizontal" tb-href="/ajax/upload-collection/"><fieldset> -->
+    <form method="POST" enctype="multipart/form-data" class="form-horizontal tb-basic" action="/ajax/create-collection/"><fieldset>
+      {% csrf_token %}
+      <div class="control-group">
+        <label class="control-label" for="project-name">Name</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" name="name" placeholder='e.g. "New York Times op-eds"'>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="description">Description</label>
+        <div class="controls">
+          <textarea class="input-xlarge" name="description" rows="3" placeholder="Where does this collection come from?"></textarea>
+        </div>
+      </div>
+      {% if collections %}
+      <div class="control-group">
+        <label class="control-label"><strong>Existing collections</strong></label>
+      </div>
+      {% else %}
+      <div class="control-group">
+        <label class="control-label"></label>
+        <div class="controls">
+          You must upload at least one collection before you can create new collections internally.</p>
+        </div>
+      </div>
+      {% endif %}
+
+      {% for p in collections %}
+          <div class="control-group">
+            <label class="control-label" for="fileInput">{{ p.profile.name }}</label>
+            <div class="controls">
+                <table class="collection-slider-holder" style="width:90%"><tr>
+                    <td style="width:70%;"><div class="collection-slider" data-max="{{p.profile.size}}"></div></td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td><input class="collection-slider-val" type="text" name="codebook_{{ p|mongo_id }}" style="width:30px; text-align:right;" value="0"></td>
+                </tr></table>
+            </div>
+          </div>
+      {% endfor %}
+<!--
+      <div class="control-group">
+        <label class="control-label" for="shuffle">Shuffle</label>
+        <div class="controls">
+            <label class="checkbox">
+              <input type="checkbox" name="shuffle"> Shuffle the documents in the new collection?
+            </label>
+        </div>
+      </div>
+-->
+      <br/><br/>
+      <button type="submit" class="btn btn-primary rightside">Create &raquo;</button>
+      <button type="cancel" class="btn rightside">Cancel &times;</button>
+    </fieldset></form>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+    $( ".collection-slider" ).each(function(i,s){
+        $(s).slider({
+            max: $(this).attr("data-max"),
+            value: 0,
+            orientation: "horizontal",
+            range: "min",
+            animate: true,
+            slide: function( event, ui ){
+                $(".collection-slider-val", $(event.target).closest(".collection-slider-holder")).val( ui.value );
+            }
+        });
+    });
+    
+    $(".collection-slider-val").change(function(event){
+        var x = parseInt($(event.target).val());
+        var collection_slider = $(".collection-slider", $(event.target).closest(".collection-slider-holder"));
+        var max_val = parseInt(collection_slider.attr("data-max"));
+        if( !x ){ x = 0; }
+        if( x < 0 ){ x = 0; }
+        if( x > max_val ){ x = max_val; }
+
+        $(event.target).val(x);
+        collection_slider.slider( "value", x );
+    });
+      
+});
+</script>
+

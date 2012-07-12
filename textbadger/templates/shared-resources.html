@@ -42,7 +42,7 @@ $(function(){
 <a class="btn btn-primary open-modal rightside">Create codebook</a>
 {% include "forms/create-codebook.htm" %}
 
-<h3>Codebooks</h3>
+<h3 id="codebooks">Codebooks</h3>
 <table id="codebooks" class="well wide">
   {% if codebooks %}
   <thead>
@@ -91,12 +91,12 @@ $(function(){
 
 
 <!-- Collections --------------------->
-<a class="btn btn-inverse open-modal rightside">Create sub-collection</a>
-{% include "forms/under-construction.htm" %}
+<a class="btn btn-inverse open-modal rightside auto">Create collection</a>
+{% include "forms/create-collection.htm" %}
 <a class="btn btn-primary open-modal rightside">Upload collection</a>
 {% include "forms/upload-collection.htm" %}
 
-<h3>Collections</h3>
+<h3 id="collections">Collections</h3>
   <table class="well wide">
   {% if collections %}
   <thead>
@@ -130,7 +130,7 @@ $(function(){
 <a class="btn btn-primary open-modal rightside">Start a batch</a>
 {% include "forms/start-batch.htm" %}
 
-<h3>Batches</h3>
+<h3 id="batches">Batches</h3>
 <table class="well wide">
   {% if batches %}
   <thead>

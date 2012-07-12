@@ -167,7 +167,7 @@ div.border{
 /*	border:5px solid #669533; */
 }
 
-.shim-graph{
+#codebook .shim-graph{
     border: 2px solid green;
     text-align:right;
     line-height:1px;
@@ -175,6 +175,7 @@ div.border{
     /* width:20px; */
     display:inline;
 }
-.shim-graph img{
+
+#codebook .shim-graph img{
     padding:1px;
 }
