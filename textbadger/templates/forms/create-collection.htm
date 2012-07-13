@@ -6,8 +6,7 @@
     <h3>Create new collection</h3>
   </div>
   <div class="modal-body">
-<!--    <form id="create-project-form" class="form-horizontal" tb-href="/ajax/upload-collection/"><fieldset> -->
-    <form method="POST" enctype="multipart/form-data" class="form-horizontal tb-basic" action="/ajax/create-collection/"><fieldset>
+    <form class="form-horizontal" tb-href="/ajax/create-collection/" tb-redirect="/shared-resources/"><fieldset>
       {% csrf_token %}
       <div class="control-group">
         <label class="control-label" for="project-name">Name</label>

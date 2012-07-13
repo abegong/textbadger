@@ -395,6 +395,44 @@ def upload_collection(request, mongo):
 #    return gen_json_response({"status": "success", "msg": "Everything all good AFAICT."})
     return redirect('/shared-resources/')
 
+@login_required(login_url='/')
+@uses_mongo
+def create_collection(request, mongo):
+    #Get name and description
+    try:
+        name = request.POST["name"]
+        description = request.POST.get("description", '')
+
+    except MultiValueDictKeyError:
+        return gen_json_response({"status": "failed", "msg": "Missing field."})
+
+    #Retrieve codebooks
+    total_docs = 0
+    collections = {}
+    for field in request.POST:
+        if re.match('codebook_', field):
+            try:
+                val = int(request.POST[field])
+                collections[field[9:]] = val
+                total_docs += val
+            except ValueError:
+                return gen_json_response({"status": "failed", "msg": "Invalid entry in one or more codebook field(s)."})
+
+    #Validate name
+    if len(name) == 0:
+        return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
+
+    if total_docs == 0:
+        return gen_json_response({"status": "failed", "msg": "Total document count must be greater than zero."})
+
+    J = models.create_collection_json(name, description, collections)
+    #print json.dumps(J, cls=MongoEncoder, indent=2)
+    
+    #return gen_json_response({"status": "failed", "msg": "Can't do this yet."})
+    mongo.get_collection("tb_app_collection").insert(J)
+
+    return redirect('/shared-resources/')
+
 
 @login_required(login_url='/')
 @uses_mongo
@@ -693,6 +731,7 @@ def export_batch(request, mongo, batch_id):
 
     return response
 
+@login_required(login_url='/')
 @uses_mongo
 def test_update_collection_metadata(request, mongo):
     collection_id = '4ff63d5d2fa6cd211b000001'

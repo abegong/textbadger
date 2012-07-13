@@ -5,7 +5,7 @@ from django.db import connections
 from bson.objectid import ObjectId
 from pymongo.errors import InvalidId
 
-import csv, re, json, datetime
+import csv, re, json, datetime, random
 
 def uses_mongo(function):
     def _inner(*args, **kwargs):
@@ -73,8 +73,9 @@ def convert_document_csv_to_bson(csv_text):
 
 #    print json.dumps(documents_json, indent=2)
     return documents_json
-    
+
 def get_new_collection_json(name, description, documents):
+    """ Create a new collection, given the name, description, and documents """
     J = {
         'profile' : {
             'name' : name,
@@ -86,6 +87,32 @@ def get_new_collection_json(name, description, documents):
     }
     
     return J
+
+@uses_mongo
+def create_collection_json(mongo, name, description, collections):
+    """ Create a new collection using documents from other collections
+    
+        collections is an array with the form:
+            [{tb_app_collection.$id : docs to retrieve from this collection}]
+    """
+    coll = mongo.get_collection("tb_app_collection")
+    
+    documents = []    
+    for id_ in collections:
+        collection = coll.find_one({"_id": ObjectId(id_)})
+
+        doc_count = collections[id_]
+        doc_list = collection["documents"]
+        random.shuffle( doc_list )
+        
+        for doc in doc_list[:doc_count]:
+            doc["metadata"]["source_id"] = id_
+            doc["metadata"]["source_name"] = collection["profile"]["name"]
+
+        documents += doc_list[:doc_count]
+        
+    random.shuffle(documents)
+    return get_new_collection_json(name, description, documents)
 
 
 
