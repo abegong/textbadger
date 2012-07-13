@@ -3,13 +3,11 @@
 === To do ===
 
 * Codebook page
-    *** Add header to codebook controls "Sequence"; move to 2nd position.
-    * Make codebooks printable
-    * Hide shimgraphs after codebook edit
-    * Add popups/modals for instructions
+    *** Add slider question_type
+    ** Hide shimgraphs after codebook edit
+    ** Add popups/modals for instructions
     * Delete button fails in firefox
     * Shorten text-area to text input for integer values
-    * Add slider question_type
 	* Check informal for cross-browser compatibility
 
 * Batches page
@@ -22,6 +20,7 @@
     *** Add termination logic for empty batches.
     *** Add loading logic for empty batches.
     * Add (optional) client-side validation
+    * Streamline keyboard interface
 
 * Review page
     *** Add answer details on rollover
@@ -142,6 +141,8 @@
     * Figure out urls, back buttons, etc.
     * Change codebook/question tabs to a simple stack.
 	** Add "Edit collection info" button
+    *** Add header to codebook controls "Sequence"; move to 2nd position.
+    * Make codebooks printable    
 
 * Collection page
     *** Show metadata
