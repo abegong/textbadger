@@ -1,27 +1,20 @@
 === On deck ===
-    *** Activate "Create collection" button
-    ** Add anchors for codebooks, collections, and batches
+
+* Collections page
+*** Show metadata
+*** Get nav buttons fully working again
+    ** Make metadata editable
     
 === To do ===
 
-* Shared resources page
-    * Add sort by name/date functionality for codebooks, collections, and batches
-    * Add activate/deactive pills to codebooks, collections, and batchs
-    * Add filter by status functionality to batches
-	* Add filter by status functionality to collections
-    * Add padding above codebook, collection, batch <h3>s (https://github.com/twitter/bootstrap/issues/193)
+* Collections page
+    * Get import json working
 
 * Codebook page
     *** Add header to codebook controls "Sequence"; move to 2nd position.
     * Shorten text-area to text input for integer values
     * Add slider question_type
 	* Check informal for cross-browser compatibility
-
-* Collections page
-    *** Show metadata
-    *** Get nav buttons fully working again
-    ** Make metadata editable
-    * Get import json working
 
 * Batches page
     *** Get reliability reports working
@@ -62,7 +55,12 @@
 * About page
     * Fill in FAQ
 
-
+* Shared resources page
+    * Add sort by name/date functionality for codebooks, collections, and batches
+    * Add activate/deactive pills to codebooks, collections, and batchs
+    * Add filter by status functionality to batches
+	* Add filter by status functionality to collections
+    * Add padding above codebook, collection, batch <h3>s (https://github.com/twitter/bootstrap/issues/193)
 
 === Punt ===
 * Suppress ?next= part of login_required decorator
@@ -105,9 +103,11 @@
     * Propagate admin field from "create new account" through to DB
     * Remove "application settings"
     * Enable permission activation and deactivation.
+
 * Home/about page
     * Remove ref to Double-J
     * Add message on "forgot your login info?"
+
 * Shared-rez page
     * Don't allow null-value strings name for in "create codebook"
     * Make whole table rows in shared-rez clickable
@@ -118,6 +118,8 @@
     * Clean up codebook table in shared-rez page
     * Make descriptions optional for codebooks and collections
     * Add size, type, and created_at fields to collections
+    *** Activate "Create collection" button
+    ** Add anchors for codebooks, collections, and batches
 
 * Codebook page
     * Get question export working -- enough....

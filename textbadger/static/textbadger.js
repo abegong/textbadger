@@ -27,9 +27,9 @@ var DocManager = {
                     }
                 }
 
-
                 DocManager.showDocument(0);
-                $("#doc-count").html(DocManager.doc_list.length);
+                console.log(DocManager.seq_list.length);
+                $("#doc-count").html(DocManager.seq_list.length);
             },
             'json'
         );
@@ -57,7 +57,7 @@ var DocManager = {
         $("#doc-index-hidden").val(DocManager.doc_index);
 
         //Update codebook markup
-        codebookModel.markupCodebook();
+        //codebookModel.markupCodebook();
 
         //Update metadata
         var M = DocManager.doc_list[DocManager.doc_index].metadata;
