@@ -129,49 +129,33 @@ $(function(){
 <hr />
 <a class="btn btn-primary open-modal rightside">Edit codebook info</a>
 {% include "forms/edit-codebook.htm" %}
-<h4>Codebook</h4>
-<strong>Name</strong>
-<p>{{ codebook.profile.name }}</p>
+<div id="control-codebook">
+    <h4>Codebook</h4>
+    <strong>Name</strong>
+    <p>{{ codebook.profile.name }}</p>
 
-<strong>Description</strong>
-<p>{{ codebook.profile.description }}</p>
+    <strong>Description</strong>
+    <p>{{ codebook.profile.description }}</p>
 
-<strong>Version</strong>
-<p>{{ codebook.profile.version }}</p>
+    <strong>Version</strong>
+    <p>{{ codebook.profile.version }}</p>
+</div>
+<hr />
 
+<div id="control-sequence">
+    <h4>Sequence</h4>
+    <div id="sequenceControls" style="text-align:center">
+        <button id="add_control"><span class="control icon-plus"></span></button>
+        <button id="del_control"><span class="control icon-minus"></span></button>
+        <button id="up_control"><span class="control icon-arrow-up"></span></button>
+        <button id="down_control"><span class="control icon-arrow-down"></span></button>
+    </div>
+</div>
+<hr/>
 
-
-
-<!--
-      <dl class="dl-horizontal">
-        <dt>version</dt><dd>{{ codebook.version }}&nbsp;</dd>
-        <dt>previous version</dt><dd>{{ codebook.parent }}&nbsp;</dd>
-        <dt>has </dt><dd>Gong&nbsp;</dd>
-        <dt>email</dt><dd>agong@umich.edu&nbsp;</dd>
-           </dl>
--->
-   
-
-<!--
-      <hr/>
-      <div id="impexpControls">
-          <a class="btn" id="export-json"><i class="icon-download"></i> Export Json</a>
-          <a class="btn" id="export-html"><i class="icon-download"></i> Export HTML</a>
-      </div>
--->
-     <hr />
-    <h4>Question</h4>
-  
-        <div id="questionControls"></div>
-        <hr/>
-        <div id="sequenceControls" style="text-align:center">
-            <button id="add_control"><span class="control icon-plus"></span></button>
-            <button id="del_control"><span class="control icon-minus"></span></button>
-            <button id="up_control"><span class="control icon-arrow-up"></span></button>
-            <button id="down_control"><span class="control icon-arrow-down"></span></button>
-        </div>
-   </div>
-  </div>
+<div id="control-question">
+    <h4>Question</h4>  
+    <div id="questionControls"></div>
 </div>
 {% endblock %}
 

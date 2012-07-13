@@ -1,17 +1,13 @@
 === On deck ===
 
-* Collections page
-*** Show metadata
-*** Get nav buttons fully working again
-    ** Make metadata editable
-    
 === To do ===
-
-* Collections page
-    * Get import json working
 
 * Codebook page
     *** Add header to codebook controls "Sequence"; move to 2nd position.
+    * Make codebooks printable
+    * Hide shimgraphs after codebook edit
+    * Add popups/modals for instructions
+    * Delete button fails in firefox
     * Shorten text-area to text input for integer values
     * Add slider question_type
 	* Check informal for cross-browser compatibility
@@ -49,6 +45,8 @@
     
 
 * Home page
+    * "Sign in" should be more prominent
+    
 * Administration page
 * My account page
 
@@ -61,6 +59,11 @@
     * Add filter by status functionality to batches
 	* Add filter by status functionality to collections
     * Add padding above codebook, collection, batch <h3>s (https://github.com/twitter/bootstrap/issues/193)
+
+* Collections page
+    ** Make metadata editable
+    * Get import json working
+    
 
 === Punt ===
 * Suppress ?next= part of login_required decorator
@@ -88,7 +91,9 @@
     * Add route
     * Add model
     * Add and fix template
+
 *** Backbone pages working well! Next up: object view pages ***
+
 * Get local DB working
 * Clean up and spin off as a separate repo.
 * Get fixtures working
@@ -98,6 +103,16 @@
 * Add "administrators" mixin
 * Add page header to collection page
 * Fix mongo bug in loadfixtures script
+* Build batch page
+* Add breadcrumb navigation to codebook/collection/batches
+* Figure out batch/coding DB structure
+* Fix codebook display for an empty list
+* Set up default fixture with "The Administrator"
+* Add descriptino field to batch.profile
+* Add "change account settings" button on my-account
+* Get "Work on my tasks" button working
+* Change codebook/question tabs to a simple stack.
+
 * Administration page
     * Propagate name fields from "create new account" through to DB
     * Propagate admin field from "create new account" through to DB
@@ -127,15 +142,11 @@
     * Figure out urls, back buttons, etc.
     * Change codebook/question tabs to a simple stack.
 	** Add "Edit collection info" button
-* Build batch page
-* Add breadcrumb navigation to codebook/collection/batches
-* Figure out batch/coding DB structure
-* Fix codebook display for an empty list
-* Set up default fixture with "The Administrator"
-* Add descriptino field to batch.profile
-* Add "change account settings" button on my-account
-* Get "Work on my tasks" button working
-* Change codebook/question tabs to a simple stack.
+
+* Collection page
+    *** Show metadata
+    *** Get nav buttons fully working again
+
 * inFormal
 	* Comment code
 	* Clean up cruft

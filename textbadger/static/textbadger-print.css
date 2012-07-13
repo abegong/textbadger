@@ -1,0 +1,11 @@
+#doc-box{
+    width:50%;
+}
+
+#control-sequence, #control-question{
+    display : none;
+}
+
+#control-box{
+    page-break-before: always;
+}
