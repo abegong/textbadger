@@ -46,6 +46,10 @@ def convert_document_csv_to_bson(csv_text):
 
     documents_json = []
 
+    #http://lethain.com/handling-very-large-csv-and-xml-files-in-python/
+    print csv.field_size_limit()
+    csv.field_size_limit(1000000)
+    
     #For each row in the collection
     for row in C:
         j = {}
