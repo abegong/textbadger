@@ -164,19 +164,6 @@ var codebookModel = function(){
             });
     };
 
-    this.addStylesToCodebook = function(){
-        if( $("#codebook").attr("tb-codebook-mode") == 'viewer' ){
-            $("div.questionBox").each(function(i,q){
-                codebookModel.addViewerStylesToQuestion($(q));
-            });
-        }
-        else if ( $("#codebook").attr("tb-codebook-mode") == 'editor' ){
-            $("div.questionBox").each(function(i,q){
-                codebookModel.addEditorStylesToQuestion($(q));
-            });
-        }
-    };
-
     this.getCodebookJson = function(){
         j = ko.toJSON({'questions':this.questions()});
         //! Remove "targeted" terms here
@@ -290,4 +277,22 @@ var CodebookManager = function(){
     ]);
 
     this.codebookModel = new codebookModel();
+    
+    this.addStyles = function(){
+        var codebookManager = this;
+        if( $("#codebook").attr("tb-codebook-mode") == 'viewer' ){
+            $("div.questionBox").each(function(i,q){
+                console.log(this);
+                //! This ref is very awkward
+                codebookManager.codebookModel.addViewerStylesToQuestion($(q));
+            });
+        }
+        else if ( $("#codebook").attr("tb-codebook-mode") == 'editor' ){
+            $("div.questionBox").each(function(i,q){
+                console.log(this);
+                //! This ref is very awkward
+                codebookManager.codebookModel.addEditorStylesToQuestion($(q));
+            });
+        }
+    };
 };

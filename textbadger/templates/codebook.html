@@ -34,8 +34,8 @@ var launchInformalEditor = function( codebook_json ){
     $.get("/static/informal/_informalTemplateKO.htm", function(template){
         $("body").append(template);
         ko.applyBindings(codebookManager.codebookModel);
-//        codebookManager.codebookModel.addStylesToCodebook();
-//        codebookManager.codebookModel.attachControlsToQuestion(0);
+        codebookManager.addStyles();
+        codebookManager.codebookModel.attachControlsToQuestion(0);
     }, "text");
 };
 	
