@@ -25,14 +25,16 @@ var launchInformalEditor = function( codebook_json ){
         new cbQuestion("Text matrix", "", {} )
     ]);
     */
-    codebookModel.loadQuestions(codebook_json);
+    CBM = new codebookManager()
+    CBM.codebookModel.loadQuestions(codebook_json);
+    console.log(CBM);
     
     //Load the template and knockout model dynamically.
     $.get("/static/informal/_informalTemplateKO.htm", function(template){
         $("body").append(template);
-        ko.applyBindings(codebookModel);
-        codebookModel.addStylesToCodebook();
-        codebookModel.attachControlsToQuestion(0);
+        ko.applyBindings(CBM.codebookModel);
+        CBM.codebookModel.addStylesToCodebook();
+        CBM.codebookModel.attachControlsToQuestion(0);
     }, "text");
 };
 	

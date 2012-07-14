@@ -1,4 +1,10 @@
 === On deck ===
+** Refactor codebookManager
+    ** Change "informal" to "codebookManager"
+    *** Tie codebookManager events into DOM objects properly
+    ** Document expected objects, methods, and internal logic of codebookManager
+** Refactor docManger
+    ** Document expected objects, methods, and internal logic of docManager
 
 === To do ===
 
