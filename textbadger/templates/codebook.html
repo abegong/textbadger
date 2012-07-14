@@ -4,12 +4,11 @@
 {% block start_scripts %}
 <script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}knockout-1.2.1.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}knockout-2.1.0.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 var launchInformalEditor = function( codebook_json ){
-
     /*
     //Create the default question
     codebookModel.questions([
@@ -25,16 +24,17 @@ var launchInformalEditor = function( codebook_json ){
         new cbQuestion("Text matrix", "", {} )
     ]);
     */
-    CBM = new codebookManager()
-    CBM.codebookModel.loadQuestions(codebook_json);
-    console.log(CBM);
+    codebookManager = new CodebookManager()
+    codebookManager.codebookModel.loadQuestions(codebook_json);
+    console.log(codebookManager);
+    console.log(codebookManager.questionTypes());
     
     //Load the template and knockout model dynamically.
     $.get("/static/informal/_informalTemplateKO.htm", function(template){
         $("body").append(template);
-        ko.applyBindings(CBM.codebookModel);
-        CBM.codebookModel.addStylesToCodebook();
-        CBM.codebookModel.attachControlsToQuestion(0);
+        ko.applyBindings(codebookManager.codebookModel);
+//        codebookManager.codebookModel.addStylesToCodebook();
+//        codebookManager.codebookModel.attachControlsToQuestion(0);
     }, "text");
 };
 	

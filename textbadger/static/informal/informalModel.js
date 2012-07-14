@@ -1,16 +1,3 @@
-var questionTypes = ko.observableArray([
-    "Static text",
-    "Multiple choice",
-    "Check all that apply",
-    "Two-way scale",
-    "Radio matrix",
-    "Checkbox matrix",
-    "Two-way matrix",
-    "Text box",
-    "Short essay",
-    "Text matrix"
-]);
-
 var questionArguments = {
     "Static text" : {"header_text":{"label":"Header text", "default":"Header text"}},
     "Multiple choice" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}},
@@ -68,8 +55,7 @@ var cbQuestion = function(question_type, var_name, params, targeted) {
     }else{
         this.targeted = ko.observable(true);
     }
-    
-    console.log(ko.toJSON(this));
+//    console.log(ko.toJSON(this));
 };
 
 var codebookModel = function(){
@@ -83,18 +69,13 @@ var codebookModel = function(){
 
     //This is really messy.  Can probably redo with splice...?
     this.loadQuestions = function(Q){
-        console.log(Q);
-        console.log(this.questions);
         while( this.questions().length > 0 ){
             this.questions().pop();
         }
-        console.log(Q);
-        console.log(this.questions);
         for( q in Q ){
-            console.log(Q[q]);
+            //console.log(Q[q]);
             this.questions.push( new cbQuestion(Q[q].question_type, Q[q].var_name, Q[q].params) );
         };
-        console.log(this.questions);
     };
 
     this.targetQuestion = function(i){
@@ -294,6 +275,19 @@ var codebookModel = function(){
     };
 };
 
-var codebookManager = function(){
+var CodebookManager = function(){
+    this.questionTypes = ko.observableArray([
+        "Static text",
+        "Multiple choice",
+        "Check all that apply",
+        "Two-way scale",
+        "Radio matrix",
+        "Checkbox matrix",
+        "Two-way matrix",
+        "Text box",
+        "Short essay",
+        "Text matrix"
+    ]);
+
     this.codebookModel = new codebookModel();
 };
