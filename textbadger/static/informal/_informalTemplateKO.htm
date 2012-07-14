@@ -5,7 +5,7 @@
 {{if question_type() == codebookManager.questionTypes()[0] /*Static text*/}}
 	<div class="headerText">{{html params.header_text}}</div>
 
-{{else question_type() == codebookManager.questionTypes[1] /*Multiple choice*/}}
+{{else question_type() == codebookManager.questionTypes()[1] /*Multiple choice*/}}
     <div class="questionMarkupAnchor">
         <div class="headerText">{{html params.header_text}}</div>
         <table class="MatrixQuestion">
@@ -13,7 +13,7 @@
             <tr class="clickable">
                 <td class="leftCol">
                     <div class="shim-graph"></div>
-                    <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
+                    <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
                 </td>
                 <td class="rightCol">{{html v}}</td>
             </tr>
@@ -21,7 +21,7 @@
         </table>
     </div>
     
-{{else question_type() == codebookManager.questionTypes[2] /*CATA*/}}
+{{else question_type() == codebookManager.questionTypes()[2] /*CATA*/}}
     <div class="questionMarkupAnchor">
         <div class="headerText">{{html params.header_text}}</div>
         <table class="MatrixQuestion">
@@ -29,7 +29,7 @@
             <tr class="clickable">
                 <td class="leftCol">
                     <div class="shim-graph"></div>
-                    <input type="checkbox" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
+                    <input type="checkbox" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
                 </td>
                 <td class="rightCol">{{html v}}</td>
             </tr>
@@ -37,7 +37,7 @@
         </table>
     </div>
 
-{{else question_type() == codebookManager.questionTypes[3] /*Two-way scale*/}}
+{{else question_type() == codebookManager.questionTypes()[3] /*Two-way scale*/}}
 	<div class="headerText">{{html params.header_text}}</div>
 	<table class="matrixQuestion">
 		<tr>
@@ -49,13 +49,13 @@
 			<td class="leftCol">{{html params.left_statement}}</td>
 			{{each(i, v) params.answer_array}}<td class="clickable">
                 <div class="shim-graph"></div>
-                <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
+                <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
             </td>{{/each}}
 			<td class="rightCol">{{html params.right_statement}}</td>
 		</tr>
 	</table>
 
-{{else question_type() == codebookManager.questionTypes[4] /*Radio matrix*/}}
+{{else question_type() == codebookManager.questionTypes()[4] /*Radio matrix*/}}
 	<div class="headerText">{{html params.header_text}}</div>
 	<table class="matrixQuestion">
 		<thead><td></td>{{each(i, v) params.answer_array}}<td>${v}</td>{{/each}}</thead>
@@ -64,13 +64,13 @@
                 <td class="textCol">{{html v}}</td>
                 {{each(j, w) params.answer_array}}<td class="clickable">
                     <div class="shim-graph"></div>
-                    <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input>
+                    <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input>
                 </td>{{/each}}
             </tr>
 		{{/each}}
 	</table>
 
-{{else question_type() == codebookManager.questionTypes[5] /*Checkbox matrix*/}}
+{{else question_type() == codebookManager.questionTypes()[5] /*Checkbox matrix*/}}
 	<div class="headerText">{{html params.header_text}}</div>
 	<table class="matrixQuestion">
 		<thead><td></td>{{each(i, v) params.answer_array}}<td>${v}</td>{{/each}}</thead>
@@ -79,13 +79,13 @@
                 <td class="textCol">{{html v}}</td>
                 {{each(j, w) params.answer_array}}<td class="questionMarkupAnchor clickable">
                     <div class="shim-graph"></div>
-                    <input type="checkbox" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input>
+                    <input type="checkbox" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input>
                 </td>{{/each}}
             </tr>
 		{{/each}}
 	</table>
 
-{{else question_type() == codebookManager.questionTypes[6] /*Two-way matrix*/}}
+{{else question_type() == codebookManager.questionTypes()[6] /*Two-way matrix*/}}
 	<div class="headerText">{{html params.header_text}}</div>
 	<table class="matrixQuestion">
 		<tr>
@@ -100,7 +100,7 @@
 				<td class="leftCol">{{html params.left_statements()[j]}}</td>
 				{{each(i, v) params.answer_array}}<td class="clickable">
                     <div class="shim-graph"></div>
-                    <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${j+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
+                    <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}_${j+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
                 </td>{{/each}}
 				<td class="rightCol">{{html params.right_statements()[j]}}</td>
 			</tr>
@@ -108,21 +108,21 @@
 		{{/if}}
 	</table>
 
-{{else question_type() == codebookManager.questionTypes[7] /*Text*/}}
+{{else question_type() == codebookManager.questionTypes()[7] /*Text*/}}
     <div class=" questionMarkupAnchor">
         <div class="headerText questionMarkupAnchor">{{html params.header_text}}</div>
         <div class="shim-graph"></div>
-        <input type="text" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="" size="${params.cols}"></input>
+        <input type="text" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="" size="${params.cols}"></input>
     </div>
 
-{{else question_type() == codebookManager.questionTypes[8] /*Short essay*/}}
+{{else question_type() == codebookManager.questionTypes()[8] /*Short essay*/}}
     <div class=" questionMarkupAnchor">
         <div class="headerText">{{html params.header_text}}</div>
         <div class="shim-graph"></div>
-        <textarea name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" cols="${params.cols}" rows="${params.rows}"></textarea>
+        <textarea name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" cols="${params.cols}" rows="${params.rows}"></textarea>
     </div>
     
-{{else question_type() == codebookManager.questionTypes[9] /*Text matrix*/}}
+{{else question_type() == codebookManager.questionTypes()[9] /*Text matrix*/}}
 	<div class="headerText">{{html params.header_text}}</div>
 	<table class="matrixQuestion">
 		{{each(i, v) params.answer_array}}
@@ -130,7 +130,7 @@
                 <td class="textCol">{{html v}}</td>
                 <td>
                     <div class="shim-graph"></div>
-                    <input type="text" name="Q${ko.utils.arrayIndexOf(codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" size="${params.cols}"></input>
+                    <input type="text" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" size="${params.cols}"></input>
                 </td>
             </tr>
 		{{/each}}
