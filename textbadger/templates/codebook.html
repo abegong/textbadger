@@ -8,83 +8,45 @@
 <script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-var launchInformalEditor = function( codebook_json ){
-    /*
-    //Create the default question
-    codebookModel.questions([
-        new cbQuestion("Static text", "", {} ),
-        new cbQuestion("Multiple choice", "", {} ),
-        new cbQuestion("Check all that apply", "", {} ),
-        new cbQuestion("Two-way scale", "", {} ),
-        new cbQuestion("Radio matrix", "", {} ),
-        new cbQuestion("Checkbox matrix", "", {} ),
-        new cbQuestion("Two-way matrix", "", {} ),
-        new cbQuestion("Text box", "", {} ),
-        new cbQuestion("Short essay", "", {} ),
-        new cbQuestion("Text matrix", "", {} )
-    ]);
-    */
-    codebookManager = new CodebookManager()
-    codebookManager.codebookModel.loadQuestions(codebook_json);
-/*
-    console.log(codebookManager);
-    console.log(codebook_json);
-    console.log(codebookManager.questionTypes());
-*/
-    //Load the template and knockout model dynamically.
-    $.get("/static/informal/_informalTemplateKO.htm", function(template){
-        $("body").append(template);
-        ko.applyBindings(codebookManager.codebookModel);
-        codebookManager.addStyles();
-        codebookManager.codebookModel.attachControlsToQuestion(0);
-    }, "text");
-};
-	
 var codebook_id = "{{codebook|mongo_id}}";
+var codebookManager = new CodebookManager()
 
-$(function(){
-    //Highlight "my-account" in nav bar
-    $('a[href*="/shared-resources/"]').parent().addClass("active");
+codebookManager.init = function( codebook_json ){
+    codebookManager.initControls();
 
-    //Activate button controls
-	$('#add_control').click( function(){ codebookModel.addQuestion(); } );
-	$('#del_control').click( function(){ codebookModel.delQuestion(); } );
-	$('#up_control').click( function(){ codebookModel.moveQuestionUp(); } );
-	$('#down_control').click( function(){ codebookModel.moveQuestionDown(); } );
+    //Load the template and knockout model dynamically.
+    var callback_a = $.get("/static/informal/_informalTemplateKO.htm", function(template){
+        $("body").append(template);
+        ko.applyBindings(codebookManager);
+        codebookManager.addStyles();
+        codebookManager.attachControlsToQuestion(0);
+    }, "text");
 
-/*
-	//! Didn't work
-    $('#export-json').click( function(){
-        //! Can't get this to work.
-        //! Better to just rewrite as real method.
-        var json = codebookModel.getCodebookJson();
-        window.open('/ajax/export-codebook/?'+JSON.stringify(json),"Json Download", "resizable=0,status=0,toolbar=0,width=600px,height=300px");
-    });
-*/
-/*
-	//! Not used
-    $('#export-html').click( function(){
-        var new_window = window.open('about:blank',"Html Download", "resizable=0,status=0,toolbar=0,width=600px,height=300px");
-        new_window.document.write($("#codebook").html());
-    });
-*/
-
-	//Load the codebook on initialization.
-	$.post("/ajax/get-codebook/",
+    //Load the codebook dynamically
+    var callback_a = $.post("/ajax/get-codebook/",
         {'id': codebook_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
             //! Need error checking for failed responses.
-            launchInformalEditor(response.codebook.questions);
+            codebookManager.loadQuestions(response.codebook.questions);
         }
     );
+    
+};
 
-	//AJAX to save the codebook
+codebookManager.initControls = function(){
+    //Activate button controls
+	$('#add_control').click( function(){ codebookManager.addQuestion(); } );
+	$('#del_control').click( function(){ codebookManager.delQuestion(); } );
+	$('#up_control').click( function(){ codebookManager.moveQuestionUp(); } );
+	$('#down_control').click( function(){ codebookManager.moveQuestionDown(); } );
+    
+    //AJAX to save the codebook
     $("#save-codebook").click(function(){
 	    $.post(
             "/ajax/save-codebook/",
             {
                 'parent_id': codebook_id,
-                'questions':codebookModel.getCodebookJson(),
+                'questions': codebookManager.getCodebookJson(),
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
             function(response){                
@@ -93,6 +55,63 @@ $(function(){
             }
         );
     });
+
+};
+
+codebookManager.attachControlsToQuestion = function(i){
+    //Change the targetQuestion in the model
+    //console.log(i);
+    this.targetQuestion(i);
+
+    //Set index variables
+    qB = $(".questionBox:eq("+i+")");        //The DOM object for the selected questionBox
+    qC = $("#questionControls");             //The DOM object for the questionControls div
+    qM = this.questions()[i];       //The question object in the knockout.js model
+    qA = qM.questionArguments[qM.question_type()];    //The questionArguments object in the knockout.js model
+
+    //Add content within the control box: variable type and name
+    qC
+        .html( "Variable type<br/><select data-bind=\"options: questionTypes, value: questions()["+i+"].question_type, event: {change: function(event){codebookModel.changeQuestionType(event.target.value);}}\"></select><br/>" )
+        .append( "Variable name<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].var_name, event: {change: function(event){codebookModel.questions()["+i+"].changeQuestionName(event.target.value);}}\"></input><br/>" );
+
+    //Add content within the control box: variable parameters
+    for( p in qA ){
+        if( p in qM.params ){
+//            alert( p + ": " + qM.params[p]() );//+ "\n" + $.isArray( qM.params[p]() ) );// + ": " + $.isArray( qM.params[p]() );
+            if( $.isArray( qM.params[p]() ) ){
+                qC.append( qA[p].label + "<textarea rows=\"5\" style=\"width:250px\" data-bind=\"event: {change: function(event){codebookModel.questions()['"+i+"'].updateParams('"+p+"', event.target.value.split('\\n'));}}\">" + qM.params[p]().join('\n') + "</textarea><br/>" )
+            }
+            else{
+                qC.append( qA[p].label +"<textarea rows=\"5\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
+//                qC.append( qA[p].label +"<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
+            }
+        }
+    }
+
+    //Re-bind questionControls
+    ko.applyBindings(codebookManager, qC[0]);
+};
+
+codebookManager.addStylesToQuestion = function(Q){
+    $(".shim-graph").hide();
+    Q
+        .unbind('click mouseenter mouseleave')
+        .hover( 
+            function(){$(this).addClass('hoverQuestion');},
+            function(){$(this).removeClass('hoverQuestion');}
+        )
+        .click( function(){
+            codebookManager.attachControlsToQuestion( $(this).index(".questionBox") );
+        });
+};
+
+
+$(function(){
+    //Highlight "my-account" in nav bar
+    $('a[href*="/shared-resources/"]').parent().addClass("active");
+
+	//Load the codebook on initialization.
+    codebookManager.init();
 });
 </script>
 {% endblock %}

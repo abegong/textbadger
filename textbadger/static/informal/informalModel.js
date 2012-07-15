@@ -1,19 +1,21 @@
-var questionArguments = {
-    "Static text" : {"header_text":{"label":"Header text", "default":"Header text"}},
-    "Multiple choice" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}},
-    "Check all that apply" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}},
-    "Two-way scale" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "left_statement":{"label":"Left statement", "default":"Left statement"}, "right_statement":{"label":"Right statement", "default":"Right statement"}},
-    "Radio matrix" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "question_array":{"label":"Questions", "default":["Question 1", "Question 2"]}},
-    "Checkbox matrix" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "question_array":{"label":"Questions", "default":["Question 1", "Question 2"]}},
-    "Two-way matrix" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "left_statements":{"label":"Left statements", "default":["Statement 1", "Statement 2"]}, "right_statements":{"label":"Right statements", "default":["Statement 1", "Statement 2"]}},
-    "Text box" : {"header_text":{"label":"Header text", "default":"Header text"}, "cols":{"label":"Columns","default":20}},
-    "Short essay" : {"header_text":{"label":"Header text", "default":"Header text"}, "cols":{"label":"Columns","default":30}, "rows":{"label":"Rows","default":5}},
-    "Text matrix" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "cols":{"label":"Columns","default":20}}
-};
-
-var cbQuestion = function(question_type, var_name, params, targeted) {
+//An individual question within the codebooks
+var CodebookQuestion = function(question_type, var_name, params, targeted) {
+    //Hardcoded question info.  This is easier than subclassing, even tho it's a bit messy.
+    this.questionArguments = {
+        "Static text" : {"header_text":{"label":"Header text", "default":"Header text"}},
+        "Multiple choice" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}},
+        "Check all that apply" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}},
+        "Two-way scale" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "left_statement":{"label":"Left statement", "default":"Left statement"}, "right_statement":{"label":"Right statement", "default":"Right statement"}},
+        "Radio matrix" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "question_array":{"label":"Questions", "default":["Question 1", "Question 2"]}},
+        "Checkbox matrix" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "question_array":{"label":"Questions", "default":["Question 1", "Question 2"]}},
+        "Two-way matrix" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "left_statements":{"label":"Left statements", "default":["Statement 1", "Statement 2"]}, "right_statements":{"label":"Right statements", "default":["Statement 1", "Statement 2"]}},
+        "Text box" : {"header_text":{"label":"Header text", "default":"Header text"}, "cols":{"label":"Columns","default":20}},
+        "Short essay" : {"header_text":{"label":"Header text", "default":"Header text"}, "cols":{"label":"Columns","default":30}, "rows":{"label":"Rows","default":5}},
+        "Text matrix" : {"header_text":{"label":"Header text", "default":"Header text"}, "answer_array":{"label":"Answer categories", "default":["Answer 1","Answer 2"]}, "cols":{"label":"Columns","default":20}}
+    };
+    
     this.fillInMissingParams = function(){
-        qA = questionArguments[this.question_type()];
+        qA = this.questionArguments[this.question_type()];
         for( a in qA ){
             if( !(a in this.params) ){
                 if( $.isArray(qA[a].default) ){
@@ -55,26 +57,50 @@ var cbQuestion = function(question_type, var_name, params, targeted) {
     }else{
         this.targeted = ko.observable(true);
     }
-//    console.log(ko.toJSON(this));
 };
 
+/*
 var codebookModel = function(){
     this.properties = {
         width: ko.observable(350)
     };
     this.questions = ko.observableArray([]);
     this.target_index = ko.observable(0);
+};
+*/
 
-    //These functions are used to modify the codebook
+var CodebookManager = function(){
+    //Main KO observable objects
+    this.questionTypes = ko.observableArray([
+        "Static text",
+        "Multiple choice",
+        "Check all that apply",
+        "Two-way scale",
+        "Radio matrix",
+        "Checkbox matrix",
+        "Two-way matrix",
+        "Text box",
+        "Short essay",
+        "Text matrix"
+    ]);
+    
+    this.properties = {
+        width: ko.observable(350)
+    };
+    this.questions = ko.observableArray([]);
+    this.target_index = ko.observable(0);
+    
+    
+    //this.codebookModel = new codebookModel();
 
-    //This is really messy.  Can probably redo with splice...?
+    //Supporting methods
     this.loadQuestions = function(Q){
         while( this.questions().length > 0 ){
             this.questions().pop();
         }
         for( q in Q ){
             //console.log(Q[q]);
-            this.questions.push( new cbQuestion(Q[q].question_type, Q[q].var_name, Q[q].params) );
+            this.questions.push( new CodebookQuestion(Q[q].question_type, Q[q].var_name, Q[q].params) );
         };
     };
 
@@ -84,32 +110,32 @@ var codebookModel = function(){
         this.target_index(i);
         this.questions()[this.target_index()].targeted(true);
 
-        this.addStylesToCodebook();
+        this.addStyles();
     };
 
     this.changeQuestionType = function( T ){
         this.questions()[this.target_index()].changeQuestionType(T);
-        this.addStylesToCodebook();
+        this.addStyles();
     };
     
     this.addQuestion = function(){
         q1 = ko.toJS( this.questions.slice( this.target_index() )[0] );
-        q2 = new cbQuestion( q1.question_type, q1.var_name, q1.params );
+        q2 = new CodebookQuestion( q1.question_type, q1.var_name, q1.params );
         this.questions.splice( this.target_index()+1, 0, q2 );
-        this.addStylesToCodebook();
+        this.addStyles();
     };
 
     this.delQuestion = function(){
         i = this.target_index();
         if( i > 0 ){
-            attachControlsToQuestion( i-1 ); 
+            this.attachControlsToQuestion( i-1 ); 
             this.questions.splice( i, 1 );
         }
         else if( this.questions().length > 1 ){ 
             this.questions.splice( i, 1 );
-            attachControlsToQuestion( 0 );
+            this.attachControlsToQuestion( 0 );
         }
-        this.addStylesToCodebook();
+        this.addStyles();
     };
 
     this.moveQuestionUp = function(){
@@ -117,15 +143,15 @@ var codebookModel = function(){
         if( i > 0 ){
             if( this.questions().length-i > 1 ){
                 this.questions.splice( i, 0, this.questions.splice(i-1,1)[0] );
-                attachControlsToQuestion(i-1);
+                this.attachControlsToQuestion(i-1);
             }
             else{
                 q = this.questions().pop();
                 this.questions.splice( i-1, 0, q );
-                attachControlsToQuestion(i-1);
+                this.attachControlsToQuestion(i-1);
             }
         }
-        this.addStylesToCodebook();
+        this.addStyles();
     };
 
     this.moveQuestionDown = function(){
@@ -134,22 +160,44 @@ var codebookModel = function(){
             this.questions.splice( i+1, 0, this.questions().splice(i,1)[0] );
             this.attachControlsToQuestion(i+1);$('input',this).attr
         }
-        this.addStylesToCodebook();
+        this.addStyles();
     };
 
-    this.addEditorStylesToQuestion = function(Q){
-        $(".shim-graph").hide();
-        Q
-            .unbind('click mouseenter mouseleave')
-            .hover( 
-                function(){$(this).addClass('hoverQuestion');},
-                function(){$(this).removeClass('hoverQuestion');}
-            )
-            .click( function(){
-                codebookManager.codebookModel.attachControlsToQuestion( $(this).index(".questionBox") );
+    //Overwrite this method in subclasses!
+    this.initControls = function(){};
+
+    //Overwrite this method in subclasses!
+    this.addStylesToQuestion = function(Q){};
+
+    this.addStyles = function(){
+        var codebookManager = this;
+        $("div.questionBox").each(function(i,q){
+            codebookManager.addStylesToQuestion($(q));
+        });
+        /*
+        if( $("#codebook").attr("tb-codebook-mode") == 'viewer' ){
+            $("div.questionBox").each(function(i,q){
+                //! This ref is very awkward
+                codebookManager.addViewerStylesToQuestion($(q));
             });
+        }
+        else if ( $("#codebook").attr("tb-codebook-mode") == 'editor' ){
+            $("div.questionBox").each(function(i,q){
+                //! This ref is very awkward
+                codebookManager.addEditorStylesToQuestion($(q));
+            });
+        }
+        */
+    };
+    
+    this.getCodebookJson = function(){
+        j = ko.toJSON({'questions':this.questions()});
+        //! Remove "targeted" terms here
+        //!? Add name and description (maybe)
+        return( j );
     };
 
+    //! This method should be moved out to a subclass
     this.addViewerStylesToQuestion = function(Q){
         $(".shim-graph").hide();
         
@@ -162,48 +210,8 @@ var codebookModel = function(){
                 }
             });
     };
-
-    this.getCodebookJson = function(){
-        j = ko.toJSON({'questions':this.questions()});
-        //! Remove "targeted" terms here
-        //!? Add name and description (maybe)
-        return( j );
-    };
-    
-    this.attachControlsToQuestion = function(i){
-        //Change the targetQuestion in the model
-        //console.log(i);
-        codebookManager.codebookModel.targetQuestion(i);
-
-        //Set index variables
-        qB = $(".questionBox:eq("+i+")");        //The DOM object for the selected questionBox
-        qC = $("#questionControls");             //The DOM object for the questionControls div
-        qM = codebookModel.questions()[i];       //The question object in the knockout.js model
-        qA = codebookModel.questionArguments[qM.question_type()];    //The questionArguments object in the knockout.js model
-
-        //Add content within the control box: variable type and name
-        qC
-            .html( "Variable type<br/><select data-bind=\"options: questionTypes, value: questions()["+i+"].question_type, event: {change: function(event){codebookModel.changeQuestionType(event.target.value);}}\"></select><br/>" )
-            .append( "Variable name<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].var_name, event: {change: function(event){codebookModel.questions()["+i+"].changeQuestionName(event.target.value);}}\"></input><br/>" );
-
-        //Add content within the control box: variable parameters
-        for( p in qA ){
-            if( p in qM.params ){
-    //            alert( p + ": " + qM.params[p]() );//+ "\n" + $.isArray( qM.params[p]() ) );// + ": " + $.isArray( qM.params[p]() );
-                if( $.isArray( qM.params[p]() ) ){
-                    qC.append( qA[p].label + "<textarea rows=\"5\" style=\"width:250px\" data-bind=\"event: {change: function(event){codebookModel.questions()['"+i+"'].updateParams('"+p+"', event.target.value.split('\\n'));}}\">" + qM.params[p]().join('\n') + "</textarea><br/>" )
-                }
-                else{
-                    qC.append( qA[p].label +"<textarea rows=\"5\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
-    //                qC.append( qA[p].label +"<input type=\"text\" style=\"width:250px\" data-bind=\"value: questions()["+i+"].params."+p+"\"></input><br/>" );
-                }
-            }
-        }
-
-        //Re-bind questionControls
-        ko.applyBindings(codebookModel, qC[0]);
-    };
-    
+   
+    //! This method should be moved out to a subclass
     this.markupCodebook = function(labels){
         var labels = label_list[DocManager.doc_index];
         /*
@@ -259,37 +267,21 @@ var codebookModel = function(){
             });
         });
     };
-};
 
-var CodebookManager = function(){
-    this.questionTypes = ko.observableArray([
-        "Static text",
-        "Multiple choice",
-        "Check all that apply",
-        "Two-way scale",
-        "Radio matrix",
-        "Checkbox matrix",
-        "Two-way matrix",
-        "Text box",
-        "Short essay",
-        "Text matrix"
+    /*
+    //Create the default question
+    codebookModel.questions([
+        new cbQuestion("Static text", "", {} ),
+        new cbQuestion("Multiple choice", "", {} ),
+        new cbQuestion("Check all that apply", "", {} ),
+        new cbQuestion("Two-way scale", "", {} ),
+        new cbQuestion("Radio matrix", "", {} ),
+        new cbQuestion("Checkbox matrix", "", {} ),
+        new cbQuestion("Two-way matrix", "", {} ),
+        new cbQuestion("Text box", "", {} ),
+        new cbQuestion("Short essay", "", {} ),
+        new cbQuestion("Text matrix", "", {} )
     ]);
+    */
 
-    this.codebookModel = new codebookModel();
-    
-    this.addStyles = function(){
-        var codebookManager = this;
-        if( $("#codebook").attr("tb-codebook-mode") == 'viewer' ){
-            $("div.questionBox").each(function(i,q){
-                //! This ref is very awkward
-                codebookManager.codebookModel.addViewerStylesToQuestion($(q));
-            });
-        }
-        else if ( $("#codebook").attr("tb-codebook-mode") == 'editor' ){
-            $("div.questionBox").each(function(i,q){
-                //! This ref is very awkward
-                codebookManager.codebookModel.addEditorStylesToQuestion($(q));
-            });
-        }
-    };
 };
