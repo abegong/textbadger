@@ -13,6 +13,7 @@
             <tr class="clickable">
                 <td class="leftCol">
                     <div class="shim-graph"></div>
+                    <!-- Try using $index instead of this arrayIndexOf monstrosity. (http://knockoutjs.com/documentation/foreach-binding.html) -->
                     <input type="radio" name="Q${ko.utils.arrayIndexOf(codebookManager.codebookModel.questions,$data)+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
                 </td>
                 <td class="rightCol">{{html v}}</td>

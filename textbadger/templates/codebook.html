@@ -26,10 +26,11 @@ var launchInformalEditor = function( codebook_json ){
     */
     codebookManager = new CodebookManager()
     codebookManager.codebookModel.loadQuestions(codebook_json);
+/*
     console.log(codebookManager);
     console.log(codebook_json);
     console.log(codebookManager.questionTypes());
-    
+*/
     //Load the template and knockout model dynamically.
     $.get("/static/informal/_informalTemplateKO.htm", function(template){
         $("body").append(template);

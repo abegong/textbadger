@@ -146,7 +146,7 @@ var codebookModel = function(){
                 function(){$(this).removeClass('hoverQuestion');}
             )
             .click( function(){
-                codebookModel.attachControlsToQuestion( $(this).index(".questionBox") );
+                codebookManager.codebookModel.attachControlsToQuestion( $(this).index(".questionBox") );
             });
     };
 
@@ -157,7 +157,6 @@ var codebookModel = function(){
             .mouseover( function(){ $(this).addClass('mouseoverCell'); })
             .mouseout( function(){ $(this).removeClass('mouseoverCell'); })
             .click( function(event){
-                console.log(event.target);
                 if( event.target.type != 'checkbox' && event.target.type != 'radio' ){
                     x = $('input', this).trigger("click");
                 }
@@ -174,7 +173,7 @@ var codebookModel = function(){
     this.attachControlsToQuestion = function(i){
         //Change the targetQuestion in the model
         //console.log(i);
-        codebookModel.targetQuestion(i);
+        codebookManager.codebookModel.targetQuestion(i);
 
         //Set index variables
         qB = $(".questionBox:eq("+i+")");        //The DOM object for the selected questionBox
@@ -282,14 +281,12 @@ var CodebookManager = function(){
         var codebookManager = this;
         if( $("#codebook").attr("tb-codebook-mode") == 'viewer' ){
             $("div.questionBox").each(function(i,q){
-                console.log(this);
                 //! This ref is very awkward
                 codebookManager.codebookModel.addViewerStylesToQuestion($(q));
             });
         }
         else if ( $("#codebook").attr("tb-codebook-mode") == 'editor' ){
             $("div.questionBox").each(function(i,q){
-                console.log(this);
                 //! This ref is very awkward
                 codebookManager.codebookModel.addEditorStylesToQuestion($(q));
             });
