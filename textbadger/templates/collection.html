@@ -4,11 +4,83 @@
 {% block start_scripts %}
 <script src="{{ STATIC_URL }}js/textbadger-documents.js" type="text/javascript"></script>
 <script type="text/javascript">
+    
+var docManager = new DocumentManager();
+
+docManager.initControls = function(){
+    var self = this;
+    $("#prev-doc-button").click(function(){
+        self.loadPrevDoc();
+        return false;
+    });
+    $("#next-doc-button").click(function(){
+        self.loadNextDoc();
+        return false;
+    });
+    $("#doc-index").change(function(){
+        var x = $(this).val();
+        //! Need to add input validation
+
+        self.seq_index = x;
+        self.showDocument(x)
+    });
+    
+    $("#doc-count").html(self.seq_list.length);
+};
+
+docManager.updateControls = function(){
+    $("#doc-index").val(this.doc_index+1);
+    $("#docs-remaining").html(this.seq_list.length-this.seq_index);
+
+    if( this.seq_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
+    else{ $("#prev-doc-button").removeClass("disabled"); }
+
+    if( this.seq_index == this.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
+    else{ $("#next-doc-button").removeClass("disabled"); }
+
+    //Update hidden field
+    $("#doc-index-hidden").val(this.doc_index);
+
+    //Update metadata
+    var M = this.doc_list[this.doc_index].metadata;
+    var elements = 1;
+    $("#doc-metadata").html("");
+    for( m in M ){
+        $("#doc-metadata").append("<dt>"+m+"</dt>");
+        $("#doc-metadata").append("<dd>"+M[m]+"</dd>");
+
+        $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\" name=\"key\" placeholder='e.g. \"New York Times op-eds\"' value=\""+m+ "\"><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\"value\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
+        elements++;
+    }
+    //console.log(M)
+    if (!M) {
+        console.log("empty");
+        $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\" name=\"key\" placeholder='e.g. \"New York Times op-eds\"' value=\""+m+ "\"><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\"value\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
+    }
+
+
+    $(name[value="meta-data-elements"]).val(elements);
+     $(".delete").live('click',function () {
+    //live is deprecated, using it for sake of expediancy, click doesn't work
+           // $(this).parent().parent().remove();
+            $(this).closest(".control-group").remove();
+            elements--;
+        });
+
+     $("#add").on('click',function () {
+            $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" name =\"key\"class=\"input-xlarge\"  placeholder='e.g. \"New York Times op-eds\"'><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\"  name=\"value\" placeholder='e.g. \"New York Times op-eds\"'></textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
+            elements++;
+            //this is likely unnecessary now, as well as the the entire idea of tracking the number of elements
+            $(name[value="meta-data-elements"]).val(elements);
+        });
+};
+
 $(function(){
     //Highlight "shared-rez" in nav bar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
 
-    DocManager.initialize("{{collection|mongo_id}}","{{csrf_token}}");
+    //Launch docManager
+    docManager.init("{{collection|mongo_id}}", "{{csrf_token}}" );
 });
 </script>
 {% endblock %}
