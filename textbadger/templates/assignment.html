@@ -14,31 +14,33 @@ codebookManager.initControls = function(){
     //Add the "submit" button.
     $('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-primary">Submit</a></div></div>')
         .appendTo("#codebook")
-        .click(function(){
-            //! Make sure codebook is filled in
-            //! (Optional) warning before submitting incomplete forms
-            
-            //Submit the result
-            $.post(
-                "/ajax/submit-batch-code/",
-                $('#codebook-form').serialize(),
-                function(result){
-                    if( result.status == "success" ){
-                        //Clear codebook answers
-                        $form = $("#codebook-form");
-                        $form.find('input:text, input:password, input:file, select, textarea').val('');
-                        $form.find('input:radio, input:checkbox')
-                             .removeAttr('checked').removeAttr('selected');
-                        
-                        //Load the next document
-                        DocManager.loadNextDoc();
-                    }else{
-                        alert( result.msg );
-                    }
-                }
-            );
-        });
-}
+        .click(this.submitAjaxCode);
+};
+
+codebookManager.submitAjaxCode = function(){
+    //! Make sure codebook is filled in
+    //! (Optional) warning before submitting incomplete forms
+    
+    //Submit the result
+    $.post(
+        "/ajax/submit-batch-code/",
+        $('#codebook-form').serialize(),
+        function(result){
+            if( result.status == "success" ){
+                //Clear codebook answers
+                $form = $("#codebook-form");
+                $form.find('input:text, input:password, input:file, select, textarea').val('');
+                $form.find('input:radio, input:checkbox')
+                     .removeAttr('checked').removeAttr('selected');
+                
+                //Load the next document
+                DocManager.loadNextDoc();
+            }else{
+                alert( result.msg );
+            }
+        }
+    );
+};
 
 
 codebookManager.addStylesToQuestion = function(Q){
@@ -54,22 +56,6 @@ codebookManager.addStylesToQuestion = function(Q){
         });
 };
    
-
-/*
-var launchInformalViewer = function( codebook_json ){
-    codebookModel.loadQuestions(codebook_json);
-    
-    //Load the template and knockout model dynamically.
-    $.get("{{ STATIC_URL }}informal/_informalTemplateKO.htm", function(template){
-        $("body").append(template);
-        ko.applyBindings(codebookModel);
-        codebookModel.addStylesToCodebook();
-        finalInit();
-    }, "text");
-
-};
-*/
-
 	
 $(function(){
     var seq_list = {{seq_list}};
@@ -82,15 +68,6 @@ $(function(){
 
     //Load codebook
     codebookManager.init('{{ batch.profile.codebook_id }}', '{{ csrf_token }}');
-    /*
-	$.post("/ajax/get-codebook/",
-        {'id': "{{ batch.profile.codebook_id }}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
-        function(response){
-            //! Need error checking for failed responses.
-            launchInformalViewer(response.codebook.questions);       
-        }
-    );
-    */
 });
 </script>
 {% endblock %}
