@@ -7,6 +7,7 @@
 
 <script type="text/javascript">
 //var codebook_id = "{{codebook|mongo_id}}";
+var docManager = new DocumentManager();
 var codebookManager = new CodebookManager();
 
 codebookManager.initControls = function(){
@@ -14,6 +15,13 @@ codebookManager.initControls = function(){
     $('<div class="questionBox"><div class="questionContent" style="text-align:right"><a class="btn btn-primary">Submit</a></div></div>')
         .appendTo("#codebook")
         .click(this.submitAjaxCode);
+};
+
+docManager.updateControls = function(){
+    $("#docs-remaining").html(this.seq_list.length-this.seq_index);
+    
+    //Update hidden field
+    $("#doc-index-hidden").val(this.doc_index);
 };
 
 codebookManager.submitAjaxCode = function(){
@@ -33,7 +41,7 @@ codebookManager.submitAjaxCode = function(){
                      .removeAttr('checked').removeAttr('selected');
                 
                 //Load the next document
-                DocManager.loadNextDoc();
+                docManager.loadNextDoc();
             }else{
                 alert( result.msg );
             }
@@ -63,7 +71,7 @@ $(function(){
     $('a[href*="/my-account/"]').parent().addClass("active");
 
     //Load collection
-    DocManager.initialize("{{batch.profile.collection_id}}", "{{csrf_token}}", {{seq_list}});
+    docManager.init("{{batch.profile.collection_id}}", "{{csrf_token}}", {{seq_list}});
 
     //Load codebook
     codebookManager.init("{{ batch.profile.codebook_id }}", "{{ csrf_token }}");

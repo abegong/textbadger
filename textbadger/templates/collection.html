@@ -4,7 +4,6 @@
 {% block start_scripts %}
 <script src="{{ STATIC_URL }}js/textbadger-documents.js" type="text/javascript"></script>
 <script type="text/javascript">
-    
 var docManager = new DocumentManager();
 
 docManager.initControls = function(){
@@ -37,9 +36,6 @@ docManager.updateControls = function(){
 
     if( this.seq_index == this.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
     else{ $("#next-doc-button").removeClass("disabled"); }
-
-    //Update hidden field
-    $("#doc-index-hidden").val(this.doc_index);
 
     //Update metadata
     var M = this.doc_list[this.doc_index].metadata;
