@@ -11,37 +11,6 @@
 var codebook_id = "{{codebook|mongo_id}}";
 var codebookManager = new CodebookManager()
 
-codebookManager.init = function( codebook_json ){
-    codebookManager.initControls();
-
-    //Load the template and knockout model dynamically.
-    var callback_a = $.get("/static/informal/_informalTemplateKO.htm", function(template){
-        $("body").append(template);
-    }, "text");
-
-    //Load the codebook dynamically
-    var callback_b = $.post("/ajax/get-codebook/",
-        {'id': codebook_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
-        function(response){
-            if( response.status=="success" ){                
-                codebookManager.loadQuestions(response.codebook.questions);
-
-                //! For easy debugging:
-                //codebookManager.initDefaultQuestions(response.codebook.questions);
-            }else{
-                //! Need error checking for failed responses.
-            }
-        }
-    );
-
-    // This should resolve a possible race condition for loading the codebook.
-    $.when(callback_a, callback_b).then(function(){
-        ko.applyBindings(codebookManager);
-        codebookManager.addStyles();
-        codebookManager.attachControlsToQuestion(0);        
-    });
-};
-
 codebookManager.initControls = function(){
     //Activate button controls
 	$('#add_control').click( function(){ codebookManager.addQuestion(); } );
@@ -64,7 +33,19 @@ codebookManager.initControls = function(){
             }
         );
     });
+};
 
+codebookManager.addStylesToQuestion = function(Q){
+    $(".shim-graph").hide();
+    Q
+        .unbind('click mouseenter mouseleave')
+        .hover( 
+            function(){$(this).addClass('hoverQuestion');},
+            function(){$(this).removeClass('hoverQuestion');}
+        )
+        .click( function(){
+            codebookManager.attachControlsToQuestion( $(this).index(".questionBox") );
+        });
 };
 
 codebookManager.attachControlsToQuestion = function(i){
@@ -101,26 +82,12 @@ codebookManager.attachControlsToQuestion = function(i){
     ko.applyBindings(codebookManager, qC[0]);
 };
 
-codebookManager.addStylesToQuestion = function(Q){
-    $(".shim-graph").hide();
-    Q
-        .unbind('click mouseenter mouseleave')
-        .hover( 
-            function(){$(this).addClass('hoverQuestion');},
-            function(){$(this).removeClass('hoverQuestion');}
-        )
-        .click( function(){
-            codebookManager.attachControlsToQuestion( $(this).index(".questionBox") );
-        });
-};
-
-
 $(function(){
     //Highlight "my-account" in nav bar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
 
 	//Load the codebook on initialization.
-    codebookManager.init();
+    codebookManager.init('{{ csrf_token }}');
 });
 </script>
 {% endblock %}

@@ -84,11 +84,9 @@ var CodebookManager = function(){
     //--- Supporting methods ------------------------------------------------//
     
     this.loadQuestions = function(Q){
-        while( this.questions().length > 0 ){
-            this.questions().pop();
-        }
+        this.clearQuestions();
+        
         for( q in Q ){
-            //console.log(Q[q]);
             this.questions.push( new CodebookQuestion(Q[q].question_type, Q[q].var_name, Q[q].params) );
         };
     };
@@ -107,6 +105,13 @@ var CodebookManager = function(){
             {question_type:"Short essay", var_name:"", params:{} },
             {question_type:"Text matrix", var_name:"", params:{} }
         ]);
+    };
+
+    this.getCodebookJson = function(){
+        j = ko.toJSON({'questions':this.questions()});
+        //! Remove "targeted" terms here
+        //!? Add name and description (maybe)
+        return( j );
     };
 
     this.targetQuestion = function(i){
@@ -168,39 +173,57 @@ var CodebookManager = function(){
         this.addStyles();
     };
 
-    //Overwrite this method in subclasses!
-    this.initControls = function(){};
+    this.clearQuestions = function(){
+        while( this.questions().length > 0 ){
+            this.questions().pop();
+        }
+    };
 
-    //Overwrite this method in subclasses!
-    this.addStylesToQuestion = function(Q){};
+    this.init = function( csrf_token ){
+        var codebookManager = this;
+        this.initControls();
+
+        //Load the template and knockout model dynamically.
+        var callback_a = $.get("/static/informal/_informalTemplateKO.htm", function(template){
+            $("body").append(template);
+        }, "text");
+
+        //Load the codebook dynamically
+        var callback_b = $.post("/ajax/get-codebook/",
+            {'id': codebook_id, 'csrfmiddlewaretoken': csrf_token },
+            function(response){
+                if( response.status=="success" ){                
+                    codebookManager.loadQuestions(response.codebook.questions);
+
+                    //! For easy debugging:
+                    //codebookManager.initDefaultQuestions(response.codebook.questions);
+                }else{
+                    alert( response.msg );
+                    //! Need error checking for failed responses.
+                }
+            }
+        );
+
+        // This should resolve a possible race condition for loading the codebook.
+        $.when(callback_a, callback_b).then(function(){
+            ko.applyBindings(codebookManager);
+            codebookManager.addStyles();
+            codebookManager.attachControlsToQuestion(0);        
+        });
+    };
 
     this.addStyles = function(){
         var codebookManager = this;
         $("div.questionBox").each(function(i,q){
             codebookManager.addStylesToQuestion($(q));
         });
-        /*
-        if( $("#codebook").attr("tb-codebook-mode") == 'viewer' ){
-            $("div.questionBox").each(function(i,q){
-                //! This ref is very awkward
-                codebookManager.addViewerStylesToQuestion($(q));
-            });
-        }
-        else if ( $("#codebook").attr("tb-codebook-mode") == 'editor' ){
-            $("div.questionBox").each(function(i,q){
-                //! This ref is very awkward
-                codebookManager.addEditorStylesToQuestion($(q));
-            });
-        }
-        */
     };
     
-    this.getCodebookJson = function(){
-        j = ko.toJSON({'questions':this.questions()});
-        //! Remove "targeted" terms here
-        //!? Add name and description (maybe)
-        return( j );
-    };
+    //Overwrite this method in subclasses!
+    this.initControls = function(){};
+
+    //Overwrite this method in subclasses!
+    this.addStylesToQuestion = function(Q){};
 
     //! This method should be moved out to a subclass
     this.addViewerStylesToQuestion = function(Q){
