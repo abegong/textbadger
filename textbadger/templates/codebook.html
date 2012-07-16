@@ -11,6 +11,8 @@ var codebookManager = new CodebookManager()
 codebookManager.initControls = function(){
     var codebookManager = this;
     
+    this.attachControlsToQuestion(0);
+    
     //Activate button controls
 	$('#add_control').click( function(){ codebookManager.addQuestion(); } );
 	$('#del_control').click( function(){ codebookManager.delQuestion(); } );
