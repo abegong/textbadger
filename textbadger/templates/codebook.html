@@ -17,20 +17,29 @@ codebookManager.init = function( codebook_json ){
     //Load the template and knockout model dynamically.
     var callback_a = $.get("/static/informal/_informalTemplateKO.htm", function(template){
         $("body").append(template);
-        ko.applyBindings(codebookManager);
-        codebookManager.addStyles();
-        codebookManager.attachControlsToQuestion(0);
     }, "text");
 
     //Load the codebook dynamically
-    var callback_a = $.post("/ajax/get-codebook/",
+    var callback_b = $.post("/ajax/get-codebook/",
         {'id': codebook_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
-            //! Need error checking for failed responses.
-            codebookManager.loadQuestions(response.codebook.questions);
+            if( response.status=="success" ){                
+                codebookManager.loadQuestions(response.codebook.questions);
+
+                //! For easy debugging:
+                //codebookManager.initDefaultQuestions(response.codebook.questions);
+            }else{
+                //! Need error checking for failed responses.
+            }
         }
     );
-    
+
+    // This should resolve a possible race condition for loading the codebook.
+    $.when(callback_a, callback_b).then(function(){
+        ko.applyBindings(codebookManager);
+        codebookManager.addStyles();
+        codebookManager.attachControlsToQuestion(0);        
+    });
 };
 
 codebookManager.initControls = function(){

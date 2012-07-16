@@ -59,18 +59,9 @@ var CodebookQuestion = function(question_type, var_name, params, targeted) {
     }
 };
 
-/*
-var codebookModel = function(){
-    this.properties = {
-        width: ko.observable(350)
-    };
-    this.questions = ko.observableArray([]);
-    this.target_index = ko.observable(0);
-};
-*/
-
 var CodebookManager = function(){
-    //Main KO observable objects
+    
+    //--- Main KO observable objects ----------------------------------------//
     this.questionTypes = ko.observableArray([
         "Static text",
         "Multiple choice",
@@ -89,11 +80,9 @@ var CodebookManager = function(){
     };
     this.questions = ko.observableArray([]);
     this.target_index = ko.observable(0);
-    
-    
-    //this.codebookModel = new codebookModel();
 
-    //Supporting methods
+    //--- Supporting methods ------------------------------------------------//
+    
     this.loadQuestions = function(Q){
         while( this.questions().length > 0 ){
             this.questions().pop();
@@ -102,6 +91,22 @@ var CodebookManager = function(){
             //console.log(Q[q]);
             this.questions.push( new CodebookQuestion(Q[q].question_type, Q[q].var_name, Q[q].params) );
         };
+    };
+
+    //Create the default question
+    this.initDefaultQuestions = function(){
+        this.loadQuestions([
+            {question_type:"Static text", var_name:"", params:{} },
+            {question_type:"Multiple choice", var_name:"", params:{} },
+            {question_type:"Check all that apply", var_name:"", params:{} },
+            {question_type:"Two-way scale", var_name:"", params:{} },
+            {question_type:"Radio matrix", var_name:"", params:{} },
+            {question_type:"Checkbox matrix", var_name:"", params:{} },
+            {question_type:"Two-way matrix", var_name:"", params:{} },
+            {question_type:"Text box", var_name:"", params:{} },
+            {question_type:"Short essay", var_name:"", params:{} },
+            {question_type:"Text matrix", var_name:"", params:{} }
+        ]);
     };
 
     this.targetQuestion = function(i){
@@ -267,21 +272,5 @@ var CodebookManager = function(){
             });
         });
     };
-
-    /*
-    //Create the default question
-    codebookModel.questions([
-        new cbQuestion("Static text", "", {} ),
-        new cbQuestion("Multiple choice", "", {} ),
-        new cbQuestion("Check all that apply", "", {} ),
-        new cbQuestion("Two-way scale", "", {} ),
-        new cbQuestion("Radio matrix", "", {} ),
-        new cbQuestion("Checkbox matrix", "", {} ),
-        new cbQuestion("Two-way matrix", "", {} ),
-        new cbQuestion("Text box", "", {} ),
-        new cbQuestion("Short essay", "", {} ),
-        new cbQuestion("Text matrix", "", {} )
-    ]);
-    */
 
 };
