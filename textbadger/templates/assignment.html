@@ -5,7 +5,7 @@
 {% include "base/codebook-includes.html" %}
 
 <script type="text/javascript">
-var codebook_id = "{{codebook|mongo_id}}";
+//var codebook_id = "{{codebook|mongo_id}}";
 var codebookManager = new CodebookManager();
 
 codebookManager.initControls = function(){
@@ -58,16 +58,16 @@ codebookManager.addStylesToQuestion = function(Q){
    
 	
 $(function(){
-    var seq_list = {{seq_list}};
+//    var seq_list = ;
     
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 
     //Load collection
-    DocManager.initialize("{{batch.profile.collection_id}}","{{csrf_token}}", seq_list);
+    DocManager.initialize("{{batch.profile.collection_id}}", "{{csrf_token}}", {{seq_list}});
 
     //Load codebook
-    codebookManager.init('{{ batch.profile.codebook_id }}', '{{ csrf_token }}');
+    codebookManager.init("{{ batch.profile.codebook_id }}", "{{ csrf_token }}");
 });
 </script>
 {% endblock %}

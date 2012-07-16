@@ -9,6 +9,8 @@
 var codebookManager = new CodebookManager()
 
 codebookManager.initControls = function(){
+    var codebookManager = this;
+    
     //Activate button controls
 	$('#add_control').click( function(){ codebookManager.addQuestion(); } );
 	$('#del_control').click( function(){ codebookManager.delQuestion(); } );
@@ -21,7 +23,7 @@ codebookManager.initControls = function(){
 	    $.post(
             "/ajax/save-codebook/",
             {
-                'parent_id': codebook_id,
+                'parent_id': codebookManager.codebook_id,
                 'questions': codebookManager.getCodebookJson(),
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
@@ -35,6 +37,7 @@ codebookManager.initControls = function(){
 
 codebookManager.addStylesToQuestion = function(Q){
     $(".shim-graph").hide();
+    
     Q
         .unbind('click mouseenter mouseleave')
         .hover( 

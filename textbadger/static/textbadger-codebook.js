@@ -60,6 +60,7 @@ var CodebookQuestion = function(question_type, var_name, params, targeted) {
 };
 
 var CodebookManager = function(){
+    this.codebook_id = '';
     
     //--- Main KO observable objects ----------------------------------------//
     this.questionTypes = ko.observableArray([
@@ -180,6 +181,7 @@ var CodebookManager = function(){
     };
 
     this.init = function( codebook_id, csrf_token ){
+        this.codebook_id = codebook_id;
         var codebookManager = this;
         this.initControls();
 
