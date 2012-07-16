@@ -16,16 +16,8 @@ var DocumentManager = function(){
             {'id': collection_id, 'csrfmiddlewaretoken': csrf_token },
             function(data){
                 self.doc_list = data.documents;
-                if(seq_list){
-                    self.seq_list = seq_list;
-                }else{
-                    //If seq_list isn't specified, create an array of indexes in boring counting order
-                    self.seq_list = new Array(self.doc_list.length);
-                    for( var i=0; i<self.doc_list.length; i++ ){
-                        self.seq_list[i] = i;
-                    }
-                }
-
+                self.initSeqList( seq_list );
+                
                 self.initControls();
                 self.showDocument(0);
             },
@@ -33,6 +25,18 @@ var DocumentManager = function(){
         );
     };
 
+    this.initSeqList = function( seq_list ){
+        if(seq_list){
+            this.seq_list = seq_list;
+        }else{
+            //If seq_list isn't specified, create an array of indexes in boring counting order
+            this.seq_list = new Array(this.doc_list.length);
+            for( var i=0; i < this.doc_list.length; i++ ){
+                this.seq_list[i] = i;
+            }
+        }
+    };
+    
     this.showDocument = function(seq_index){
 		//Update both indexes
 		this.seq_index = seq_index;
@@ -66,6 +70,7 @@ var DocumentManager = function(){
     };
 
     this.init = function( collection_id, csrf_token, seq_list ){
+        console.log(this);
         this.loadDocList( collection_id, csrf_token, seq_list );
     };
     
@@ -76,5 +81,36 @@ var DocumentManager = function(){
     
     this.updateControls = function(){
         //Called after a new document is loaded
+    };
+
+    this.initDefaultNavControls = function(){
+        var self = this;
+        $("#prev-doc-button").click(function(){
+            self.loadPrevDoc();
+            return false;
+        });
+        $("#next-doc-button").click(function(){
+            self.loadNextDoc();
+            return false;
+        });
+        $("#doc-index").change(function(){
+            var x = $(this).val();
+            //! Need to add input validation
+
+            self.seq_index = x;
+            self.showDocument(x)
+        });
+        
+        $("#doc-count").html(self.seq_list.length);
+    };
+        
+    this.updateDefaultNavControls = function(){
+        $("#doc-index").val(this.doc_index+1);
+
+        if( this.seq_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
+        else{ $("#prev-doc-button").removeClass("disabled"); }
+
+        if( this.seq_index == this.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
+        else{ $("#next-doc-button").removeClass("disabled"); }
     };
 };

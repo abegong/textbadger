@@ -6,11 +6,15 @@
 {% include "base/codebook-includes.html" %}
 
 <script type="text/javascript">
+var docManager = new DocumentManager();
 var codebookManager = new CodebookManager();
 var label_list = {{ label_list|safe }};
 
-codebookManager.addStylesToQuestion = function(){
-    var labels = label_list[DocManager.doc_index];
+docManager.initControls = docManager.initDefaultNavControls;
+docManager.updateControls = function(){
+    this.updateDefaultNavControls();
+    
+    var labels = label_list[this.doc_index];
     /*
     console.log("====================================================");
     console.log("label_list");
@@ -54,7 +58,7 @@ codebookManager.addStylesToQuestion = function(){
                 for( j in labels[var_name] ){
                     //console.log(var_name+"\t"+j+"\t:\t"+val+"\t:\t"+labels[var_name][j]);
                     if( labels[var_name][j] == val ){
-                        $shimgraph.append('<img src="/static/tiny-shim-b.gif"></img>');
+                        $shimgraph.append('<img src="/static/img/tiny-shim-b.gif"></img>');
                     }
                 }
             }
@@ -63,6 +67,9 @@ codebookManager.addStylesToQuestion = function(){
                 .next().hide();
         });
     });
+};
+
+codebookManager.addStylesToQuestion = function(){
 };
 
 /*
@@ -136,7 +143,7 @@ $(function(){
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 
-    DocManager.initialize("{{batch.profile.collection_id}}","{{csrf_token}}");
+    docManager.init("{{ batch.profile.collection_id }}", "{{ csrf_token }}");
 
     codebookManager.init("{{ batch.profile.codebook_id }}", "{{ csrf_token }}");
 

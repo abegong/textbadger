@@ -6,36 +6,10 @@
 <script type="text/javascript">
 var docManager = new DocumentManager();
 
-docManager.initControls = function(){
-    var self = this;
-    $("#prev-doc-button").click(function(){
-        self.loadPrevDoc();
-        return false;
-    });
-    $("#next-doc-button").click(function(){
-        self.loadNextDoc();
-        return false;
-    });
-    $("#doc-index").change(function(){
-        var x = $(this).val();
-        //! Need to add input validation
-
-        self.seq_index = x;
-        self.showDocument(x)
-    });
-    
-    $("#doc-count").html(self.seq_list.length);
-};
+docManager.initControls = docManager.initDefaultNavControls;
 
 docManager.updateControls = function(){
-    $("#doc-index").val(this.doc_index+1);
-    $("#docs-remaining").html(this.seq_list.length-this.seq_index);
-
-    if( this.seq_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
-    else{ $("#prev-doc-button").removeClass("disabled"); }
-
-    if( this.seq_index == this.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
-    else{ $("#next-doc-button").removeClass("disabled"); }
+    this.updateDefaultNavControls();
 
     //Update metadata
     var M = this.doc_list[this.doc_index].metadata;
