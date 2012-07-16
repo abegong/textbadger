@@ -184,7 +184,7 @@ var CodebookManager = function(){
         this.initControls();
 
         //Load the template and knockout model dynamically.
-        var callback_a = $.get("/static/informal/_informalTemplateKO.htm", function(template){
+        var callback_a = $.get("/static/_codebookKnockoutTemplate.htm", function(template){
             $("body").append(template);
         }, "text");
 
