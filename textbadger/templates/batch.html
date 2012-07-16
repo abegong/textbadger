@@ -6,6 +6,19 @@
 $(function(){
     //Highlight "shared-rez" in nav bar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
+    
+    $('#update-reliability').click(function(){
+        $.post(
+            "/ajax/update-batch-reliability/",
+            {csrfmiddlewaretoken: '{{ csrf_token }}', batch_id: '{{ batch|mongo_id }}'},
+            function(response){
+                if( response.status == "success" ){
+                }else{
+                    alert( response.msg );
+                }
+            }
+        );
+    });
 });
 </script>
 {% endblock %}
@@ -79,7 +92,7 @@ $(function(){
 
 <!-- Reliability --------------------->
 <div class="rightside">
-  <a class="btn btn-inverse rightside"><i class="icon-refresh"></i> Update reliability</a>
+  <a id="update-reliability" class="btn btn-inverse rightside"><i class="icon-refresh"></i> Update reliability</a>
   <br/>
   <span class="rightside">Last update: 2 hours ago, 457 completed tasks</span>
   <br/>

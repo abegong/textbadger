@@ -54,7 +54,7 @@ urlpatterns = patterns('',
 
     url(r'^ajax/start-batch/$', 'tb_app.views.start_batch'),
 #    url(r'^ajax/update-batch-progress/$', 'tb_app.views.update_batch_progress'),
-#    url(r'^ajax/update-batch-reliability/$', 'tb_app.views.update_batch_reliability'),
+    url(r'^ajax/update-batch-reliability/$', 'tb_app.views.update_batch_reliability'),
 
     url(r'^ajax/submit-batch-code/$', 'tb_app.views.submit_batch_code'),
 

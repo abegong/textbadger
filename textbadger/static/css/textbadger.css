@@ -156,7 +156,10 @@ div.border{
     border-right:5px solid #ccddbb;
     background-color:#ccddbb;
 }
-#codebook .targetQuestion{ border-right:5px solid #669533; background-color:#ccddbb; }
+#codebook .targetQuestion{
+    border-right:5px solid #669533;
+    background-color:#ccddbb;
+}
 
 /*** Formatting for marked up codebook questions ************************************************/
 
@@ -168,12 +171,12 @@ div.border{
 }
 
 #codebook .shim-graph{
-    border: 2px solid green;
+/*    border: 2px solid green; */
     text-align:right;
     line-height:1px;
     /* margin-left:auto; */
     /* width:20px; */
-    display:inline;
+    /*display:inline;*/
 }
 
 #codebook .shim-graph img{

@@ -6,12 +6,21 @@ from bson.objectid import ObjectId
 from pymongo.errors import InvalidId
 
 import csv, re, json, datetime, random
+from collections import defaultdict
 
 def uses_mongo(function):
     def _inner(*args, **kwargs):
         mongo = connections["default"]
         return function(mongo, *args, **kwargs)
     return _inner
+
+class MongoEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        if hasattr(obj, 'isoformat'):
+            return obj.isoformat()
+        return json.JSONEncoder.default(self, obj)
 
 ##############################################################################
 
@@ -376,5 +385,55 @@ def update_batch_progress(id_):
     coll.update({"_id": ObjectId(id_)}, batch)
 #    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
 
-    # Validate response
+
+def kripp_alpha(data):
+    return random.uniform(0,1), None, None
+
+@uses_mongo
+def update_batch_reliability(mongo, batch_id):
+    batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(batch_id)})
+    
+    #Scaffold the reliability object
+    coders = batch["profile"]["coders"]
+    reliability = {
+        #"docs": {},
+        #"coders": dict([(c, {}) for c in coders]),
+        "summary": {},
+    }
+    
+    #Count total and complete document codes
+    code_array = defaultdict(dict)
+    assigned, complete = 0, 0
+    for doc in batch["documents"]:
+        print json.dumps(doc, indent=2, cls=MongoEncoder)
+        for coder in doc["labels"]:
+            answer_set = get_most_recent_answer_set(doc["labels"][coder])
+            for question in answer_set:
+                if doc["index"] in code_array[question]:
+                    code_array[question][doc["index"]].append( answer_set[question] )
+                else:
+                    code_array[question][doc["index"]] = [answer_set[question]]
+#            assigned += 1
+#            reliability["coders"][coder]["assigned"] += 1
+#
+#            if doc["labels"][coder] != []:
+#                complete += 1
+#                reliability["coders"][coder]["complete"] += 1
+
+    #Calculate percentages
+#    for coder in reliability["coders"]:
+#        c = reliability["coders"][coder]
+#        c["percent"] = round(float(100 * c["complete"]) / c["assigned"], 1)
+
+    print json.dumps(code_array, indent=2, cls=MongoEncoder)
+
+    for q in code_array:
+        summary, coders, docs = kripp_alpha(code_array[q])
+        reliability["summary"][q] = summary
+
+    batch["reports"]["reliability"] = reliability
+    print json.dumps(reliability, indent=2, cls=MongoEncoder)
+
+    #coll.update({"_id": ObjectId(id_)}, batch)
+
 

@@ -732,6 +732,16 @@ def export_batch(request, mongo, batch_id):
     return response
 
 @login_required(login_url='/')
+#@uses_mongo
+def update_batch_reliability(request):
+    batch_id = request.POST["batch_id"]
+    
+    models.update_batch_reliability(batch_id)
+
+    return gen_json_response({"status": "failed", "msg": "Method does not fully work yet."})
+
+
+@login_required(login_url='/')
 @uses_mongo
 def test_update_collection_metadata(request, mongo):
     collection_id = '4ff63d5d2fa6cd211b000001'

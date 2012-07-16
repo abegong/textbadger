@@ -54,6 +54,8 @@ docManager.updateControls = function(){
                 $shimgraph = $(g),
                 val = $shimgraph.next().val();
             
+            $shimgraph.html("");
+            
             if( var_name in labels ){
                 for( j in labels[var_name] ){
                     //console.log(var_name+"\t"+j+"\t:\t"+val+"\t:\t"+labels[var_name][j]);
