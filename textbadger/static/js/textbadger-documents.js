@@ -70,7 +70,7 @@ var DocManager = {
             $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\" name=\"key\" placeholder='e.g. \"New York Times op-eds\"' value=\""+m+ "\"><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\"value\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
             elements++;
         }
-        console.log(M)
+        //console.log(M)
         if (!M) {
             console.log("empty");
             $("#edit-metadata").append("<div id = \"" + elements + "\" class=\"control-group\"><input type=\"text\" class=\"input-xlarge\" name=\"key\" placeholder='e.g. \"New York Times op-eds\"' value=\""+m+ "\"><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\"value\" placeholder='e.g. \"New York Times op-eds\"'>"+M[m]+"</textarea><button id=\"delete-"+elements+"\"class=\"btn btn-mini delete\">&times;</button></div></div>");
