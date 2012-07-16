@@ -2,13 +2,10 @@
 {% load tb_app_tags %}
 
 {% block start_scripts %}
-<script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}knockout-2.1.0.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}textbadger-codebook.js" type="text/javascript"></script>
+{% include "base/codebook-includes.html" %}
 
 <script type="text/javascript">
-var codebook_id = "{{codebook|mongo_id}}";
+//var codebook_id = "";
 var codebookManager = new CodebookManager()
 
 codebookManager.initControls = function(){
@@ -19,6 +16,7 @@ codebookManager.initControls = function(){
 	$('#down_control').click( function(){ codebookManager.moveQuestionDown(); } );
     
     //AJAX to save the codebook
+    //! This should be part of CodebookManager
     $("#save-codebook").click(function(){
 	    $.post(
             "/ajax/save-codebook/",
@@ -87,7 +85,7 @@ $(function(){
     $('a[href*="/shared-resources/"]').parent().addClass("active");
 
 	//Load the codebook on initialization.
-    codebookManager.init('{{ csrf_token }}');
+    codebookManager.init('{{ codebook|mongo_id }}', '{{ csrf_token }}');
 });
 </script>
 {% endblock %}

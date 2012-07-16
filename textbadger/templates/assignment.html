@@ -2,13 +2,13 @@
 {% load tb_app_tags %}
 
 {% block start_scripts %}
-<script src="{{ STATIC_URL }}jquery.tmpl.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}underscore-min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}knockout-1.2.1.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}informal/informalModel.js" type="text/javascript"></script>
+{% include "base/codebook-includes.html" %}
 
 <script type="text/javascript">
-var finalInit = function(){
+var codebook_id = "{{codebook|mongo_id}}";
+var codebookManager = new CodebookManager();
+
+codebookManager.initControls = function(){
     //Add hidden csrf token and other hidden fields
 
     //Add the "submit" button.
@@ -18,7 +18,7 @@ var finalInit = function(){
             //! Make sure codebook is filled in
             //! (Optional) warning before submitting incomplete forms
             
-            //Submite the result
+            //Submit the result
             $.post(
                 "/ajax/submit-batch-code/",
                 $('#codebook-form').serialize(),
@@ -38,8 +38,24 @@ var finalInit = function(){
                 }
             );
         });
-
 }
+
+
+codebookManager.addStylesToQuestion = function(Q){
+    $(".shim-graph").hide();
+    
+    $(".clickable", Q)
+        .mouseover( function(){ $(this).addClass('mouseoverCell'); })
+        .mouseout( function(){ $(this).removeClass('mouseoverCell'); })
+        .click( function(event){
+            if( event.target.type != 'checkbox' && event.target.type != 'radio' ){
+                x = $('input', this).trigger("click");
+            }
+        });
+};
+   
+
+/*
 var launchInformalViewer = function( codebook_json ){
     codebookModel.loadQuestions(codebook_json);
     
@@ -52,7 +68,8 @@ var launchInformalViewer = function( codebook_json ){
     }, "text");
 
 };
-	
+*/
+
 	
 $(function(){
     var seq_list = {{seq_list}};
@@ -64,6 +81,8 @@ $(function(){
     DocManager.initialize("{{batch.profile.collection_id}}","{{csrf_token}}", seq_list);
 
     //Load codebook
+    codebookManager.init('{{ batch.profile.codebook_id }}', '{{ csrf_token }}');
+    /*
 	$.post("/ajax/get-codebook/",
         {'id': "{{ batch.profile.codebook_id }}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         function(response){
@@ -71,6 +90,7 @@ $(function(){
             launchInformalViewer(response.codebook.questions);       
         }
     );
+    */
 });
 </script>
 {% endblock %}

@@ -179,7 +179,7 @@ var CodebookManager = function(){
         }
     };
 
-    this.init = function( csrf_token ){
+    this.init = function( codebook_id, csrf_token ){
         var codebookManager = this;
         this.initControls();
 
@@ -225,20 +225,6 @@ var CodebookManager = function(){
     //Overwrite this method in subclasses!
     this.addStylesToQuestion = function(Q){};
 
-    //! This method should be moved out to a subclass
-    this.addViewerStylesToQuestion = function(Q){
-        $(".shim-graph").hide();
-        
-        $(".clickable", Q)
-            .mouseover( function(){ $(this).addClass('mouseoverCell'); })
-            .mouseout( function(){ $(this).removeClass('mouseoverCell'); })
-            .click( function(event){
-                if( event.target.type != 'checkbox' && event.target.type != 'radio' ){
-                    x = $('input', this).trigger("click");
-                }
-            });
-    };
-   
     //! This method should be moved out to a subclass
     this.markupCodebook = function(labels){
         var labels = label_list[DocManager.doc_index];
