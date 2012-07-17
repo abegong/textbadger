@@ -7,6 +7,7 @@ from pymongo.errors import InvalidId
 
 import csv, re, json, datetime, random
 from collections import defaultdict
+import tb_app.kripp as kripp
 
 def uses_mongo(function):
     def _inner(*args, **kwargs):
@@ -385,54 +386,71 @@ def update_batch_progress(id_):
     coll.update({"_id": ObjectId(id_)}, batch)
 #    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
 
+def convert_batch_to_2d_arrays(batch, col_names, missing_val=None):
+    #2-D arrays wrapped in a dictionary : [question][document][coder]
+    coder_index = dict([(c,i) for i,c in enumerate(batch["profile"]["coders"])])
+    
+    #Create empty arrays
+    code_arrays = dict([ (n, [[missing_val for c in coder_index] for d in batch["documents"]]) for n in col_names])
+    
+    for i, doc in enumerate(batch["documents"]):
+        for coder in doc["labels"]:
+            answer_set = get_most_recent_answer_set(doc["labels"][coder])
+#            print answer_set
+            for question in answer_set:
+                if question in code_arrays.keys():
+                    try:
+#                        print '\t'.join([str(x) for x in [question, i, coder, answer_set[question]]])
+                        code_arrays[question][i][coder_index[coder]] = float(answer_set[question])
+                    except ValueError:
+                        code_arrays[question][i][coder_index[coder]] = missing_val
 
-def kripp_alpha(data):
-    return random.uniform(0,1), None, None
+    return code_arrays
+    
+
 
 @uses_mongo
 def update_batch_reliability(mongo, batch_id):
     batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(batch_id)})
+    codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])})
     
+    col_names = gen_codebook_column_names(codebook)
+    col_names.remove("created_at")
+
+    data_arrays = convert_batch_to_2d_arrays(batch, col_names)
+
+    summary = {}
+    for q in data_arrays:
+        print q, '\t', kripp.alpha(data_arrays[q], kripp.interval)
+        summary[q] = kripp.alpha(data_arrays[q], kripp.interval)
+    
+    #print json.dumps(code_array, indent=2, cls=MongoEncoder)
+
     #Scaffold the reliability object
-    coders = batch["profile"]["coders"]
     reliability = {
         #"docs": {},
         #"coders": dict([(c, {}) for c in coders]),
-        "summary": {},
+        "summary": summary,
     }
     
-    #Count total and complete document codes
-    code_array = defaultdict(dict)
-    assigned, complete = 0, 0
-    for doc in batch["documents"]:
-        print json.dumps(doc, indent=2, cls=MongoEncoder)
-        for coder in doc["labels"]:
-            answer_set = get_most_recent_answer_set(doc["labels"][coder])
-            for question in answer_set:
-                if doc["index"] in code_array[question]:
-                    code_array[question][doc["index"]].append( answer_set[question] )
-                else:
-                    code_array[question][doc["index"]] = [answer_set[question]]
-#            assigned += 1
-#            reliability["coders"][coder]["assigned"] += 1
-#
-#            if doc["labels"][coder] != []:
-#                complete += 1
-#                reliability["coders"][coder]["complete"] += 1
+    
+#    #Create confusion matrices
+#    for question in code_array:
+#        conf_m = get_confusion_matrix(code_array[question])
+#        reliability["summary"][question] = kripp_alpha( conf_m )
 
-    #Calculate percentages
-#    for coder in reliability["coders"]:
-#        c = reliability["coders"][coder]
-#        c["percent"] = round(float(100 * c["complete"]) / c["assigned"], 1)
 
-    print json.dumps(code_array, indent=2, cls=MongoEncoder)
-
-    for q in code_array:
-        summary, coders, docs = kripp_alpha(code_array[q])
-        reliability["summary"][q] = summary
+#    for q in code_array:
+#        summary, coders, docs = kripp_alpha(code_array[q])
+#        reliability["summary"][q] = summary
 
     batch["reports"]["reliability"] = reliability
     print json.dumps(reliability, indent=2, cls=MongoEncoder)
+
+    mongo.get_collection("tb_app_batch").update(
+        { "_id": ObjectId(batch_id) },
+        { "$set": { 'reports.reliability' : reliability}}
+    )
 
     #coll.update({"_id": ObjectId(id_)}, batch)
 

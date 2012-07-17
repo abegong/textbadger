@@ -668,7 +668,8 @@ def submit_batch_code(request, mongo):
         if re.match("Q[0-9]+", field):
             labels[field] = request.POST[field]
 
-    #print labels
+    print labels
+    print doc_index, batch_id
 
     #!? Validate responses against codebook questions
     #! Not for now.  This would be medium hard.
@@ -732,15 +733,17 @@ def export_batch(request, mongo, batch_id):
     return response
 
 @login_required(login_url='/')
-#@uses_mongo
 def update_batch_reliability(request):
     batch_id = request.POST["batch_id"]
+    
+    #! Validate batch_id
     
     models.update_batch_reliability(batch_id)
 
     return gen_json_response({"status": "failed", "msg": "Method does not fully work yet."})
 
 
+"""
 @login_required(login_url='/')
 @uses_mongo
 def test_update_collection_metadata(request, mongo):
@@ -759,4 +762,4 @@ def test_update_collection_metadata(request, mongo):
     )
 
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
-
+"""
