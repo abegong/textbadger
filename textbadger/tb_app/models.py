@@ -440,13 +440,14 @@ def update_batch_reliability(mongo, batch_id):
 
     #Build the reliability object
     reliability = {
+        "updated_at" : datetime.datetime.now(),
         #"docs": {},
         #"coders": dict([(c, {}) for c in coders]),
         "summary": summary,
     }
     
     #batch["reports"]["reliability"] = reliability
-    print json.dumps(reliability, indent=2, cls=MongoEncoder)
+    #print json.dumps(reliability, indent=2, cls=MongoEncoder)
 
     mongo.get_collection("tb_app_batch").update(
         { "_id": ObjectId(batch_id) },

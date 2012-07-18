@@ -94,7 +94,7 @@ $(function(){
 <div class="rightside">
   <a id="update-reliability" class="btn btn-primary rightside"><i class="icon-refresh"></i> Update reliability</a>
   <br/>
-  <span class="rightside">Last update: 2 hours ago, 457 completed tasks</span>
+  <span class="rightside">Last updated: {{ batch.reports.reliability.updated_at|date_diff }}</span>
   <br/>
   <br/>
 </div>

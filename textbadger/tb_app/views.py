@@ -165,8 +165,11 @@ def collection(request, mongo, id_):
 @uses_mongo
 def batch(request, mongo, id_):
     models.update_batch_progress(id_)
+    models.update_batch_reliability(id_)
+
     batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1, "documents": 1})
     #print json.dumps(batch, cls=MongoEncoder, indent=1)
+    
 
     result = {
         'batch': batch,
@@ -249,7 +252,7 @@ def review(request, mongo, batch_index):
     return render_to_response('review.html', result, context_instance=RequestContext(request))
 
 
-### Ajax calls ###############################################################
+### Ajax calls #################################################################
 
 def signin(request):
     try:
@@ -645,10 +648,6 @@ def start_batch(request, mongo):
 
 
 @login_required(login_url='/')
-def update_batch_reliability(request):
-    return gen_json_response({"status": "failed", "msg": "Nope.  You can't do this yet."})
-
-@login_required(login_url='/')
 @uses_mongo
 def submit_batch_code(request, mongo):
     #Get indexes
@@ -668,8 +667,8 @@ def submit_batch_code(request, mongo):
         if re.match("Q[0-9]+", field):
             labels[field] = request.POST[field]
 
-    print labels
-    print doc_index, batch_id
+    #print labels
+    #print doc_index, batch_id
 
     #!? Validate responses against codebook questions
     #! Not for now.  This would be medium hard.
