@@ -92,7 +92,7 @@ $(function(){
 
 <!-- Reliability --------------------->
 <div class="rightside">
-  <a id="update-reliability" class="btn btn-inverse rightside"><i class="icon-refresh"></i> Update reliability</a>
+  <a id="update-reliability" class="btn btn-primary rightside"><i class="icon-refresh"></i> Update reliability</a>
   <br/>
   <span class="rightside">Last update: 2 hours ago, 457 completed tasks</span>
   <br/>
@@ -111,18 +111,23 @@ $(function(){
     </tr>
   </thead>
   <tbody>
+    {% for question,value in batch.reports.reliability.summary.items %}
     <tr>
-      <td>1</td>
-      <td>How many jelly beans are...</td>
-      <td>Interval</td>
+      <td>{{forloop.counter}}</td>
+      <td>{{question}}</td>
+      <td>{{value.metric}}</td>
       <td><div class="progress progress-striped progress-warning" style="margin:0px">
-          <div class="bar" style="width: 23%;"></div>
+          <div class="bar" style="width: {{value.alpha_100|floatformat:1}}%;"></div>
       </div></td>
+      <td>{{value.alpha|floatformat:4}}</td>
+    </tr>
+  {% endfor %}
 <!--
       <td class="progress progress-striped progress-warning">
           <div class="bar" style="width: 23%;"></div>
       </td>
 -->
+<!--
       <td>.2347</td>
     </tr>
     <tr>
@@ -132,11 +137,6 @@ $(function(){
       <td><div class="progress progress-striped progress-success" style="margin:0px">
           <div class="bar" style="width: 85%;"></div>
       </div></td>
-<!--
-      <td class="progress progress-striped progress-success">
-          <div class="bar" style="width: 85%;"></div>
-      </td>
--->
       <td>.8576</td>
     </tr>
     <tr>
@@ -146,14 +146,9 @@ $(function(){
       <td><div class="progress progress-striped" style="margin:0px">
           <div class="bar" style="width: 57%;"></div>
       </div></td>
-<!--
-      <td class="progress progress-striped progress-active">
-          <div class="bar" style="width: 57%;"></div>
-      </td>
--->
       <td>.5744</td>
     </tr>
-
+-->
   {% for p in batches %}
     <tr>
       <td>{{ p.profile.name }}</td>

@@ -740,7 +740,7 @@ def update_batch_reliability(request):
     
     models.update_batch_reliability(batch_id)
 
-    return gen_json_response({"status": "failed", "msg": "Method does not fully work yet."})
+    return gen_json_response({"status": "success", "msg": "Successfully updated reliability report."})
 
 
 """

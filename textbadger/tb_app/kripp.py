@@ -61,6 +61,9 @@ def alpha(data, metric=nominal):
                 De += sum(metric(code_a, code_b) for code_a in doc_1 for code_b in doc_2)
     De /= float(n*(n-1))
 
+    if De == 0:
+        return None
+
     Do = 0.
     for doc in data:
         if len(doc) > 1:
@@ -68,10 +71,11 @@ def alpha(data, metric=nominal):
             Do += D_doc/float(len(doc)-1)
     Do /= float(n)
 
-    #print n
-    #print Do
-    #print De
-    #print 1.-Do/De
+#    print '.'*80
+#    print n
+#    print Do
+#    print De
+#    print 1.-Do/De
 
     return 1.-Do/De
 

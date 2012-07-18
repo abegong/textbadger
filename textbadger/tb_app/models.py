@@ -194,9 +194,7 @@ def get_revised_codebook_json(parent_codebook, question_json):
     return J
 
 def gen_codebook_column_names(codebook):
-    """
-        codebook should be in json format, hot off a mongodb query
-    """
+    """codebook should be in json format, hot off a mongodb query"""
     
     col_names = ['created_at']
     
@@ -419,39 +417,38 @@ def update_batch_reliability(mongo, batch_id):
 
     data_arrays = convert_batch_to_2d_arrays(batch, col_names)
 
-    summary = {}
-    for q in data_arrays:
-        print q, '\t', kripp.alpha(data_arrays[q], kripp.interval)
-        summary[q] = kripp.alpha(data_arrays[q], kripp.interval)
+    print col_names
     
-    #print json.dumps(code_array, indent=2, cls=MongoEncoder)
+    #Build the summary object
+    summary = {}
+    for i,question in enumerate(col_names):
+#        print q, '\t', kripp.alpha(data_arrays[q], kripp.interval)
+        alpha = kripp.alpha(data_arrays[question], kripp.interval)
+        #alpha = random.uniform(-1,1)
+        try:
+            alpha_100 = 100*alpha
+        except TypeError:
+            alpha_100 = None
+            
+        summary[question] = {
+            'alpha': alpha,
+            'alpha_100': alpha_100,
+            'metric': 'interval',
+            'text': '',
+            'variable_name': question,
+        }
 
-    #Scaffold the reliability object
+    #Build the reliability object
     reliability = {
         #"docs": {},
         #"coders": dict([(c, {}) for c in coders]),
         "summary": summary,
     }
     
-    
-#    #Create confusion matrices
-#    for question in code_array:
-#        conf_m = get_confusion_matrix(code_array[question])
-#        reliability["summary"][question] = kripp_alpha( conf_m )
-
-
-#    for q in code_array:
-#        summary, coders, docs = kripp_alpha(code_array[q])
-#        reliability["summary"][q] = summary
-
-    batch["reports"]["reliability"] = reliability
+    #batch["reports"]["reliability"] = reliability
     print json.dumps(reliability, indent=2, cls=MongoEncoder)
 
     mongo.get_collection("tb_app_batch").update(
         { "_id": ObjectId(batch_id) },
         { "$set": { 'reports.reliability' : reliability}}
     )
-
-    #coll.update({"_id": ObjectId(id_)}, batch)
-
-
