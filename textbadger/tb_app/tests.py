@@ -18,7 +18,10 @@ from tb_app import models
 class SimpleTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+        
+        #User.objects.create_superuser('john', 'lennon@thebeatles.com', 'johnpassword')
+        #User.objects.create_superuser('john', 'lennon@thebeatles.com', 'johnpassword')
+        
         self.mongo = connections["default"]
 
     def test_convert_csv_to_bson(self):
@@ -37,9 +40,9 @@ class SimpleTest(TestCase):
         print
         self.client.login(username='john', password='johnpassword')
 
-        url_list = ['/', '/about/', '/my-account/', '/shared-resources/']
-        #!!!!! self.mongo.get_collection("tb_app_collection").find({},{})
-        
+        url_list = ['/', '/about/', '/my-account/', '/shared-resources/', '/administration/']
+        collections = list(self.mongo.get_collection("tb_app_collection").find())
+        print collections 
         for url in url_list:
             print 'Attempting to load url', url
             response = self.client.get(url)
