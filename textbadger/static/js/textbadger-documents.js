@@ -70,7 +70,7 @@ var DocumentManager = function(){
     };
 
     this.init = function( collection_id, csrf_token, seq_list ){
-        console.log(this);
+        //console.log(this);
         this.loadDocList( collection_id, csrf_token, seq_list );
     };
     
