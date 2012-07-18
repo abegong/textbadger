@@ -12,9 +12,9 @@ def dist_metric(function):
 def nominal(a,b):
     return a != b
 
-@dist_metric
-def ordinal(a,b):
-    return a != b
+#@dist_metric
+#def ordinal(a,b):
+#    return a != b
 
 @dist_metric
 def interval(a,b):

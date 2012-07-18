@@ -762,3 +762,14 @@ def test_update_collection_metadata(request, mongo):
 
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
 """
+
+@login_required(login_url='/')
+@uses_mongo
+def variable_tester(request, mongo):
+    codebook = mongo.get_collection("tb_app_codebook").find()[1]
+    result = {
+        'questions': codebook["questions"],
+        'variables': models.get_codebook_variables_from_questions( codebook["questions"] ),
+    }
+
+    return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})

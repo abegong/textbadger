@@ -59,6 +59,7 @@ urlpatterns = patterns('',
     url(r'^ajax/submit-batch-code/$', 'tb_app.views.submit_batch_code'),
 
     #url(r'^tester/$', 'tb_app.views.test_update_collection_metadata'),
+    #url(r'^tester/$', 'tb_app.views.variable_tester'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -155,8 +155,50 @@ def get_default_codebook_questions():
             }
         }
     ]
+    
+def create_new_variable_json(question_index, subquestion_index, variable_name, question_header, subquestion_label, variable_type):
+    return {
+        'question_index': question_index,
+        'subquestion_index': subquestion_index,
+        'variable_name': variable_name,
+        'question_header': question_header,
+        'subquestion_label': subquestion_label,
+        'variable_type': variable_type
+    }
+    
+def get_codebook_variables_from_questions(questions):
+    variables = []
+    
+    for i,q in enumerate(questions):
+        if q["var_name"]:
+            var_name = "_"+q["var_name"]
+        else:
+            var_name = ''
+
+        short_text = q["params"]["header_text"]
+        variable_type = "interval"#q["params"]["variable_type"]
+        
+        if q["question_type"] in ['Static text', 'Multiple choice', 'Check all that apply', 'Two-way scale', 'Text box', 'Short essay']:
+            variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+var_name, short_text, "", variable_type) )
+
+        elif q["question_type"] in ['Radio matrix', 'Checkbox matrix']:
+            for j,p in enumerate(q["params"]["question_array"]):
+                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p, variable_type) )
+
+        elif q["question_type"] == 'Two-way matrix':
+            for j,p in enumerate(q["params"]["left_statements"]):
+                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p+"/"+q["params"]["right_statements"][j], variable_type) )
+
+        elif q["question_type"] == 'Text matrix':
+            for j,p in enumerate(q["params"]["answer_array"]):
+                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p, variable_type) )
+    
+    return variables
 
 def get_new_codebook_json(name, description):
+    questions = get_default_codebook_questions()
+    variables = get_codebook_variables_from_questions(questions)
+    
     #Construct object
     return {
         'profile' : {
@@ -168,12 +210,13 @@ def get_new_codebook_json(name, description):
             'batches' : [],
             'parent' : None,
         },
-        'questions' : get_default_codebook_questions()
+        'questions' : questions,
+        'variables' : variables,
     }
 
 
 def get_revised_codebook_json(parent_codebook, question_json):
-    print parent_codebook
+    #print parent_codebook
     J = {
         'profile' : {
             'description' : parent_codebook['profile']["description"],
@@ -184,6 +227,7 @@ def get_revised_codebook_json(parent_codebook, question_json):
             'parent' : parent_codebook['_id'],#ObjectId(parent_id),
         },
         'questions' : question_json,
+        'variables' : get_codebook_variables_from_questions(question_json),
     }
 
     if parent_codebook['profile']["children"]:
@@ -299,13 +343,13 @@ def get_batch_documents_json(coders, pct_overlap, shuffle, collection):
     return documents
 
 def get_new_batch_json(count, coders, pct_overlap, shuffle, codebook, collection):
-    #construct profile object
+    #Construct profile object
     profile = {
         'name': 'Batch ' + str(count + 1),
         'description': collection["profile"]["name"][:20] + " * " + codebook["profile"]["name"][:20] + " (" + str(codebook["profile"]["version"]) + ")",
         'index': count + 1,
-        'codebook_id': codebook['_id'],#codebook_id,
-        'collection_id': collection['_id'],#collection_id,
+        'codebook_id': codebook['_id'],
+        'collection_id': collection['_id'],
         'coders': coders,
         'pct_overlap': pct_overlap,
         'shuffle': shuffle,
@@ -338,12 +382,10 @@ def get_most_recent_answer_set(answer_set_list):
 
     return most_recent_answer_set
 
-#! This is the only method that includes a DB connection right now.
-#! Eventually, we might want to do more like this
-def update_batch_progress(id_):
+@uses_mongo
+def update_batch_progress(mongo, id_):
     #Connect to the DB
-    conn = connections["default"]
-    coll = conn.get_collection("tb_app_batch")
+    coll = mongo.get_collection("tb_app_batch")
 
     #Retrieve the batch
     batch = coll.find_one({"_id": ObjectId(id_)})
@@ -405,8 +447,6 @@ def convert_batch_to_2d_arrays(batch, col_names, missing_val=None):
 
     return code_arrays
     
-
-
 @uses_mongo
 def update_batch_reliability(mongo, batch_id):
     batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(batch_id)})

@@ -1,4 +1,6 @@
 === On deck ===
+* Batches page
+    *** Debug export
 
 === To do ===
 
@@ -6,15 +8,11 @@
     *** Add slider question_type
     ** Hide shimgraphs after codebook edit
     ** Add popups/modals for instructions
+    ** Add variable type to codebook page
+    *** Create "variables" subobject
     * Delete button fails in firefox
     * Shorten text-area to text input for integer values
 	* Check informal for cross-browser compatibility
-
-* Batches page
-    *** Get reliability reports working
-    *** Add krippendorff's alpha functions: nominal, ordinal, interval
-    *** Add variable type to codebook page
-    * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
 
 * Assignments page
     *** Add termination logic for empty batches.
@@ -28,14 +26,13 @@
     *** Clear shim-graphs on new doc load
 
 *** Technical debt ***
-    * Add @admin_required decorator
     * Document database code
     ** Document import formats for collections
     * Add "type" field to questions in codebooks
     * Implement "has_batches" functionality in codebooks
     * Add fixtures for codebooks, batches, and assignments
     *** Figure out triggers for update-batch-progress-report (create models method; call whenever we need to get the object)
-    
+    * Add @admin_required decorator    
 
 * Home page
     * "Sign in" should be more prominent
@@ -56,6 +53,11 @@
 * Collections page
     ** Make metadata editable
     * Get import json working
+
+* Batches page
+    ** Add krippendorff's alpha functions: ordinal
+    ** Use variable types in reliability calculation
+    * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
     
 
 === Punt ===
@@ -161,6 +163,8 @@
 * Batch page
     *** Get "export results" button working
     *** Get "review results" button working    
+    *** Get reliability reports working
+    *** Add krippendorff's alpha functions: nominal, interval
 
 * Review page
     * Scaffold
