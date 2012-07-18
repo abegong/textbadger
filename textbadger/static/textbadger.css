@@ -1,0 +1,188 @@
+footer{
+    text-align:center;
+}
+
+div.nav-collapse{
+/*    float:right; */
+/*    display:hidden; */
+}
+
+textarea { 
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+
+/*** Interactive stuff *******************************************************/
+
+div.faq-q{
+    margin:10px;
+    margin-left:40px;
+    cursor:pointer;
+    font-size:18px;
+    line-height:26px;
+}
+
+.rightside{
+    margin-left:5px;
+    float:right;
+    text-align:right;
+}
+
+ul.big-list li{
+    font-size:18px;
+    margin-top:10px;
+}
+
+div#faq p strong{
+    cursor:pointer;
+}
+
+#sign-in-btn{
+    cursor:pointer;
+}
+
+tr[href]{
+    cursor:pointer;
+}
+
+.tb-hilight{
+    background-color:#ddd;
+}
+
+
+/*** table.wide formatting ***************************************************/
+table.wide{
+    width:100%;
+}
+
+table.wide th{
+    text-align:left;
+    padding:5px 10px 5px 10px;
+}
+
+table.wide td{
+    padding:5px 10px 5px 10px;
+}
+
+
+/*** Misc ***/
+
+div.shaded{
+    background-color: #888;
+}
+
+div.border{
+    border: 2px solid #bbb;
+}
+
+
+/*** modal fomatting *********************************************************/
+.modal{
+    display:none;
+}
+
+@import "bootstrap";
+.modal-backdrop {
+  opacity:0.4;
+}
+
+/* Formatting for codebook controls *******************************************************/
+
+#sequenceControls{text-align:center; margin-top:6px; margin-bottom:4px;}
+#questionControls {text-align:left;}
+
+/*** Formatting for codebook questions ************************************************/
+
+#codebook {
+	/*padding:10px;*/
+	text-align:left;
+	border:2px solid #fff;
+	border-radius:10px;
+}
+
+#codebook .questionBox{
+	margin:0px;
+	padding:0px;
+	border-right:5px solid #f5f5f5;
+	position: relative;
+}
+#codebook .questionContent{
+	margin:3px;
+	padding:7px;
+}
+#codebook .questionBox p{ margin:0px 20px 0px 20px; }
+#codebook .questionBox input[type=text]{ margin-left:20px; }
+#codebook .questionBox textarea{ margin-left:20px; }
+#codebook .questionBox table.matrixQuestion input[type=text]{
+	width:90%;
+	margin-left:0px;
+}
+
+#codebook .headerText,.answerText,.questionText{ width:95%; padding:0px; } /*background-color:#eee; */
+#codebook .answerText{
+/*    padding-left:22px;*/
+/*    cursor:pointer; */
+}
+#codebook .mouseoverCell{ background-color:#ccddbb; }
+
+#codebook .clickable{
+    cursor: pointer;
+}
+
+#codebook table.matrixQuestion{
+	border-collapse:collapse;
+	width: 100%;
+	margin:auto;
+}
+
+#codebook tr.even{
+	background-color:#e8e8e8;
+}
+#codebook tr.odd{
+	background-color:##f5f5f5;
+}
+
+#codebook td{
+	text-align:center;
+	padding:5px;
+    height:100%;
+}
+#codebook .textCol{
+	text-align:left;
+	/* padding-left:15px; */
+	/*text-indent:20px;*/
+}
+#codebook .leftCol{	text-align:right; }
+#codebook .rightCol{ text-align:left; }
+
+/*** Formatting for editable codebook questions ************************************************/
+
+#codebook .hoverQuestion{
+    border-right:5px solid #ccddbb;
+    background-color:#ccddbb;
+}
+#codebook .targetQuestion{ border-right:5px solid #669533; background-color:#ccddbb; }
+
+/*** Formatting for marked up codebook questions ************************************************/
+
+#codebook .questionMarkup{
+	position:absolute;
+	padding-top: 5px;
+	padding-bottom : 5px;
+/*	border:5px solid #669533; */
+}
+
+#codebook .shim-graph{
+    border: 2px solid green;
+    text-align:right;
+    line-height:1px;
+    /* margin-left:auto; */
+    /* width:20px; */
+    display:inline;
+}
+
+#codebook .shim-graph img{
+    padding:1px;
+}
