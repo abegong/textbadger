@@ -2,7 +2,10 @@
 {% load tb_app_tags %}
 
 {% block start_scripts %}
+<script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+<!--<script src="{{ STATIC_URL }}js/dataTables.percent.js"></script>-->
 <script type="text/javascript">
+/*
 function filterAll(){
     $("table#codebooks tbody tr").fadeIn();
 }
@@ -33,27 +36,80 @@ $(function(){
     $("table#codebooks tbody tr:not(.current)").hide();
     $("table#codebooks tbody tr.current").show();
 });
+*/
+
+$(document).ready(function() {
+     $('#codebooks').dataTable( {
+       "oLanguage": {
+         "sLengthMenu": 'Display <select>'+
+           '<option value="10">10</option>'+
+           '<option value="20">20</option>'+
+           '<option value="30">30</option>'+
+           '<option value="40">40</option>'+
+           '<option value="50">50</option>'+
+           '<option value="-1">All</option>'+
+           '</select> records'
+       },
+       "bFilter": false,
+       "sDom": 't<"bottom"ipls>'
+     } );
+   } );
+
+$(document).ready(function() {
+     $('#collections').dataTable( {
+       "oLanguage": {
+         "sLengthMenu": 'Display <select>'+
+           '<option value="10">10</option>'+
+           '<option value="20">20</option>'+
+           '<option value="30">30</option>'+
+           '<option value="40">40</option>'+
+           '<option value="50">50</option>'+
+           '<option value="-1">All</option>'+
+           '</select> records'
+       },
+       "bFilter": false,
+       "sDom": 't<"bottom"ipls>'
+     } );
+   } );
+
+
+
+$(document).ready(function() {
+     $('#batches').dataTable( {
+       "oLanguage": {
+         "sLengthMenu": 'Display <select>'+
+           '<option value="10">10</option>'+
+           '<option value="20">20</option>'+
+           '<option value="30">30</option>'+
+           '<option value="40">40</option>'+
+           '<option value="50">50</option>'+
+           '<option value="-1">All</option>'+
+           '</select> records'
+       },
+       "bFilter": false,
+       "sDom": 't<"bottom"ipls>'
+     } );
+   } );
+
 </script>
 {% endblock %}
 
 {% block content %}
 
-<!-- Codebooks --------------------->
+<!-- Codebooks -->
 <a class="btn btn-primary open-modal rightside">Create codebook</a>
 {% include "forms/create-codebook.htm" %}
 
-<h3 id="codebooks">Codebooks</h3>
+<h3>Codebooks</h3>
 <table id="codebooks" class="well wide">
   {% if codebooks %}
   <thead>
     <tr>
       <th>Name</th>
       <th>Version</th>
-      <th>Created
-<!--        <span class="badge rightside"><i class="icon-chevron-up"></i></span> -->
-      </th>
-      <th>
-        <span class="dropdown" id="filter-menu">
+      <th>Created</th>
+      <th>State</th>
+       <!-- <span class="dropdown" id="filter-menu">
           <a class="dropdown-toggle btn" data-toggle="dropdown" href="#filter-menu">
             Filter
             <b class="caret"></b>
@@ -63,7 +119,7 @@ $(function(){
             <li><a id="filterCurrent" href="#">Current versions only</a></li>
             <li><a id="filterBatch" href="#">With batches only</a></li>
           </ul>
-        </span>
+        </span>-->
       </th>
     </tr>
   </thead>
@@ -90,14 +146,14 @@ $(function(){
 <br/><br/>
 
 
-<!-- Collections --------------------->
+<!-- Collections -->
 <a class="btn btn-primary open-modal rightside">Create collection</a>
 {% include "forms/create-collection.htm" %}
 <a class="btn btn-primary open-modal rightside">Upload collection</a>
 {% include "forms/upload-collection.htm" %}
 
-<h3 id="collections">Collections</h3>
-  <table class="well wide">
+<h3>Collections</h3>
+  <table class="well wide" id="collections">
   {% if collections %}
   <thead>
     <tr>
@@ -126,18 +182,18 @@ $(function(){
   </table>
 <br/><br/>
 
-<!-- Batches ------------------------->
+<!-- Batches -->
 <a class="btn btn-primary open-modal rightside">Start a batch</a>
 {% include "forms/start-batch.htm" %}
 
-<h3 id="batches">Batches</h3>
-<table class="well wide">
+<h3>Batches</h3>
+<table class="well wide" id="batches">
   {% if batches %}
   <thead>
     <tr>
       <th>Project</th>
-      <th>Progress</th>
       <th></th>
+      <th>Progress</th>
     </tr>
   </thead>
   {% endif %}
@@ -148,7 +204,7 @@ $(function(){
       <td><div class="progress progress-striped" style="margin:0px">
           <div class="bar" style="width: {{ p.reports.progress.summary.percent }}%;"></div>
       </div></td>
-      <td>{{ p.reports.progress.summary.percent }}%</td>
+      <td>{{ p.reports.progress.summary.percent }}</td>
     </tr>
   {% empty %}
     <tr>
@@ -164,4 +220,3 @@ $(function(){
 
 
 {% endblock %}
-

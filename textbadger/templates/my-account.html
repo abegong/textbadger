@@ -1,25 +1,44 @@
 {% extends "base/single-column.html" %}
 
 {% block start_scripts %}
+<script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
 $(function(){
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 });
+
+
+$(document).ready(function() {
+     $('#assignments').dataTable( {
+       "oLanguage": {
+         "sLengthMenu": 'Display <select>'+
+           '<option value="10">10</option>'+
+           '<option value="20">20</option>'+
+           '<option value="30">30</option>'+
+           '<option value="40">40</option>'+
+           '<option value="50">50</option>'+
+           '<option value="-1">All</option>'+
+           '</select> records'
+       },
+       "bFilter": false,
+       "sDom": 't<"bottom"ipls>'
+     } );
+   } );
 </script>
 {% endblock %}
 
 {% block content %}
-<!-- Assignments --------------------->
+<!-- Assignments -->
 <h3>My Assignments</h3>
-  <table class="well wide">
+  <table id="assignments" class="well wide">
   {% if assignments %}
   <thead>
     <tr>
       <th>Assignment</th>
-      <th style="width:30%">Progress</th>
-      <th></th>
-      <th></th>
+      <th style="width:30%"></th>
+      <th>Progress</th>
+      <th>Progress</th>
     </tr>
   </thead>
   {% endif %}
@@ -31,7 +50,7 @@ $(function(){
           <div class="bar" style="width: {{a.progress.percent}}%;"></div>
       </div></td>
       <td>{{a.progress.complete}}/{{a.progress.assigned}}</td>
-      <td>{{a.progress.percent}}%</td>
+      <td>{{a.progress.percent}}</td>
     </tr>
   {% empty %}
     <tr>
@@ -45,7 +64,7 @@ $(function(){
 <br/><br/>
 
 
-<!-- Account Settings --------------------->
+<!-- Account Settings -->
 <a class="btn btn-primary open-modal rightside">Edit account settings</a>
 {% include "forms/edit-account.htm" %}
 <h3>Account settings</h3>

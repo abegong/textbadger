@@ -182,3 +182,15 @@ div.border{
 #codebook .shim-graph img{
     padding:1px;
 }
+
+#codebooks_previous {
+    margin-right: 3px;
+}
+
+#codebooks_next {
+    margin-left: 3px;
+}
+
+.progress {
+    width: 100px;
+}
