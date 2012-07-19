@@ -27,7 +27,8 @@ urlpatterns = patterns('',
     url(r'^batch/(.*)/$', 'textbadger.tb_app.views.batch' ),
 
     #Assignment and review page(s)
-    url(r'^assignment/(.*)/(.*)$', 'textbadger.tb_app.views.assignment' ),
+    #url(r'^assignment/(.*)/(.*)$', 'textbadger.tb_app.views.assignment' ),
+    url(r'^assignment/(.*)/$', 'textbadger.tb_app.views.assignment' ),
     url(r'^review/(.*)/$', 'textbadger.tb_app.views.review' ),
 
     #!?    url(r'^game/$', 'textbadger.tb_app.views.game' ),

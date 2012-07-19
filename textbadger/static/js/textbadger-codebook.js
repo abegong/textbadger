@@ -28,6 +28,7 @@ var CodebookQuestion = function(question_type, var_name, params, targeted) {
     };
 
     this.changeQuestionType = function( T ){
+        console.log(T);
         this.question_type(T);
         this.fillInMissingParams();
     };
@@ -36,7 +37,11 @@ var CodebookQuestion = function(question_type, var_name, params, targeted) {
         this.var_name( N.replace(/\W+/g,'') );
     };
 
-    this.updateParams = function( p, A ){ this.params[p]( A ); };
+    this.updateParams = function( p, A ){ 
+        console.log(p);
+        console.log(A);
+        this.params[p]( A );
+    };
 
     //Initialize
     this.question_type = ko.observable(question_type);

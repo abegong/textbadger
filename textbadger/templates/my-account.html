@@ -1,4 +1,5 @@
 {% extends "base/single-column.html" %}
+{% load tb_app_tags %}
 
 {% block start_scripts %}
 <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
@@ -44,13 +45,14 @@ $(document).ready(function() {
   {% endif %}
   <tbody>
   {% for a in assignments %}
-    <tr <a href="/assignment/{{ a.batch.index }}/{{ user.username }}">
-      <td><a href="/assignment/{{ a.batch.index }}/{{ user.username }}">{{ a.batch.name }}</a></td>
+    <tr <a href="/assignment/{{ a.profile.index }}/">
+      <td><a href="/assignment/{{ a.profile.index }}/">{{ a.profile.name }} : {{a.profile.description}}</a></td>
       <td><div class="progress progress-striped progress-success" style="margin:0px">
-          <div class="bar" style="width: {{a.progress.percent}}%;"></div>
+          <div class="bar" style="width: {{a.reports.progress.summary.percent}}%;"></div>
       </div></td>
-      <td>{{a.progress.complete}}/{{a.progress.assigned}}</td>
-      <td>{{a.progress.percent}}</td>
+      <td>{{a.reports.progress.summary.complete}}/{{a.reports.progress.summary.assigned}}</td>
+      <td>{{a.reports.progress.summary.percent}}</td>
+
     </tr>
   {% empty %}
     <tr>

@@ -73,7 +73,7 @@ $(document).ready(function() {
     {% if user.username in batch.profile.coders %}
     <li>
         <span class="divider"> :: </span>
-        <a href="/assignment/{{ batch.profile.index }}/{{ user.username }}">Go to assignment page</a></span>
+        <a href="/assignment/{{ batch.profile.index }}/">Go to assignment page</a></span>
     </li>
     {% endif %}
 </ul>
@@ -88,8 +88,8 @@ $(document).ready(function() {
 <h2>{{batch.profile.name}}</h2>
 
 <dl class="dl-horizontal">
-    <dt>Codebook</dt><dd>{{ codebook.profile.name }} ({{ codebook.profile.version }})&nbsp;</dd>
-    <dt>Collection</dt><dd>{{ collection.profile.name }}&nbsp;</dd>
+    <dt>Codebook</dt><dd><a href="/codebook/{{ batch.profile.codebook_id }}">{{ codebook.profile.name }} ({{ codebook.profile.version }})</a>&nbsp;</dd>
+    <dt>Collection</dt><dd><a href="/collection/{{ batch.profile.collection_id }}">{{ collection.profile.name }}</a>&nbsp;</dd>
     <dt>Documents</dt><dd>{{ collection.profile.size }}&nbsp;</dd>
     <dt>Overlap</dt><dd>{{ batch.profile.pct_overlap }}%</dd>
     <dt>Shuffle</dt><dd>{{ batch.profile.shuffle }}&nbsp;</dd>
@@ -99,7 +99,7 @@ $(document).ready(function() {
 
 <!-- Assignments -------------------->
 {% if user.username in batch.profile.coders %}
-<a class="btn btn-primary rightside" href="/assignment/{{ batch.profile.index }}/{{ user.username }}">Work on my tasks &raquo;</a>
+<a class="btn btn-primary rightside" href="/assignment/{{ batch.profile.index }}">Work on my tasks &raquo;</a>
 {% endif %}
 <h3>Assignments</h3>
 <table class="well wide" id="assignments">

@@ -92,21 +92,11 @@ def my_account(request, mongo):
         fields={"profile": 1, "reports.progress": 1}, sort=[('profile.created_at', 1)]
     ))
 
-    #Find all the batches that have assignments for this use, and repackage the object for templates
-    #This is sort of a hassle.  Something we would *not* have to do in cyclone.
-    assignments = []
     for b in batches:
-        assignments.append({
-            "batch": {
-                "name": b["profile"]["name"],
-                "index": b["profile"]["index"],
-                "_id": b["_id"],
-            },
-            "progress": b["reports"]["progress"]["coders"][request.user.username],
-        })
-
+        models.update_batch_progress(b["_id"])
+    
     result = {
-        'assignments': assignments,
+        'assignments': batches,
     }
 
     return render_to_response('my-account.html', result, context_instance=RequestContext(request))
@@ -119,6 +109,7 @@ def shared_resources(request, mongo):
 
     for b in batches:
         models.update_batch_progress(b["_id"])
+        models.update_batch_reliability(b["_id"])
 
 #    print list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
@@ -188,7 +179,7 @@ def batch(request, mongo, id_):
 
 @login_required(login_url='/')
 @uses_mongo
-def assignment(request, mongo, batch_index, username):
+def assignment(request, mongo, batch_index):#, username):
     query = {"profile.index": int(batch_index)}
     #fields =  { "profile": 1, "documents.labels."+username: [], "documents.index": 1 }
 
@@ -200,8 +191,8 @@ def assignment(request, mongo, batch_index, username):
 
     seq_list = []
     for d in docs:
-        if username in d["labels"]:
-            if d["labels"][username] == []:
+        if request.user.username in d["labels"]:
+            if d["labels"][request.user.username] == []:
                 seq_list.append(d["index"])
     #print doc_list
 
@@ -761,7 +752,6 @@ def test_update_collection_metadata(request, mongo):
     )
 
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
-"""
 
 @login_required(login_url='/')
 @uses_mongo
@@ -773,3 +763,4 @@ def variable_tester(request, mongo):
     }
 
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
+"""
