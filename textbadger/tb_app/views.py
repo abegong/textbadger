@@ -92,6 +92,7 @@ def my_account(request, mongo):
         fields={"profile": 1, "reports.progress": 1}, sort=[('profile.created_at', 1)]
     ))
 
+    """
     #Find all the batches that have assignments for this use, and repackage the object for templates
     #This is sort of a hassle.  Something we would *not* have to do in cyclone.
     assignments = []
@@ -107,6 +108,11 @@ def my_account(request, mongo):
 
     result = {
         'assignments': assignments,
+    }
+    """
+    
+    result = {
+        'assignments': batches,
     }
 
     return render_to_response('my-account.html', result, context_instance=RequestContext(request))
@@ -188,7 +194,7 @@ def batch(request, mongo, id_):
 
 @login_required(login_url='/')
 @uses_mongo
-def assignment(request, mongo, batch_index, username):
+def assignment(request, mongo, batch_index):#, username):
     query = {"profile.index": int(batch_index)}
     #fields =  { "profile": 1, "documents.labels."+username: [], "documents.index": 1 }
 
@@ -200,8 +206,8 @@ def assignment(request, mongo, batch_index, username):
 
     seq_list = []
     for d in docs:
-        if username in d["labels"]:
-            if d["labels"][username] == []:
+        if request.user.username in d["labels"]:
+            if d["labels"][request.user.username] == []:
                 seq_list.append(d["index"])
     #print doc_list
 
@@ -761,7 +767,6 @@ def test_update_collection_metadata(request, mongo):
     )
 
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
-"""
 
 @login_required(login_url='/')
 @uses_mongo
@@ -773,3 +778,4 @@ def variable_tester(request, mongo):
     }
 
     return gen_json_response({"status": "success", "msg": "Added code to batch.", "r":result})
+"""
