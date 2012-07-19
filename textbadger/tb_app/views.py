@@ -92,24 +92,8 @@ def my_account(request, mongo):
         fields={"profile": 1, "reports.progress": 1}, sort=[('profile.created_at', 1)]
     ))
 
-    """
-    #Find all the batches that have assignments for this use, and repackage the object for templates
-    #This is sort of a hassle.  Something we would *not* have to do in cyclone.
-    assignments = []
     for b in batches:
-        assignments.append({
-            "batch": {
-                "name": b["profile"]["name"],
-                "index": b["profile"]["index"],
-                "_id": b["_id"],
-            },
-            "progress": b["reports"]["progress"]["coders"][request.user.username],
-        })
-
-    result = {
-        'assignments': assignments,
-    }
-    """
+        models.update_batch_progress(b["_id"])
     
     result = {
         'assignments': batches,
@@ -125,6 +109,7 @@ def shared_resources(request, mongo):
 
     for b in batches:
         models.update_batch_progress(b["_id"])
+        models.update_batch_reliability(b["_id"])
 
 #    print list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
