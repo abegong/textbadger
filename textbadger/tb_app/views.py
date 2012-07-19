@@ -89,7 +89,7 @@ def uses_mongo(function):
 def my_account(request, mongo):
     batches = list(mongo.get_collection("tb_app_batch").find(
         {"profile.coders": {"$in": [request.user.username]}},
-        fields={"profile": 1, "reports.progress": 1},
+        fields={"profile": 1, "reports.progress": 1}, sort=[('profile.created_at', 1)]
     ))
 
     #Find all the batches that have assignments for this use, and repackage the object for templates
@@ -115,7 +115,7 @@ def my_account(request, mongo):
 @login_required(login_url='/')
 @uses_mongo
 def shared_resources(request, mongo):
-    batches = list(mongo.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('created_at', 1)]))
+    batches = list(mongo.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('profile.created_at', 1)]))
 
     for b in batches:
         models.update_batch_progress(b["_id"])
