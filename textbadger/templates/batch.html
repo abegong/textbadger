@@ -51,8 +51,8 @@ $(function(){
 <h2>{{batch.profile.name}}</h2>
 
 <dl class="dl-horizontal">
-    <dt>Codebook</dt><dd>{{ codebook.profile.name }} ({{ codebook.profile.version }})&nbsp;</dd>
-    <dt>Collection</dt><dd>{{ collection.profile.name }}&nbsp;</dd>
+    <dt>Codebook</dt><dd><a href="/codebook/{{ batch.profile.codebook_id }}">{{ codebook.profile.name }} ({{ codebook.profile.version }})</a>&nbsp;</dd>
+    <dt>Collection</dt><dd><a href="/collection/{{ batch.profile.collection_id }}">{{ collection.profile.name }}</a>&nbsp;</dd>
     <dt>Documents</dt><dd>{{ collection.profile.size }}&nbsp;</dd>
     <dt>Overlap</dt><dd>{{ batch.profile.pct_overlap }}%</dd>
     <dt>Shuffle</dt><dd>{{ batch.profile.shuffle }}&nbsp;</dd>

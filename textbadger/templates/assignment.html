@@ -58,7 +58,13 @@ codebookManager.addStylesToQuestion = function(Q){
         .mouseout( function(){ $(this).removeClass('mouseoverCell'); })
         .click( function(event){
             if( event.target.type != 'checkbox' && event.target.type != 'radio' ){
-                x = $('input', this).trigger("click");
+                var y = $('input', this);
+                var x = y.attr("checked");
+                console.log(y);
+                console.log(x);
+                console.log(!x);
+                $('input', this).attr("checked", !x);
+                //$('input', this).trigger("click");
             }
         });
 };
