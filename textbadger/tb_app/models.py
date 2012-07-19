@@ -57,7 +57,7 @@ def convert_document_csv_to_bson(csv_text):
     documents_json = []
 
     #http://lethain.com/handling-very-large-csv-and-xml-files-in-python/
-    print csv.field_size_limit()
+    #print csv.field_size_limit()
     csv.field_size_limit(1000000)
     
     #For each row in the collection
@@ -300,7 +300,7 @@ def gen_col_index_from_col_names(col_names):
 
 def gen_csv_column_from_batch_labels(labels, col_index):
     csv_col = [None for i in range(len(col_index))]
-    print labels
+    #print labels
     for q in labels:
         csv_col[col_index[q]] = labels[q]
     return csv_col
@@ -457,7 +457,7 @@ def update_batch_reliability(mongo, batch_id):
 
     data_arrays = convert_batch_to_2d_arrays(batch, col_names)
 
-    print col_names
+    #print col_names
     
     #Build the summary object
     summary = {}
