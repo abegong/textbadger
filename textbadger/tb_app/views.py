@@ -94,7 +94,7 @@ def my_account(request, mongo):
 
     for b in batches:
         models.update_batch_progress(b["_id"])
-    
+
     result = {
         'assignments': batches,
     }
@@ -160,7 +160,7 @@ def batch(request, mongo, id_):
 
     batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(id_)}, fields={"profile": 1, "reports": 1, "documents": 1})
     #print json.dumps(batch, cls=MongoEncoder, indent=1)
-    
+
 
     result = {
         'batch': batch,
@@ -421,7 +421,7 @@ def create_collection(request, mongo):
 
     J = models.create_collection_json(name, description, collections)
     #print json.dumps(J, cls=MongoEncoder, indent=2)
-    
+
     #return gen_json_response({"status": "failed", "msg": "Can't do this yet."})
     mongo.get_collection("tb_app_collection").insert(J)
 
@@ -498,6 +498,7 @@ def update_meta_data(request, mongo):
     )
 
         return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
+
 
 @login_required(login_url='/')
 @uses_mongo
@@ -725,9 +726,9 @@ def export_batch(request, mongo, batch_id):
 @login_required(login_url='/')
 def update_batch_reliability(request):
     batch_id = request.POST["batch_id"]
-    
+
     #! Validate batch_id
-    
+
     models.update_batch_reliability(batch_id)
 
     return gen_json_response({"status": "success", "msg": "Successfully updated reliability report."})
