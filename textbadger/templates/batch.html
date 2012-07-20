@@ -2,11 +2,13 @@
 {% load tb_app_tags %}
 
 {% block start_scripts %}
+<script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+
 <script type="text/javascript">
 $(function(){
     //Highlight "shared-rez" in nav bar
     $('a[href*="/shared-resources/"]').parent().addClass("active");
-    
+
     $('#update-reliability').click(function(){
         $.post(
             "/ajax/update-batch-reliability/",
@@ -20,6 +22,41 @@ $(function(){
         );
     });
 });
+
+$(document).ready(function() {
+     $('#assignments').dataTable( {
+       "oLanguage": {
+         "sLengthMenu": 'Display <select>'+
+           '<option value="10">10</option>'+
+           '<option value="20">20</option>'+
+           '<option value="30">30</option>'+
+           '<option value="40">40</option>'+
+           '<option value="50">50</option>'+
+           '<option value="-1">All</option>'+
+           '</select> records'
+       },
+       "bFilter": false,
+       "sDom": 't<"bottom"ipls>'
+     } );
+   } );
+
+$(document).ready(function() {
+     $('#reliability').dataTable( {
+       "oLanguage": {
+         "sLengthMenu": 'Display <select>'+
+           '<option value="10">10</option>'+
+           '<option value="20">20</option>'+
+           '<option value="30">30</option>'+
+           '<option value="40">40</option>'+
+           '<option value="50">50</option>'+
+           '<option value="-1">All</option>'+
+           '</select> records'
+       },
+       "bFilter": false,
+       "sDom": 't<"bottom"ipls>'
+     } );
+   } );
+
 </script>
 {% endblock %}
 
@@ -45,7 +82,7 @@ $(function(){
 
 
 {% block content %}
-<!-- Overview --------------------->
+<!-- Overview -------------------->
 <a class="btn btn-primary rightside" href="/review/{{ batch.profile.index }}/">Review results &raquo;</a>
 <a class="btn btn-primary rightside" href="/batch/{{ batch|mongo_id }}/export/"><i class="icon-download"></i> Export results</a>
 <h2>{{batch.profile.name}}</h2>
@@ -60,18 +97,18 @@ $(function(){
 </dl>
 <br/>
 
-<!-- Assignments --------------------->
+<!-- Assignments -------------------->
 {% if user.username in batch.profile.coders %}
 <a class="btn btn-primary rightside" href="/assignment/{{ batch.profile.index }}">Work on my tasks &raquo;</a>
 {% endif %}
 <h3>Assignments</h3>
-<table class="well wide">
+<table class="well wide" id="assignments">
   <thead>
     <tr>
       <th>Name</th>
       <th>Progress</th>
       <th style="width: 40%"></th>
-      <th></th>
+      <th>Progress</th>
     </tr>
   </thead>
   <tbody>
@@ -80,7 +117,7 @@ $(function(){
       <td>{{ coder }}</td>
       <td>{{ value.complete }}/{{ value.assigned }}</td>
       <td><div class="progress progress-striped" style="margin:0px">
-          <div class="bar" style="width: {{ value.percent }}%;"></div>
+          <div class="bar" style="width: {{ value.percent }};"></div>
       </div></td>
       <td>{{ value.percent }}%</td>
     </tr>
@@ -90,7 +127,7 @@ $(function(){
 <br/><br/>
 
 
-<!-- Reliability --------------------->
+<!-- Reliability -------------------->
 <div class="rightside">
   <a id="update-reliability" class="btn btn-primary rightside"><i class="icon-refresh"></i> Update reliability</a>
   <br/>
@@ -100,14 +137,14 @@ $(function(){
 </div>
 <h3>Reliability</h3>
 
-<table class="well wide">
+<table class="well wide" id="reliability">
   <thead>
     <tr>
       <th>#</th>
       <th>Question</th>
       <th>Type</th>
-      <th style="width:20%">Reliability</th>
-      <th></th>
+      <th style="width:20%"></th>
+      <th>Reliability</th>
     </tr>
   </thead>
   <tbody>
