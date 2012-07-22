@@ -106,7 +106,7 @@ $(function(){
 
 {% block control %}
 <form id="codebook-form">
-    <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }" tb-codebook-mode="viewer"></div>
+    <div id="codebook" data-bind="template: { name: 'question-template', foreach: questions }"></div>
     {% csrf_token %}
     <input id='batch-id-hidden' type='hidden' name='batch_id' value='{{ batch|mongo_id }}'></input>
     <input id='doc-index-hidden' type='hidden' name='doc_index' value='0'></input>

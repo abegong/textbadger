@@ -165,7 +165,10 @@ def create_new_variable_json(question_index, subquestion_index, variable_name, q
         'subquestion_label': subquestion_label,
         'variable_type': variable_type
     }
-    
+
+#! As the code is written, this method is never invoked.
+#! Using the variables field would help clean up the code in a bunch of places
+#!  * reliability checking / csv export / table generation on the batch page
 def get_codebook_variables_from_questions(questions):
     variables = []
     

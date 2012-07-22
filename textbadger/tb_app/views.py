@@ -14,8 +14,6 @@ from django.db import connections
 from bson.objectid import ObjectId
 from pymongo.errors import InvalidId
 
-#from tb_app.models import Codebook, Collection, Batch
-#from tb_app.models import convert_csv_to_bson
 from tb_app import models
 
 
@@ -48,32 +46,6 @@ def gen_json_response(result):
 def sluggify(string):
     ustring = unicode.decode(string).lower()
     return re.sub(r'\W+','-',ustring)
-
-'''
-from django.core.exceptions import PermissionDenied
-
-def superuser_only(function):
-    """
-    Limit view to superusers only.
-    Usage:
-    --------------------------------------------------------------------------
-    @superuser_only
-    def my_view(request):
-        ...
-    --------------------------------------------------------------------------
-    or in urls:
-    --------------------------------------------------------------------------
-    urlpatterns = patterns('',
-        (r'^foobar/(.*)', is_staff(my_view)),
-    )
-    --------------------------------------------------------------------------
-    """
-    def _inner(request, *args, **kwargs):
-        if not request.user.is_superuser:
-            raise PermissionDenied
-        return function(request, *args, **kwargs)
-    return _inner
-'''
 
 def uses_mongo(function):
     def _inner(request, *args, **kwargs):
@@ -181,11 +153,6 @@ def batch(request, mongo, id_):
 @uses_mongo
 def assignment(request, mongo, batch_index):#, username):
     query = {"profile.index": int(batch_index)}
-    #fields =  { "profile": 1, "documents.labels."+username: [], "documents.index": 1 }
-
-    #print query
-    #print fields
-
     batch = mongo.get_collection("tb_app_batch").find_one(query, {"profile": 1})
     docs = mongo.get_collection("tb_app_batch").find_one(query, {"documents": 1})["documents"]
 
@@ -694,13 +661,13 @@ def export_batch(request, mongo, batch_id):
     col_index = models.gen_col_index_from_col_names(col_names)
 
     #Generate filename
-    filename = sluggify(collection["profile"]["name"])+"-"+datetime.datetime.now().strftime("%Y-%M-%d-%H-%M-%S")+".csv"
+    filename = sluggify(batch["profile"]["name"])+"-"+datetime.datetime.now().strftime("%Y-%M-%d-%H-%M-%S")+".csv"
 
     #Begin constructing a response
     #response = HttpResponse(mimetype='text')
 
     response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = 'attachment; filename='+filename+'.csv'
+    response['Content-Disposition'] = 'attachment; filename='+filename
     writer = csv.writer(response)
 
     #Generate and write column headers
@@ -714,7 +681,7 @@ def export_batch(request, mongo, batch_id):
         for coder in doc["labels"]:
             answer_set = models.get_most_recent_answer_set(doc["labels"][coder])
             if answer_set != {} or include_empty_rows:
-                row = [i, coder]
+                row = [i+1, coder]
                 if include_doc_content:
                     row += [collection["documents"][i]["content"]]
                 row += models.gen_csv_column_from_batch_labels(answer_set, col_index)
