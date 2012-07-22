@@ -1,15 +1,11 @@
 === On deck ===
-* Batches page
-    *** Debug export
 
 === To do ===
 
 * Codebook page
-    *** Add slider question_type
-    ** Hide shimgraphs after codebook edit
+    ** Add slider question_type
     ** Add popups/modals for instructions
-    ** Add variable type to codebook page
-    *** Create "variables" subobject
+    ** Add variable_type to codebook page
     * Delete button fails in firefox
     * Shorten text-area to text input for integer values
 	* Check informal for cross-browser compatibility
@@ -23,16 +19,12 @@
 * Review page
     *** Add answer details on rollover
     *** Make shim-graphs work for text fields
-    *** Clear shim-graphs on new doc load
 
 *** Technical debt ***
     * Document database code
     ** Document import formats for collections
     * Add "type" field to questions in codebooks
     * Implement "has_batches" functionality in codebooks
-    * Add fixtures for codebooks, batches, and assignments
-    *** Figure out triggers for update-batch-progress-report (create models method; call whenever we need to get the object)
-    * Add @admin_required decorator    
 
 * Home page
     * "Sign in" should be more prominent
@@ -63,6 +55,7 @@
 === Punt ===
 * Suppress ?next= part of login_required decorator
 * Set off batches visually on shared-rez page
+* Add @admin_required decorator    
 
 === Done ===
 * Get the welcome page up and running again
@@ -139,6 +132,8 @@
 	** Add "Edit collection info" button
     *** Add header to codebook controls "Sequence"; move to 2nd position.
     * Make codebooks printable    
+    ** Hide shimgraphs after codebook edit
+    *** Create "variables" subobject
 
 * Collection page
     *** Show metadata
@@ -165,9 +160,11 @@
     *** Get "review results" button working    
     *** Get reliability reports working
     *** Add krippendorff's alpha functions: nominal, interval
+    *** Debug export
 
 * Review page
     * Scaffold
+    *** Clear shim-graphs on new doc load
 
 * Add @mongo_connection decorator
 * Add "profile" fields to codebooks, collections, and batches
@@ -178,3 +175,5 @@
     ** Document expected objects, methods, and internal logic of codebookManager
 ** Refactor docManger
     ** Document expected objects, methods, and internal logic of docManager
+* Add fixtures for codebooks, batches, and assignments
+*** Figure out triggers for update-batch-progress-report (create models method; call whenever we need to get the object)
