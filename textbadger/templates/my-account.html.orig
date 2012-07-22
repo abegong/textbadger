@@ -1,0 +1,86 @@
+{% extends "base/single-column.html" %}
+{% load tb_app_tags %}
+
+{% block start_scripts %}
+<script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    //Highlight "my-account" in nav bar
+    $('a[href*="/my-account/"]').parent().addClass("active");
+});
+
+
+$(document).ready(function() {
+     $('#assignments').dataTable( {
+       "oLanguage": {
+         "sLengthMenu": 'Display <select>'+
+           '<option value="10">10</option>'+
+           '<option value="20">20</option>'+
+           '<option value="30">30</option>'+
+           '<option value="40">40</option>'+
+           '<option value="50">50</option>'+
+           '<option value="-1">All</option>'+
+           '</select> records'
+       },
+       "bFilter": false,
+       "sDom": 't<"bottom"ipls>'
+     } );
+   } );
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Assignments -->
+<h3>My Assignments</h3>
+  <table id="assignments" class="well wide">
+  {% if assignments %}
+  <thead>
+    <tr>
+      <th>Assignment</th>
+      <th style="width:30%"></th>
+      <th>Progress</th>
+      <th>Progress</th>
+    </tr>
+  </thead>
+  {% endif %}
+  <tbody>
+  {% for a in assignments %}
+    <tr <a href="/assignment/{{ a.profile.index }}/">
+      <td><a href="/assignment/{{ a.profile.index }}/">{{ a.profile.name }} : {{a.profile.description}}</a></td>
+      <td><div class="progress progress-striped progress-success" style="margin:0px">
+          <div class="bar" style="width: {{a.reports.progress.summary.percent}}%;"></div>
+      </div></td>
+<<<<<<< HEAD
+      <td>{{a.progress.complete}}/{{a.progress.assigned}}</td>
+      <td>{{a.progress.percent}}</td>
+=======
+      <td>{{a.reports.progress.summary.complete}}/{{a.reports.progress.summary.assigned}}</td>
+      <td>{{a.reports.progress.summary.percent}}%</td>
+>>>>>>> ff3c3c5e6e707950e1f4fd73d73a9025d9e93d81
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan=4><br/>You don't have any coding assignments yet.<br/><br/>
+<!--        <a href="/assignment/1">temp-link: "/assignment/1"</a> -->
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+<br/><br/>
+
+
+<!-- Account Settings -->
+<a class="btn btn-primary open-modal rightside">Edit account settings</a>
+{% include "forms/edit-account.htm" %}
+<h3>Account settings</h3>
+<dl class="dl-horizontal">
+    <dt>username</dt><dd>{{user.username}}&nbsp;</dd>
+    <dt>first name</dt><dd>{{user.first_name}}&nbsp;</dd>
+    <dt>last name</dt><dd>{{user.last_name}}&nbsp;</dd>
+    <dt>email</dt><dd>{{user.email}}&nbsp;</dd>
+</dl>
+{% endblock %}
+
+{% block footer_columns %}{% endblock %}
+

@@ -1,6 +1,6 @@
 /*
 * Manager document-related data and DOM manipulation.
-* 
+*
 * Usage: TBD...
 */
 var DocumentManager = function(){
@@ -17,7 +17,7 @@ var DocumentManager = function(){
             function(data){
                 self.doc_list = data.documents;
                 self.initSeqList( seq_list );
-                
+
                 self.initControls();
                 self.showDocument(0);
             },
@@ -36,7 +36,7 @@ var DocumentManager = function(){
             }
         }
     };
-    
+
     this.showDocument = function(seq_index){
 		//Update both indexes
 		this.seq_index = seq_index;
@@ -56,10 +56,10 @@ var DocumentManager = function(){
 */
 
     this.loadPrevDoc = function(){
-	    if( this.seq_index > 0 ){
-		    this.showDocument( this.seq_index-1 );
-	    }
-	    return( false );
+        if( this.seq_index > 0 ){
+            this.showDocument( this.seq_index-1 );
+        }
+        return( false );
     };
 
     this.loadNextDoc = function(){
@@ -73,12 +73,12 @@ var DocumentManager = function(){
         //console.log(this);
         this.loadDocList( collection_id, csrf_token, seq_list );
     };
-    
+
     //Overwrite these functions...
     this.initControls = function(){
         //Called once at startup
     };
-    
+
     this.updateControls = function(){
         //Called after a new document is loaded
     };
@@ -100,10 +100,10 @@ var DocumentManager = function(){
             self.seq_index = x;
             self.showDocument(x)
         });
-        
+
         $("#doc-count").html(self.seq_list.length);
     };
-        
+
     this.updateDefaultNavControls = function(){
         $("#doc-index").val(this.doc_index+1);
 

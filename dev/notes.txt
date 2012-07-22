@@ -1,4 +1,8 @@
 
+=== 2012/07/20 ===
+    Using Datatables for jQuery to manage tables, gives us pagination and sorting on single and multiple columns (shift click secondary columns). Percents seem to give it trouble, but that can be alleviated via custom sort plugins. Alternatives include TinySort, PicNet Table Filter, Tablesorter, ang jQuery Powertable.
+
+
 === 2012/06/16 ===
     Installing django-nonrel from github:
     pip install git+https://github.com/django-nonrel/django-nonrel.git
