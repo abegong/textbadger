@@ -39,7 +39,7 @@ $(function(){
 */
 
 $(document).ready(function() {
-     $('#codebooks').dataTable( {
+     $('#codebooks, #collections').dataTable( {//, #batches').dataTable( {
        "oLanguage": {
          "sLengthMenu": 'Display <select>'+
            '<option value="10">10</option>'+
@@ -53,43 +53,7 @@ $(document).ready(function() {
        "bFilter": false,
        "sDom": 't<"bottom"ipls>'
      } );
-   } );
-
-$(document).ready(function() {
-     $('#collections').dataTable( {
-       "oLanguage": {
-         "sLengthMenu": 'Display <select>'+
-           '<option value="10">10</option>'+
-           '<option value="20">20</option>'+
-           '<option value="30">30</option>'+
-           '<option value="40">40</option>'+
-           '<option value="50">50</option>'+
-           '<option value="-1">All</option>'+
-           '</select> records'
-       },
-       "bFilter": false,
-       "sDom": 't<"bottom"ipls>'
-     } );
-   } );
-
-
-
-$(document).ready(function() {
-     $('#batches').dataTable( {
-       "oLanguage": {
-         "sLengthMenu": 'Display <select>'+
-           '<option value="10">10</option>'+
-           '<option value="20">20</option>'+
-           '<option value="30">30</option>'+
-           '<option value="40">40</option>'+
-           '<option value="50">50</option>'+
-           '<option value="-1">All</option>'+
-           '</select> records'
-       },
-       "bFilter": false,
-       "sDom": 't<"bottom"ipls>'
-     } );
-   } );
+});
 
 </script>
 {% endblock %}
