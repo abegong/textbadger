@@ -15,5 +15,5 @@
     * Ref for civilometer: Mongo BSON syntax is in loadfixtures.py
 
 
-    * Assignments indiv progress bars aren't working.
-    * My-account progress bars are wrong
+    * Assignments indiv progress bars aren't working. -- Fixed
+    * my-account progress bars are wrong.

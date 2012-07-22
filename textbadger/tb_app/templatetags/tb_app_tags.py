@@ -1,7 +1,6 @@
 from django import template
 register = template.Library()
 
-
 @register.filter("mongo_id")
 def mongo_id(value):
     # Retrieve _id value
@@ -16,8 +15,7 @@ from django import template
 from django.utils.translation import ungettext, ugettext as _
 import datetime
 
-
-@register.filter
+@register.filter("date_diff")
 def date_diff(d):
     now = datetime.datetime.now()
     today = datetime.datetime(now.year, now.month, now.day)
@@ -56,3 +54,10 @@ def date_diff(d):
 
     return _('%(number)d %(type)s ago') % \
         {'number': count, 'type': name(count)}
+
+
+
+@register.simple_tag()#takes_context = True)
+def personal_report_field(report, coder, field):
+    # Return value
+    return report["coders"][coder][field]

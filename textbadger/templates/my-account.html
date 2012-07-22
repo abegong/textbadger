@@ -39,7 +39,7 @@ $(document).ready(function() {
       <th>Assignment</th>
       <th style="width:30%"></th>
       <th>Progress</th>
-      <th>Progress</th>
+      <th>Size</th>
     </tr>
   </thead>
   {% endif %}
@@ -48,10 +48,10 @@ $(document).ready(function() {
     <tr <a href="/assignment/{{ a.profile.index }}/">
       <td><a href="/assignment/{{ a.profile.index }}/">{{ a.profile.name }} : {{a.profile.description}}</a></td>
       <td><div class="progress progress-striped progress-success" style="margin:0px">
-          <div class="bar" style="width: {{a.reports.progress.summary.percent}}%;"></div>
+          <div class="bar" style="width: {% personal_report_field a.reports.progress user.username 'percent' %}%;"></div>
       </div></td>
-      <td>{{a.reports.progress.summary.complete}}/{{a.reports.progress.summary.assigned}}</td>
-      <td>{{a.reports.progress.summary.percent}}</td>
+      <td>{% personal_report_field a.reports.progress user.username "percent" %}</td>
+      <td>{% personal_report_field a.reports.progress user.username "complete" %}/{% personal_report_field a.reports.progress user.username "assigned" %}</td>
 
     </tr>
   {% empty %}
