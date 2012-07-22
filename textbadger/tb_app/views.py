@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect  # 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 
-import json, re, datetime, csv
+import json, re, datetime, csv, random
 from collections import defaultdict
 
 from django.contrib.auth.models import User
@@ -161,6 +161,11 @@ def assignment(request, mongo, batch_index):#, username):
         if request.user.username in d["labels"]:
             if d["labels"][request.user.username] == []:
                 seq_list.append(d["index"])
+        
+    print batch["profile"]["shuffle"]
+    if batch["profile"]["shuffle"]:
+        print "bang!"
+        random.shuffle( seq_list )
     #print doc_list
 
     result = {'batch': batch, 'seq_list': seq_list}
@@ -672,7 +677,7 @@ def export_batch(request, mongo, batch_id):
     writer = csv.writer(response)
 
     #Generate and write column headers
-    header = ['index', 'username']
+    header = ['index', 'doc_index', 'username']
     if include_doc_content:
         header += ['document']
     header += col_names
@@ -682,7 +687,7 @@ def export_batch(request, mongo, batch_id):
         for coder in doc["labels"]:
             answer_set = models.get_most_recent_answer_set(doc["labels"][coder])
             if answer_set != {} or include_empty_rows:
-                row = [i+1, coder]
+                row = [i+1, doc["index"], coder]
                 if include_doc_content:
                     row += [collection["documents"][i]["content"]]
                 row += models.gen_csv_column_from_batch_labels(answer_set, col_index)

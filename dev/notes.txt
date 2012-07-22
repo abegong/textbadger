@@ -9,3 +9,11 @@
 
 
     http://stackoverflow.com/questions/6086852/how-to-fix-the-django-sites-table
+
+=== 2012/07/21 ===
+    * DataTables crash when tables are empty (loadfixtures with empty-fixture) to see.
+    * Ref for civilometer: Mongo BSON syntax is in loadfixtures.py
+
+
+    * Assignments indiv progress bars aren't working.
+    * My-account progress bars are wrong
