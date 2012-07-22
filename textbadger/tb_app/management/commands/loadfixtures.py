@@ -32,9 +32,16 @@ class Command(management.BaseCommand):
         conn[db_name]['tb_app_batch'].ensure_index('profile.index', unique=True)
         #Ensuring indexes *within* subelements is not possible
 
+        if len(args) > 0:
+            subdirectory = args[0] + "/"
+            print 'Selected fixtures subdirectory', args[0]
+        else:
+            subdirectory = ""
+
         #Get all fixtures
-        print 'Loading fixtures from', settings.PROJECT_PATH+'/fixtures/*'
-        fixtures = glob.glob(settings.PROJECT_PATH+'/fixtures/*.json')
+        fixture_path = settings.PROJECT_PATH+'/fixtures/'+subdirectory
+        print 'Loading fixtures from', fixture_path+'*'
+        fixtures = glob.glob(fixture_path+'*.json')
 
         for f in fixtures:
             name = f.split('/')[-1].split('.')[0]
