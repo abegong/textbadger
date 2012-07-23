@@ -636,6 +636,7 @@ def submit_batch_code(request, mongo):
 
     #!? Validate responses against codebook questions
     #! Not for now.  This would be medium hard.
+    #! Would be easier using the codebook.variables object...
 
     #Update DB
     coll = mongo.get_collection("tb_app_batch")
