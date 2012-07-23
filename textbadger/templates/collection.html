@@ -26,7 +26,7 @@ docManager.updateControls = function(){
         $("#edit-metadata").html("<div class=\"control-group\"><input type=\"text\" class=\"input-xlarge\" name=\"key\" placeholder='e.g. \"New York Times op-eds\"' value=\"\"><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\" name=\"value\" placeholder='e.g. \"New York Times op-eds\"'></textarea><button id=\"delete\"class=\"btn btn-mini\">&times;</button></div></div>");
     }
 
-
+    $("[name=doc-index]").val(this.doc_index);
 
 };
 
@@ -38,6 +38,7 @@ docManager.updateControls = function(){
 
      $("#add").live('click',function () {
             $("#edit-metadata").append("<div class=\"control-group\"><input type=\"text\" name =\"key\"class=\"input-xlarge\"  placeholder='e.g. \"New York Times op-eds\"'><div class=\"controls\"><textarea rows=\"3\" class=\"input-xlarge\"  name=\"value\" placeholder='e.g. \"New York Times op-eds\"'></textarea><button class=\"btn btn-mini delete\">&times;</button></div></div>");
+            return false;
         });
 
 
@@ -94,7 +95,7 @@ $(function(){
 <p>{{ collection.profile.description }}</p>
 
 <hr/>
-<a class="btn btn-inverse open-modal rightside">Edit meta-data</a>
+<a class="btn btn-primary open-modal rightside">Edit meta-data</a>
 {% include "forms/edit-meta-data.htm" %}
 <h4>Document</h4>
 <br/>
