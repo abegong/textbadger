@@ -161,7 +161,7 @@ def assignment(request, mongo, batch_index):#, username):
         if request.user.username in d["labels"]:
             if d["labels"][request.user.username] == []:
                 seq_list.append(d["index"])
-        
+
     print batch["profile"]["shuffle"]
     if batch["profile"]["shuffle"]:
         print "bang!"
@@ -451,25 +451,38 @@ def update_meta_data(request, mongo):
     if request.method == 'POST':
         try:
             q = request.POST
-            id_ = q.get("id_")
+            collection_id = q.get("id_")
             doc_index = q.get("doc-index")
             keys = q.getlist("key")
             values = q.getlist("value")
+            new_metadata = dict(zip(keys, values))
         except MultiValueDictKeyError:
             return gen_json_response({"status": "failed", "msg": "Missing field."})
 
-        coll = mongo.get_collection("tb_app_collection")
-        t_coll = coll.find_one({"id_": ObjectId(id_)}, {"documents.metadata": 1, "documents": {"$slice": [doc_index, 1]}})
+        #coll = mongo.get_collection("tb_app_collection")
+        #meta_coll = coll.find_one({"id_": ObjectId(id_)}, {"documents.metadata": 1, "documents": {"$slice": [doc_index, 1]}})
+        #print meta_coll
+        print "id:" + doc_index
+        mongo.get_collection("tb_app_collection").update(
+        {"_id": ObjectId(collection_id)},
+        {"$set": {'documents.' + str(doc_index) + '.metadata': new_metadata}}
+        )
+
+        result = mongo.get_collection("tb_app_collection").find_one(
+        {"_id": ObjectId(collection_id)},
+        {"documents": {"$slice": [doc_index, 1]}}
+        )
+
+        """
         for key, value in zip(keys, values):
             t_coll["documents"][0]["metadata"][key] = value
 
         #coll.update({"id_": ObjectId(id_)}, {"documents.metadata": 1, "documents": {"$slice": [doc_index, 1]}}, {"documents.$.metadata": t_coll})
         mongo.get_collection("tb_app_collection").update(
         {"_id": ObjectId(id_)},
-        {"$set": {'documents.' + str(doc_index) + '.metadata': t_coll}}
-    )
-
-        return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
+        {"$set": {'documents.' + str(doc_index) + '.metadata': t_coll}})
+        """
+    return gen_json_response({"status": "success", "msg": "Successfully updated collection."})
 
 
 @login_required(login_url='/')

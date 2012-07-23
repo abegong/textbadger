@@ -47,6 +47,7 @@ var DocumentManager = function(){
 
         //Update navigation
         this.updateControls();
+
     };
 
 /*
@@ -99,9 +100,11 @@ var DocumentManager = function(){
 
             self.seq_index = x;
             self.showDocument(x)
+
         });
 
         $("#doc-count").html(self.seq_list.length);
+
     };
 
     this.updateDefaultNavControls = function(){
@@ -112,5 +115,6 @@ var DocumentManager = function(){
 
         if( this.seq_index == this.doc_list.length-1 ){ $("#next-doc-button").addClass("disabled"); }
         else{ $("#next-doc-button").removeClass("disabled"); }
+
     };
 };
