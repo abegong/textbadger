@@ -182,3 +182,17 @@ div.border{
 #codebook .shim-graph img{
     padding:1px;
 }
+
+/*** tables */
+
+.sorting_desc {
+    background: url('img/sort_desc.png') no-repeat center right;
+}
+
+.sorting_asc {
+    background: url('img/sort_asc.png') no-repeat center right;
+}
+
+.sorting {
+    background: url('img/sort_both.png') no-repeat center right;
+}

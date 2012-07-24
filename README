@@ -1,19 +1,4 @@
-Textbadger is a heavily ajaxed python application yadda yadda.
-
-
-Requirements -
-Django*
-MondoDB
-bson
-django-mongodb-engine
-djangotoolbox
-pymongo
-pytz
-wsgiref
-
-*For the sake of sanity you'll want to use the NoSQL fork of Django, called Django-Norel, found at https://github.com/django-nonrel/django-nonrel.
-
-To initialize the database run "python manage.py loadfixtures" in the appropriate directory.
+Textbadger is a heavily ajaxed Django application built for collaborative content analysis. It is (currently) best run in a walled environment, it should not be run on a server directly accessible to the public. Textbadger is mostly finished, but is still somewhat rough around the edges. Installation instructions can be found in the dev folder.
 
 
 Textbadger is licensed under the MIT Licence, for more details see license.txt.

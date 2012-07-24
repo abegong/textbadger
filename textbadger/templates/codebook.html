@@ -5,20 +5,20 @@
 {% include "base/codebook-includes.html" %}
 
 <script type="text/javascript">
-//var codebook_id = "";
+
 var codebookManager = new CodebookManager()
 
 codebookManager.initControls = function(){
     var codebookManager = this;
-    
+
     this.attachControlsToQuestion(0);
-    
+
     //Activate button controls
 	$('#add_control').click( function(){ codebookManager.addQuestion(); } );
 	$('#del_control').click( function(){ codebookManager.delQuestion(); } );
 	$('#up_control').click( function(){ codebookManager.moveQuestionUp(); } );
 	$('#down_control').click( function(){ codebookManager.moveQuestionDown(); } );
-    
+
     //AJAX to save the codebook
     //! This should be part of CodebookManager
     $("#save-codebook").click(function(){
@@ -29,7 +29,7 @@ codebookManager.initControls = function(){
                 'questions': codebookManager.getCodebookJson(),
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
-            function(response){                
+            function(response){
                 //! Need error checking for failed responses.
                 location.href = '/codebook/'+response._id;
             }
@@ -39,10 +39,10 @@ codebookManager.initControls = function(){
 
 codebookManager.addStylesToQuestion = function(Q){
     $(".shim-graph").hide();
-    
+
     Q
         .unbind('click mouseenter mouseleave')
-        .hover( 
+        .hover(
             function(){$(this).addClass('hoverQuestion');},
             function(){$(this).removeClass('hoverQuestion');}
         )
@@ -156,7 +156,7 @@ $(function(){
 <hr/>
 
 <div id="control-question">
-    <h4>Question</h4>  
+    <h4>Question</h4>
     <div id="questionControls"></div>
 </div>
 {% endblock %}

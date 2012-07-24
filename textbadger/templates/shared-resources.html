@@ -39,18 +39,31 @@ $(function(){
 */
 
 $(document).ready(function() {
-     $('#codebooks, #collections').dataTable( {//, #batches').dataTable( {
-       "oLanguage": {
-         "sLengthMenu": 'Show <select>'+
-           '<option value="10">10</option>'+
-           '<option value="20">25</option>'+
-           '<option value="50">50</option>'+
-           '<option value="-1">All</option>'+
-           '</select> records'
-       },
-       "bFilter": false,
-       "sDom": 't<"bottom"lips>'
-     } );
+  var tables = [];
+  //could be better, alternatively need to look for #collections etc with a child th, this was quicker
+    {% if codebooks %}
+      tables.push("#codebooks");
+    {% endif %}
+    {% if collections %}
+      tables.push("#collections");
+    {% endif %}
+    {% if batches %}
+      tables.push("#batches");
+    {% endif %}
+
+      $(tables.join(",")).dataTable({
+         "oLanguage": {
+           "sLengthMenu": 'Show <select>'+
+             '<option value="10">10</option>'+
+             '<option value="20">25</option>'+
+             '<option value="50">50</option>'+
+             '<option value="-1">All</option>'+
+             '</select> records'
+         },
+         "bFilter": false,
+         "sDom": 't<"bottom"lips>'
+       });
+
  });
 
 </script>
@@ -184,7 +197,12 @@ $(document).ready(function() {
 <br/><br/>
 
 <!-- Batches -->
+{% if collections and codebooks %}
 <a class="btn btn-primary open-modal rightside">Start a batch</a>
+{% else %}
+<a class="btn btn-primary disabled  rightside">Start a batch</a>
+
+{% endif %}
 {% include "forms/start-batch.htm" %}
 
 <h3>Batches</h3>
