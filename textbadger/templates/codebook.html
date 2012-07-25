@@ -8,10 +8,22 @@
 
 var codebookManager = new CodebookManager()
 
+
+
+
+
 codebookManager.initControls = function(){
     var codebookManager = this;
+    var dirty;
 
     this.attachControlsToQuestion(0);
+  this.dirty = JSON.stringify(codebookManager.getCodebookJson());
+window.onbeforeunload = function(){
+
+        if (codebookManager.dirty != JSON.stringify(codebookManager.getCodebookJson())) {
+            return "You have unsaved changes!";
+        }
+    };
 
     //Activate button controls
 	$('#add_control').click( function(){ codebookManager.addQuestion(); } );

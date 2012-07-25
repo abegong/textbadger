@@ -1,4 +1,8 @@
 Textbadger is a heavily ajaxed Django application built for collaborative content analysis. It is (currently) best run in a walled environment, it should not be run on a server directly accessible to the public. Textbadger is mostly finished, but is still somewhat rough around the edges. Installation instructions can be found in the dev folder.
 
 
+
+Textbadger's tables can be sorted on multiple columns, just click the heading of the primary column then shift-click any secondary column(s).
+
+
 Textbadger is licensed under the MIT Licence, for more details see license.txt.
