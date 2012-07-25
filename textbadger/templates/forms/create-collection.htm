@@ -1,6 +1,6 @@
 {% load tb_app_tags %}
 
-<div class="modal" id="myModal">
+<div class="modal" id="create_collection_modal">
   <div class="modal-header">
     <button class="close" data-dismiss="modal">&times;</button>
     <h3>Create new collection</h3>
@@ -61,7 +61,6 @@
     </fieldset></form>
   </div>
 </div>
-
 <script type="text/javascript">
 $(function(){
     $( ".collection-slider" ).each(function(i,s){
@@ -76,7 +75,7 @@ $(function(){
             }
         });
     });
-    
+
     $(".collection-slider-val").change(function(event){
         var x = parseInt($(event.target).val());
         var collection_slider = $(".collection-slider", $(event.target).closest(".collection-slider-holder"));
@@ -88,7 +87,7 @@ $(function(){
         $(event.target).val(x);
         collection_slider.slider( "value", x );
     });
-      
+
 });
 </script>
 

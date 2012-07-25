@@ -397,7 +397,7 @@ def create_collection(request, mongo):
     #return gen_json_response({"status": "failed", "msg": "Can't do this yet."})
     mongo.get_collection("tb_app_collection").insert(J)
 
-    return redirect('/shared-resources/')
+    return gen_json_response({"status": "success", "msg": "Successfully created collection."})
 
 
 @login_required(login_url='/')

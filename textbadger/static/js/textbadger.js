@@ -47,12 +47,11 @@ $(function(){
     $('form:not(.tb-basic)').submit(function() {
         //event.preventDefault();
         var form = $(this);
-        //console.log(form.serializeArray());
+        console.log(form.serializeArray());
         $.post(
             form.attr('tb-href'),
             form.serializeArray(),
             function(data){
-
                 //If the AJAx call succeeded
                 if( data.status == "success" ){
 
@@ -60,7 +59,7 @@ $(function(){
                   if( form.attr("tb-redirect") ){
                     //Redirect to the designated url
                     location.href = form.attr("tb-redirect");
-
+                    console.log("got to tb-redirect");
                   //...or if the AJAX response designates a redirect target URL
                   }else if( data.redirect ){
                     //Redirect to the designated url

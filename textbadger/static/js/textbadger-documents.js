@@ -10,19 +10,24 @@ var DocumentManager = function(){
     this.seq_index = 0;  //Current index in the sequence array
 
     this.loadDocList = function( collection_id, csrf_token, seq_list ){
-        var self = this;
-        $.post(
-            '/ajax/get-collection-docs/',
-            {'id': collection_id, 'csrfmiddlewaretoken': csrf_token },
-            function(data){
-                self.doc_list = data.documents;
-                self.initSeqList( seq_list );
+        if (!seq_list.length) {
+                    alert("You have completed this assignment. There is nothing to do here.");
+        } else {
+            var self = this;
+            $.post(
+                '/ajax/get-collection-docs/',
+                {'id': collection_id, 'csrfmiddlewaretoken': csrf_token },
+                function(data){
 
-                self.initControls();
-                self.showDocument(0);
-            },
-            'json'
-        );
+                    self.doc_list = data.documents;
+                    self.initSeqList( seq_list );
+                    self.initControls();
+                    self.showDocument(0);
+
+                },
+                'json'
+            );
+        }
     };
 
     this.initSeqList = function( seq_list ){
@@ -64,14 +69,13 @@ var DocumentManager = function(){
     };
 
     this.loadNextDoc = function(){
-	    if( this.seq_index < this.seq_list.length-1 ){
-		    this.showDocument( this.seq_index+1 );
-	    }
-	    return( false );
+        if( this.seq_index < this.seq_list.length-1 ){
+            this.showDocument( this.seq_index+1 );
+        }
+        return( false );
     };
 
     this.init = function( collection_id, csrf_token, seq_list ){
-        //console.log(this);
         this.loadDocList( collection_id, csrf_token, seq_list );
     };
 
