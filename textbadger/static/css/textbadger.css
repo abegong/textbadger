@@ -183,20 +183,12 @@ div.border{
     padding:1px;
 }
 
-#codebooks_previous {
-    margin-right: 3px;
-}
-
-#codebooks_next {
-    margin-left: 3px;
-}
-
 .progress {
     width: 100px;
 }
 
 
-/*** tables */
+/*** datatables */
 
 .sorting_desc {
     background: url('../img/sort_desc.png') no-repeat center right;
@@ -210,3 +202,58 @@ div.border{
     background: url('../img/sort_both.png') no-repeat center right;
 }
 
+.bottom{
+    width:100%
+    display: inline;
+}
+
+.bottom div{
+    display: inline;
+}
+
+.dataTables_length{
+    float: right;
+}
+
+.dataTables_length label{
+    margin:0px;
+    display:table-cell;
+    vertical-align:top;
+}
+
+.dataTables_length label select{
+    display: inline;
+    width: 48px;
+    font-size:12px;
+    padding:0px;
+    line-height:12px;
+    height:24px;
+}
+
+.dataTable{
+    margin:2px 0px 4px 0px;
+}
+
+.dataTables_paginate {
+    margin-left: 40px;
+}
+
+.paginate_disabled_previous,
+.paginate_disabled_next,
+.paginate_enabled_previous,
+.paginate_enabled_next {
+    margin: 0px 5px;
+}
+
+.paginate_enabled_previous, .paginate_enabled_next {
+    cursor: pointer;
+}
+
+.paginate_disabled_previous, .paginate_disabled_next {
+    color: #666;
+}
+
+.paginate_disabled_previous:hover, .paginate_disabled_next:hover {
+    text-decoration: none;
+    color: #666;
+}
