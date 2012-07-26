@@ -454,32 +454,27 @@ def convert_batch_to_2d_arrays(batch, col_names, missing_val=None):
 def update_batch_reliability(mongo, batch_id):
     batch = mongo.get_collection("tb_app_batch").find_one({"_id": ObjectId(batch_id)})
     codebook = mongo.get_collection("tb_app_codebook").find_one({"_id": ObjectId(batch["profile"]["codebook_id"])})
-    
-    col_names = gen_codebook_column_names(codebook)
-    col_names.remove("created_at")
 
-    data_arrays = convert_batch_to_2d_arrays(batch, col_names)
-
-    #print col_names
+    variables = codebook["variables"]
+    var_names = [v["variable_name"] for v in variables]
+    print var_names
+    data_arrays = convert_batch_to_2d_arrays(batch, var_names)
     
-    #Build the summary object
     summary = {}
-    for i,question in enumerate(col_names):
+    for i, v in enumerate(variables):
+        v_name = v["variable_name"]
 #        print q, '\t', kripp.alpha(data_arrays[q], kripp.interval)
-        alpha = kripp.alpha(data_arrays[question], kripp.interval)
-        #alpha = random.uniform(-1,1)
+        alpha = kripp.alpha(data_arrays[v_name], kripp.interval)
         try:
             alpha_100 = 100*alpha
         except TypeError:
             alpha_100 = None
             
-        summary[question] = {
+        summary[v_name] = dict(v.items() + {
             'alpha': alpha,
             'alpha_100': alpha_100,
-            'metric': 'interval',
-            'text': '',
-            'variable_name': question,
-        }
+        }.items())
+    
 
     #Build the reliability object
     reliability = {
