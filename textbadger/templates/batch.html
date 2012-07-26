@@ -114,23 +114,37 @@ $(document).ready(function() {
 <div class="rightside">
   <a id="update-reliability" class="btn btn-primary rightside"><i class="icon-refresh"></i> Update reliability</a>
   <br/>
-  <span class="rightside">Last updated: {{ batch.reports.reliability.updated_at|date_diff }}</span>
+<!--  <span class="rightside">Last updated: {{ batch.reports.reliability.updated_at|date_diff }}</span> -->
   <br/>
   <br/>
 </div>
 <h3>Reliability</h3>
-
+{{ codebook }}
 <table class="well wide" id="reliability">
   <thead>
     <tr>
-      <th>#</th>
+      <th>#.#</th>
       <th>Question</th>
+      <th>Name</th>
       <th>Type</th>
       <th style="width:20%"></th>
       <th>Reliability</th>
     </tr>
   </thead>
   <tbody>
+  {% for var in codebook.variables %}
+    <tr>
+      <td>{{var.question_index}}.{{var.subquestion_index}}</td>
+      <td>{{var}}</td>
+      <td>{{var.variable_name}}</td>
+      <td>{{var.variable_type}}</td>
+      <td><div class="progress progress-striped progress-warning" style="margin:0px">
+          <div class="bar" style="width: {{value.alpha_100|floatformat:1}}%;"></div>
+      </div></td>
+      <td>{{value.alpha|floatformat:4}}</td>
+    </tr>
+  {% endfor %}
+{% comment %}
     {% for question,value in batch.reports.reliability.summary.items %}
     <tr>
       <td>{{forloop.counter}}</td>
@@ -142,43 +156,11 @@ $(document).ready(function() {
       <td>{{value.alpha|floatformat:4}}</td>
     </tr>
   {% endfor %}
-<!--
-      <td class="progress progress-striped progress-warning">
-          <div class="bar" style="width: 23%;"></div>
-      </td>
--->
-<!--
-      <td>.2347</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>How much wood would a woodchuck...</td>
-      <td>Ordinal</td>
-      <td><div class="progress progress-striped progress-success" style="margin:0px">
-          <div class="bar" style="width: 85%;"></div>
-      </div></td>
-      <td>.8576</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>How many jelly beans are...</td>
-      <td>Interval</td>
-      <td><div class="progress progress-striped" style="margin:0px">
-          <div class="bar" style="width: 57%;"></div>
-      </div></td>
-      <td>.5744</td>
-    </tr>
--->
-  {% for p in batches %}
-    <tr>
-      <td>{{ p.profile.name }}</td>
-      <td>[...]</td>
-      <td>[...]</td>
-    </tr>
-  {% endfor %}
+{% endcomment %}
+
+
   </tbody>
 </table>
-<!-- <a>View/print extended report</a> -->
 
 
 {% endblock %}

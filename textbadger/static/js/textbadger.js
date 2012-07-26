@@ -44,8 +44,8 @@ $(function(){
       return false;
     });
 
-    $('form:not(.tb-basic)').submit(function() {
-        //event.preventDefault();
+    $('form:not(.tb-basic)').submit(function(event) {
+        event.preventDefault();
         var form = $(this);
         console.log(form.serializeArray());
         $.post(
@@ -54,24 +54,21 @@ $(function(){
             function(data){
                 //If the AJAx call succeeded
                 if( data.status == "success" ){
-
                   //...and the form has "tb-redirect"
                   if( form.attr("tb-redirect") ){
                     //Redirect to the designated url
                     location.href = form.attr("tb-redirect");
-                    console.log("got to tb-redirect");
+                    //console.log("got to tb-redirect");
                   //...or if the AJAX response designates a redirect target URL
                   }else if( data.redirect ){
                     //Redirect to the designated url
                     location.href = data.redirect;
                   }
-
                 //If the AJAX call failed
                 }else{
                   //! Give some kind of alert
                   alert( data.msg );
                 }
-                //alert(JSON.stringify(data));
             },
             'json'
         );

@@ -83,9 +83,14 @@ def shared_resources(request, mongo):
         models.update_batch_progress(b["_id"])
         models.update_batch_reliability(b["_id"])
 
+    codebooks = list(mongo.get_collection("tb_app_codebook").find(sort=[('profile.created_at', 1)]))
+    for c in codebooks:
+        c["variables"] = models.get_codebook_variables_from_questions(c["questions"])
+        mongo.get_collection("tb_app_codebook").save(c)
+
 #    print list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
-        'codebooks': list(mongo.get_collection("tb_app_codebook").find(sort=[('profile.created_at', 1)])),
+        'codebooks': codebooks,
         'collections': list(mongo.get_collection("tb_app_collection").find(fields={"profile":1})),#fields={"id": 1, "name": 1, "description": 1})),
         'batches': batches,
         'users': jsonifyRecords(User.objects.all(), ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser']),
@@ -138,7 +143,7 @@ def batch(request, mongo, id_):
         'batch': batch,
         'codebook': mongo.get_collection("tb_app_codebook").find_one(
             {"_id": ObjectId(batch["profile"]["codebook_id"])},
-            {"profile":1}
+            {"profile":1, "variables":1}
         ),
         'collection': mongo.get_collection("tb_app_collection").find_one(
             {"_id": ObjectId(batch["profile"]["collection_id"])},
@@ -162,9 +167,9 @@ def assignment(request, mongo, batch_index):#, username):
             if d["labels"][request.user.username] == []:
                 seq_list.append(d["index"])
 
-    print batch["profile"]["shuffle"]
+    #print batch["profile"]["shuffle"]
     if batch["profile"]["shuffle"]:
-        print "bang!"
+        #print "bang!"
         random.shuffle( seq_list )
     #print doc_list
 
@@ -204,7 +209,7 @@ def review(request, mongo, batch_index):
 
         label_list.append(label_set)
 
-    print json.dumps(label_list, cls=MongoEncoder, indent=2)
+#    print json.dumps(label_list, cls=MongoEncoder, indent=2)
     
     result = {
         'batch': batch,
@@ -463,7 +468,7 @@ def update_meta_data(request, mongo):
         #coll = mongo.get_collection("tb_app_collection")
         #meta_coll = coll.find_one({"id_": ObjectId(id_)}, {"documents.metadata": 1, "documents": {"$slice": [doc_index, 1]}})
         #print meta_coll
-        print "id:" + doc_index
+        #print "id:" + doc_index
         mongo.get_collection("tb_app_collection").update(
         {"_id": ObjectId(collection_id)},
         {"$set": {'documents.' + str(doc_index) + '.metadata': new_metadata}}
