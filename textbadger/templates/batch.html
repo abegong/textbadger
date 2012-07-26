@@ -119,11 +119,10 @@ $(document).ready(function() {
   <br/>
 </div>
 <h3>Reliability</h3>
-{{ codebook }}
 <table class="well wide" id="reliability">
   <thead>
     <tr>
-      <th>#.#</th>
+      <th>#</th>
       <th>Question</th>
       <th>Name</th>
       <th>Type</th>
@@ -132,31 +131,20 @@ $(document).ready(function() {
     </tr>
   </thead>
   <tbody>
-  {% for var in codebook.variables %}
-    <tr>
-      <td>{{var.question_index}}.{{var.subquestion_index}}</td>
-      <td>{{var}}</td>
-      <td>{{var.variable_name}}</td>
-      <td>{{var.variable_type}}</td>
-      <td><div class="progress progress-striped progress-warning" style="margin:0px">
-          <div class="bar" style="width: {{value.alpha_100|floatformat:1}}%;"></div>
-      </div></td>
-      <td>{{value.alpha|floatformat:4}}</td>
-    </tr>
-  {% endfor %}
-{% comment %}
     {% for question,value in batch.reports.reliability.summary.items %}
-    <tr>
-      <td>{{forloop.counter}}</td>
-      <td>{{question}}</td>
-      <td>{{value.metric}}</td>
-      <td><div class="progress progress-striped progress-warning" style="margin:0px">
-          <div class="bar" style="width: {{value.alpha_100|floatformat:1}}%;"></div>
-      </div></td>
-      <td>{{value.alpha|floatformat:4}}</td>
-    </tr>
+        {% if value.alpha %}
+        <tr>
+          <td>{{value.question_index}}{%if value.subquestion_index %}.{{value.subquestion_index}}{% endif %}</td>
+          <td>{{value.question_header}}{%if value.subquestion_label %} : {{value.subquestion_label}}{% endif %}</td>
+          <td>{{question}}</td>
+          <td>{{value.variable_type}}</td>
+          <td><div class="progress progress-striped progress-warning" style="margin:0px">
+              <div class="bar" style="width: {{value.alpha_100|floatformat:1}}%;"></div>
+          </div></td>
+          <td>{{value.alpha|floatformat:4}}</td>
+        </tr>
+    {% endif %}
   {% endfor %}
-{% endcomment %}
 
 
   </tbody>

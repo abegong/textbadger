@@ -77,16 +77,16 @@ def my_account(request, mongo):
 @login_required(login_url='/')
 @uses_mongo
 def shared_resources(request, mongo):
+    codebooks = list(mongo.get_collection("tb_app_codebook").find(sort=[('profile.created_at', 1)]))
+    for c in codebooks:
+        c["variables"] = models.get_codebook_variables_from_questions(c["questions"])
+        mongo.get_collection("tb_app_codebook").save(c)
+
     batches = list(mongo.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('profile.created_at', 1)]))
 
     for b in batches:
         models.update_batch_progress(b["_id"])
         models.update_batch_reliability(b["_id"])
-
-    codebooks = list(mongo.get_collection("tb_app_codebook").find(sort=[('profile.created_at', 1)]))
-    for c in codebooks:
-        c["variables"] = models.get_codebook_variables_from_questions(c["questions"])
-        mongo.get_collection("tb_app_codebook").save(c)
 
 #    print list(mongo.get_collection("tb_app_codebook").find(sort=[('created_at',1)]))
     result = {
