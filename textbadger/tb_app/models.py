@@ -181,24 +181,24 @@ def get_codebook_variables_from_questions(questions):
         short_text = q["params"]["header_text"]
         #variable_type = q["params"]["variable_type"]
         
-        if q["question_type"] is 'Static text':
+        if q["question_type"] == 'Static text':
             variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+var_name, short_text, "", "none") )
 
         if q["question_type"] in ['Multiple choice', 'Two-way scale']:
             variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+var_name, short_text, "", "ordinal") )
 
-        if q["question_type"] is 'Check all that apply':
+        if q["question_type"] == 'Check all that apply':
             for j,a in enumerate(q["params"]["answer_array"]):
                 variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, "", "nominal") )
 
         if q["question_type"] in ['Text box', 'Short essay']:
             variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+var_name, short_text, "", "text") )
 
-        elif q["question_type"] is 'Radio matrix':
+        elif q["question_type"] == 'Radio matrix':
             for j,p in enumerate(q["params"]["question_array"]):
                 variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p, "interval") )
 
-        elif q["question_type"] is 'Checkbox matrix':
+        elif q["question_type"] == 'Checkbox matrix':
             for j,p in enumerate(q["params"]["question_array"]):
                 for k,r in enumerate(q["params"]["answer_array"]):
                     variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+"_"+str(k+1)+var_name, short_text, p, "nominal") )
@@ -280,36 +280,6 @@ def gen_codebook_column_names(codebook):
         elif q["question_type"] == 'Text matrix':
             for j,p in enumerate(q["params"]["answer_array"]):
                 col_names.append("Q"+str(i+1)+"_"+str(j+1)+var_name)
-
-        """    
-        if q["question_type"] == 'Static text':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Multiple choice':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Check all that apply':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Two-way scale':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Radio matrix':
-            for j,p in enumerate(q["params"]["question_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-            
-        elif q["question_type"] == 'Checkbox matrix':
-            for j,p in enumerate(q["params"]["question_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-
-        elif q["question_type"] == 'Two-way matrix':
-            for j,p in enumerate(q["params"]["left_statements"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-
-        elif q["question_type"] == 'Text box':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Short essay':
-            col_names.append("Q"+str(i)+var_name)
-        elif q["question_type"] == 'Text matrix':
-            for j,p in enumerate(q["params"]["answer_array"]):
-                col_names.append("Q"+str(i)+"_"+str(j)+var_name)
-        """
 
     return col_names
 
@@ -439,26 +409,23 @@ def update_batch_progress(mongo, id_):
     }
 
     batch["reports"]["progress"] = progress
-#    print json.dumps(progress, indent=2, cls=MongoEncoder)
-
     coll.update({"_id": ObjectId(id_)}, batch)
-#    print result#json.dumps(progress, indent=2, cls=MongoEncoder)
 
-def convert_batch_to_2d_arrays(batch, col_names, missing_val=None):
+def convert_batch_to_2d_arrays(batch, var_names, missing_val=None):
     #2-D arrays wrapped in a dictionary : [question][document][coder]
     coder_index = dict([(c,i) for i,c in enumerate(batch["profile"]["coders"])])
     
     #Create empty arrays
-    code_arrays = dict([ (n, [[missing_val for c in coder_index] for d in batch["documents"]]) for n in col_names])
+    code_arrays = dict([ (n, [[0 for c in coder_index] for d in batch["documents"]]) for n in var_names])
     
     for i, doc in enumerate(batch["documents"]):
         for coder in doc["labels"]:
             answer_set = get_most_recent_answer_set(doc["labels"][coder])
-#            print answer_set
+            #print answer_set
             for question in answer_set:
                 if question in code_arrays.keys():
                     try:
-#                        print '\t'.join([str(x) for x in [question, i, coder, answer_set[question]]])
+                        #print '\t'.join([str(x) for x in [question, i, coder, answer_set[question]]])
                         code_arrays[question][i][coder_index[coder]] = float(answer_set[question])
                     except ValueError:
                         code_arrays[question][i][coder_index[coder]] = missing_val
@@ -472,15 +439,26 @@ def update_batch_reliability(mongo, batch_id):
 
     variables = codebook["variables"]
     var_names = [v["variable_name"] for v in variables]
-    print var_names
     data_arrays = convert_batch_to_2d_arrays(batch, var_names)
     
     summary = {}
     for i, v in enumerate(variables):
         v_name = v["variable_name"]
 #        print q, '\t', kripp.alpha(data_arrays[q], kripp.interval)
-        print v_name, '\t', v["variable_type"]
-        alpha = kripp.alpha(data_arrays[v_name], kripp.interval)
+        #print v_name, '\t', v["variable_type"]
+        
+        #Get variable metric
+        v_type = v["variable_type"]
+        if v_type == "nominal":
+            metric = kripp.nominal
+        elif v_type in ["interval", "ordinal"]:
+            metric = kripp.interval
+        elif v_type == "ratio":
+            metric = kripp.ratio
+        
+        if metric:
+            alpha = kripp.alpha(data_arrays[v_name], metric)
+            
         try:
             alpha_100 = 100*alpha
         except TypeError:

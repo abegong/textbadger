@@ -132,7 +132,7 @@ $(document).ready(function() {
   </thead>
   <tbody>
     {% for question,value in batch.reports.reliability.summary.items %}
-        {% if value.alpha %}
+    {% if value.alpha %}
         <tr>
           <td>{{value.question_index}}{%if value.subquestion_index %}.{{value.subquestion_index}}{% endif %}</td>
           <td>{{value.question_header}}{%if value.subquestion_label %} : {{value.subquestion_label}}{% endif %}</td>
