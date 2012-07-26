@@ -179,22 +179,37 @@ def get_codebook_variables_from_questions(questions):
             var_name = ''
 
         short_text = q["params"]["header_text"]
-        variable_type = "interval"#q["params"]["variable_type"]
+        #variable_type = q["params"]["variable_type"]
         
-        if q["question_type"] in ['Static text', 'Multiple choice', 'Check all that apply', 'Two-way scale', 'Text box', 'Short essay']:
-            variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+var_name, short_text, "", variable_type) )
+        if q["question_type"] is 'Static text':
+            variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+var_name, short_text, "", "none") )
 
-        elif q["question_type"] in ['Radio matrix', 'Checkbox matrix']:
+        if q["question_type"] in ['Multiple choice', 'Two-way scale']:
+            variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+var_name, short_text, "", "ordinal") )
+
+        if q["question_type"] is 'Check all that apply':
+            for j,a in enumerate(q["params"]["answer_array"]):
+                variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, "", "nominal") )
+
+        if q["question_type"] in ['Text box', 'Short essay']:
+            variables.append( create_new_variable_json(i+1, None, "Q"+str(i+1)+var_name, short_text, "", "text") )
+
+        elif q["question_type"] is 'Radio matrix':
             for j,p in enumerate(q["params"]["question_array"]):
-                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p, variable_type) )
+                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p, "interval") )
+
+        elif q["question_type"] is 'Checkbox matrix':
+            for j,p in enumerate(q["params"]["question_array"]):
+                for k,r in enumerate(q["params"]["answer_array"]):
+                    variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+"_"+str(k+1)+var_name, short_text, p, "nominal") )
 
         elif q["question_type"] == 'Two-way matrix':
             for j,p in enumerate(q["params"]["left_statements"]):
-                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p+"/"+q["params"]["right_statements"][j], variable_type) )
+                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p+"/"+q["params"]["right_statements"][j], "ordinal") )
 
         elif q["question_type"] == 'Text matrix':
             for j,p in enumerate(q["params"]["answer_array"]):
-                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p, variable_type) )
+                variables.append( create_new_variable_json(i+1, j+1, "Q"+str(i+1)+"_"+str(j+1)+var_name, short_text, p, "text") )
     
     return variables
 
@@ -464,6 +479,7 @@ def update_batch_reliability(mongo, batch_id):
     for i, v in enumerate(variables):
         v_name = v["variable_name"]
 #        print q, '\t', kripp.alpha(data_arrays[q], kripp.interval)
+        print v_name, '\t', v["variable_type"]
         alpha = kripp.alpha(data_arrays[v_name], kripp.interval)
         try:
             alpha_100 = 100*alpha
