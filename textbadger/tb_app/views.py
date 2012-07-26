@@ -189,7 +189,7 @@ def review(request, mongo, batch_index):
     #print json.dumps(batch, cls=MongoEncoder, indent=2)
 
     #Reshape label dictionaries for display
-    #! This should go in mondels.py
+    #! This should go in models.py
     label_list = []
     for doc in batch["documents"]:
         label_set = defaultdict(dict)
@@ -204,7 +204,8 @@ def review(request, mongo, batch_index):
 
         label_list.append(label_set)
 
-    #print json.dumps(label_list, cls=MongoEncoder, indent=2)
+    print json.dumps(label_list, cls=MongoEncoder, indent=2)
+    
     result = {
         'batch': batch,
         'label_list': json.dumps(label_list, cls=MongoEncoder, indent=2),
@@ -347,12 +348,12 @@ def upload_collection(request, mongo):
         return gen_json_response({"status": "failed", "msg": "Name cannot be blank."})
 
     #Detect filetype
-    if re.search('\.csv$', filename.lower()):
-        csv_text = csv_file.read()
-        documents = models.convert_document_csv_to_bson(csv_text)
+#    if re.search('\.csv$', filename.lower()):
+    csv_text = csv_file.read()
+    documents = models.convert_document_csv_to_bson(csv_text)
 
-    elif re.search('\.json$', filename.lower()):
-        documents = json.load(file(filename, 'r'))
+#    elif re.search('\.json$', filename.lower()):
+#        documents = json.load(file(filename, 'r'))
         #! Validate json object here
 
     J = models.get_new_collection_json( name, description, documents )
@@ -681,7 +682,7 @@ def export_batch(request, mongo, batch_id):
     col_index = models.gen_col_index_from_col_names(col_names)
 
     #Generate filename
-    filename = sluggify(batch["profile"]["name"])+"-"+datetime.datetime.now().strftime("%Y-%M-%d-%H-%M-%S")+".csv"
+    filename = sluggify(batch["profile"]["name"])+"-"+datetime.datetime.now().strftime("%Y-%m-%d")+".csv"
 
     #Begin constructing a response
     #response = HttpResponse(mimetype='text')

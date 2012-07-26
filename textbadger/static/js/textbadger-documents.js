@@ -10,24 +10,20 @@ var DocumentManager = function(){
     this.seq_index = 0;  //Current index in the sequence array
 
     this.loadDocList = function( collection_id, csrf_token, seq_list ){
-        if (!seq_list.length) {
-                    alert("You have completed this assignment. There is nothing to do here.");
-        } else {
-            var self = this;
-            $.post(
-                '/ajax/get-collection-docs/',
-                {'id': collection_id, 'csrfmiddlewaretoken': csrf_token },
-                function(data){
+        var self = this;
+        $.post(
+            '/ajax/get-collection-docs/',
+            {'id': collection_id, 'csrfmiddlewaretoken': csrf_token },
+            function(data){
 
-                    self.doc_list = data.documents;
-                    self.initSeqList( seq_list );
-                    self.initControls();
-                    self.showDocument(0);
+                self.doc_list = data.documents;
+                self.initSeqList( seq_list );
+                self.initControls();
+                self.showDocument(0);
 
-                },
-                'json'
-            );
-        }
+            },
+            'json'
+        );
     };
 
     this.initSeqList = function( seq_list ){
@@ -76,6 +72,19 @@ var DocumentManager = function(){
     };
 
     this.init = function( collection_id, csrf_token, seq_list ){
+        //On the collections and review pages, seq_list is null
+        //On the assignments page, seq_list is an array containing the indexes of documents to be coded.
+
+        //Check to see if the seq_list is present, but empty
+        if(seq_list){
+            if( !seq_list.length ){
+                //If so, exit without initializing
+                alert("You have already completed this assignment. There is nothing to do here.  Please go to the batch page to review results.");
+                return false;
+            }
+        }
+        
+        //Otherwise, initialize the document list
         this.loadDocList( collection_id, csrf_token, seq_list );
     };
 

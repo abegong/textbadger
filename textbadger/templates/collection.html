@@ -47,7 +47,7 @@ $(function(){
     $('a[href*="/shared-resources/"]').parent().addClass("active");
 
     //Launch docManager
-    docManager.init("{{collection|mongo_id}}", "{{csrf_token}}" );
+    docManager.init("{{collection|mongo_id}}", "{{csrf_token}}");
 });
 </script>
 {% endblock %}

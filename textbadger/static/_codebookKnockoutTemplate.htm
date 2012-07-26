@@ -6,7 +6,7 @@
 	<div class="headerText">{{html params.header_text}}</div>
 
 {{else question_type() == codebookManager.questionTypes()[1] /*Multiple choice*/}}
-    <div class="questionMarkupAnchor">
+    <div class="questionMarkupAnchor" data-var-name="Q${$index()+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="radio">
         <div class="headerText">{{html params.header_text}}</div>
         <table class="MatrixQuestion">
         {{each(i,v) params.answer_array}}
@@ -22,20 +22,18 @@
     </div>
     
 {{else question_type() == codebookManager.questionTypes()[2] /*CATA*/}}
-    <div class="questionMarkupAnchor">
-        <div class="headerText">{{html params.header_text}}</div>
-        <table class="MatrixQuestion">
-        {{each(i,v) params.answer_array}}
-            <tr class="clickable">
-                <td class="leftCol">
-                    <div class="shim-graph"></div>
-                    <input type="checkbox" name="Q${$index()+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
-                </td>
-                <td class="rightCol">{{html v}}</td>
-            </tr>
-        {{/each}}
-        </table>
-    </div>
+    <div class="headerText">{{html params.header_text}}</div>
+    <table class="MatrixQuestion">
+    {{each(i,v) params.answer_array}}
+        <tr class="clickable questionMarkupAnchor" data-var-name="Q${$index()+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="cata">
+            <td class="leftCol">
+                <div class="shim-graph"></div>
+                <input type="checkbox" name="Q${$index()+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${i+1}"></input>
+            </td>
+            <td class="rightCol">{{html v}}</td>
+        </tr>
+    {{/each}}
+    </table>
 
 {{else question_type() == codebookManager.questionTypes()[3] /*Two-way scale*/}}
 	<div class="headerText">{{html params.header_text}}</div>
@@ -45,7 +43,7 @@
 			{{each(i, v) params.answer_array}}<td>{{html v}}</td>{{/each}}
 			<td></td>
 		</tr>
-		<tr class="questionMarkupAnchor">
+		<tr class="questionMarkupAnchor" data-var-name="Q${$index()+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="radio">
 			<td class="leftCol">{{html params.left_statement}}</td>
 			{{each(i, v) params.answer_array}}<td class="clickable">
                 <div class="shim-graph"></div>
@@ -60,7 +58,7 @@
 	<table class="matrixQuestion">
 		<thead><td></td>{{each(i, v) params.answer_array}}<td>${v}</td>{{/each}}</thead>
 		{{each(i, v) params.question_array}}
-			<tr class="questionMarkupAnchor {{if i%2}}odd{{else}}even{{/if}}">
+			<tr class="questionMarkupAnchor {{if i%2}}odd{{else}}even{{/if}}" data-var-name="Q${$index()+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="radio">
                 <td class="textCol">{{html v}}</td>
                 {{each(j, w) params.answer_array}}<td class="clickable">
                     <div class="shim-graph"></div>
@@ -77,9 +75,9 @@
 		{{each(i, v) params.question_array}}
 			<tr {{if i%2}}class="odd"{{else}}class="even"{{/if}}>
                 <td class="textCol">{{html v}}</td>
-                {{each(j, w) params.answer_array}}<td class="questionMarkupAnchor clickable">
+                {{each(j, w) params.answer_array}}<td class="questionMarkupAnchor clickable" data-var-name="Q${$index()+1}_${i+1}_${j+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="cata">
                     <div class="shim-graph"></div>
-                    <input type="checkbox" name="Q${$index()+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input>
+                    <input type="checkbox" name="Q${$index()+1}_${i+1}_${j+1}{{if var_name}}_${var_name}{{/if}}" value="${j+1}"></input>
                 </td>{{/each}}
             </tr>
 		{{/each}}
@@ -96,7 +94,7 @@
 
 		{{if !(typeof params.left_statements == 'undefined')}}
 		{{each(j,w) _.range(0,Math.max(params.left_statements().length,params.right_statements().length))}}
-			<tr class="questionMarkupAnchor {{if j%2}}odd{{else}}even{{/if}}">
+			<tr class="questionMarkupAnchor {{if j%2}}odd{{else}}even{{/if}}" data-var-name="Q${$index()+1}_${j+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="radio">
 				<td class="leftCol">{{html params.left_statements()[j]}}</td>
 				{{each(i, v) params.answer_array}}<td class="clickable">
                     <div class="shim-graph"></div>
@@ -109,14 +107,14 @@
 	</table>
 
 {{else question_type() == codebookManager.questionTypes()[7] /*Text*/}}
-    <div class=" questionMarkupAnchor">
-        <div class="headerText questionMarkupAnchor">{{html params.header_text}}</div>
+    <div class="questionMarkupAnchor" data-var-name="Q${$index()+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="text">
+        <div class="headerText">{{html params.header_text}}</div>
         <div class="shim-graph"></div>
         <input type="text" name="Q${$index()+1}{{if var_name}}_${var_name}{{/if}}" value="" size="${params.cols}"></input>
     </div>
 
 {{else question_type() == codebookManager.questionTypes()[8] /*Short essay*/}}
-    <div class=" questionMarkupAnchor">
+    <div class="questionMarkupAnchor" data-var-name="Q${$index()+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="text">
         <div class="headerText">{{html params.header_text}}</div>
         <div class="shim-graph"></div>
         <textarea name="Q${$index()+1}{{if var_name}}_${var_name}{{/if}}" cols="${params.cols}" rows="${params.rows}"></textarea>
@@ -126,7 +124,7 @@
 	<div class="headerText">{{html params.header_text}}</div>
 	<table class="matrixQuestion">
 		{{each(i, v) params.answer_array}}
-			<tr class="questionMarkupAnchor {{if i%2}}odd{{else}}even{{/if}}">
+			<tr class="questionMarkupAnchor {{if i%2}}odd{{else}}even{{/if}}" data-var-name="Q${$index()+1}_${i+1}{{if var_name}}_${var_name}{{/if}}" data-var-type="text">
                 <td class="textCol">{{html v}}</td>
                 <td>
                     <div class="shim-graph"></div>

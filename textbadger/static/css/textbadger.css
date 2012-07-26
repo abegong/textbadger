@@ -130,6 +130,10 @@ div.border{
 	margin:auto;
 }
 
+#codebook tr{
+    width:100%;
+}
+
 #codebook tr.even{
 	background-color:#e8e8e8;
 }
@@ -172,7 +176,7 @@ div.border{
 
 #codebook .shim-graph{
 /*    border: 2px solid green; */
-    text-align:right;
+    text-align:center;
     line-height:1px;
     /* margin-left:auto; */
     /* width:20px; */
@@ -181,6 +185,12 @@ div.border{
 
 #codebook .shim-graph img{
     padding:1px;
+    width:7px;
+    height:7px;
+}
+
+#codebook .leftCol{
+    width: 20px;
 }
 
 .progress {
@@ -188,7 +198,7 @@ div.border{
 }
 
 
-/*** datatables */
+/*** datatables ****************************************************************/
 
 .sorting_desc {
     background: url('../img/sort_desc.png') no-repeat center right;

@@ -37,6 +37,7 @@ class Command(management.BaseCommand):
             print 'Selected fixtures subdirectory', args[0]
         else:
             subdirectory = ""
+            print 'Using default fixtures directory'
 
         #Get all fixtures
         fixture_path = settings.PROJECT_PATH+'/fixtures/'+subdirectory

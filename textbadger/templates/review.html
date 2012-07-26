@@ -28,7 +28,29 @@ docManager.updateControls = function(){
     //Markup
     $(".questionMarkupAnchor").each(function(i,d){
         var $d = $(d),
-            show_badges = false;
+            show_badges = false,
+            var_name = $d.attr("data-var-name"),
+            var_type = $d.attr("data-var-type");
+
+        //Create and show popover
+        var popover_title = "<strong>"+var_name+"</strong></strong><br/>",
+            popover_str = "";
+        if( var_name in labels ){
+            for( j in labels[var_name] ){
+                if( labels[var_name][j] != "" ){
+                    popover_str += j+" : "+labels[var_name][j]+"<br/>";
+                }
+            }
+        }
+
+        $d.popover({
+            title: popover_title,
+            content: popover_str,
+            placement: "left"
+        });
+        $d.attr("data-content", popover_str);
+
+        $d.css("cursor","pointer");
 
         //Create and show badges
         if( show_badges ){
@@ -47,23 +69,45 @@ docManager.updateControls = function(){
             var offset = $d.offset();
             $badge.offset({ top: offset.top, left: offset.left-$badge.width()-22 });
         }
-        
+
         //Create and show shim-graphs
         $(".shim-graph", $d).each(function(i,g){
-            var var_name = $(this).next().attr("name"),
-                $shimgraph = $(g),
-                val = $shimgraph.next().val();
-            
+            var $shimgraph = $(g);
             $shimgraph.html("");
-            
+                
             if( var_name in labels ){
-                for( j in labels[var_name] ){
-                    //console.log(var_name+"\t"+j+"\t:\t"+val+"\t:\t"+labels[var_name][j]);
-                    if( labels[var_name][j] == val ){
-                        $shimgraph.append('<img src="/static/img/tiny-shim-b.gif"></img>');
+                if( var_type == 'radio' ){
+                    var val = $shimgraph.next().val();
+
+                    for( j in labels[var_name] ){
+                        //console.log(var_name+"\t"+j+"\t:\t"+val+"\t:\t"+labels[var_name][j]);
+                        if( labels[var_name][j] == val ){
+                            $('<img src="/static/img/tiny-shim-b.gif"></img>')
+                                .appendTo( $shimgraph );
+                        }
+                    }
+
+                    //Fake data
+/*
+                    for( j=0; j<Math.floor(Math.random()*5); j++ ){
+                        $('<img src="/static/img/tiny-shim-b.gif"></img>').appendTo( $shimgraph );
+                    }
+*/
+
+                }else if( var_type == 'cata' ){
+                    for( j in labels[var_name] ){
+                        console.log(var_name + "\t" + j + "\t" + labels[var_name][j]);
+                        $('<img src="/static/img/tiny-shim-b.gif"></img>').appendTo( $shimgraph );
+                    }
+                }else if( var_type == 'text' ){
+                    for( j in labels[var_name] ){
+                        if( labels[var_name][j] != "" ){
+                            $('<img src="/static/img/tiny-shim-b.gif"></img>').appendTo( $shimgraph );
+                        }
                     }
                 }
             }
+
             $(this)
                 .data("var_name", var_name)
                 .next().hide();
@@ -71,7 +115,12 @@ docManager.updateControls = function(){
     });
 };
 
+
 codebookManager.addStylesToQuestion = function(){
+};
+
+codebookManager.initControls = function(){
+    docManager.showDocument(0);
 };
 
 /*
@@ -146,18 +195,7 @@ $(function(){
     $('a[href*="/my-account/"]').parent().addClass("active");
 
     docManager.init("{{ batch.profile.collection_id }}", "{{ csrf_token }}");
-
     codebookManager.init("{{ batch.profile.codebook_id }}", "{{ csrf_token }}");
-
-/*
-	$.post("/ajax/get-codebook/",
-        {'id': "{{batch.profile.codebook_id}}", 'csrfmiddlewaretoken': '{{ csrf_token }}' },
-        function(response){
-            //! Need error checking for failed responses.
-            launchInformalViewer(response.codebook.questions);       
-        }
-    );
-*/
 });
 </script>
 {% endblock %}
@@ -166,15 +204,15 @@ $(function(){
 <div class="container">
 <ul class="breadcrumb">
     <li>
-        <a href="/shared-resources/#batches">Batches</a>
+        <a href="/shared-resources/">Review</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="/batch/{{ batch|mongo_id }}/">{{ batch.profile.name }}</a>
-        <span class="divider">/</span>
+        <a href="#">{{ batch.profile.name }}</a>
+        <span class="divider">::</span>
     </li>
     <li>
-        <a href="#">Review</a>
+        <a href="/batch/{{ batch|mongo_id }}/">Go to batch page</a>
     </li>
 </ul>
 </div>
@@ -183,7 +221,6 @@ $(function(){
 {% block document %}
 --- Document ---
 {{batch}}
-asdf
 {% endblock %}
 
 {% block control %}
