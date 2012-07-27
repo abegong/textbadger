@@ -38,11 +38,44 @@ $(function(){
 });
 */
 
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "title-numeric-pre": function ( a ) {
+        var x = a.match(/title="(.*?)"/)[0].toString();
+        console.log(x);
+        x = x.replace(/[^\d.]/g, "");
+        console.log(x);
+        return parseInt(x);
+    },
+
+    "title-numeric-asc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+
+    "title-numeric-desc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    },
+
+    "percent-numeric-pre": function ( a ) {
+        var x = a.replace("%", "");
+        x = x.replace(".","");
+        return parseInt(x);
+    },
+
+    "percent-numeric-asc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+
+    "percent-numeric-desc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );
+
 $(document).ready(function() {
   var tables = [];
   var dTables;
   //could be better, alternatively need to look for #collections etc with a child th, this was quicker
     {% if codebooks %}
+
 
 $('input').change(function(){
   if ($('#filterBox:checked').val()) {
@@ -51,10 +84,11 @@ $('input').change(function(){
     dTables.fnFilter("");
   }
 });
+/*
     if (document.getElementById("filterBox").checked) {
       console.log("test");
       //dTables.fnFilter(this.value, dTables.oApi._fnVisibleToColumnIndex(.dTables.fnSettings(), document.getElementById("filterBox").index(this)));
-    }
+    }*/
 
     dTables = $("#codebooks").dataTable({
          "oLanguage": {
@@ -66,16 +100,56 @@ $('input').change(function(){
              '</select> records'
          },
 
-         "sDom": 't<"bottom"lips>'
+         "sDom": 't<"bottom"lips>',
+          "aoColumns": [
+          null,
+          null,
+          {"sType": "title-numeric"},
+          null
+        ]
     });
+    dTables.fnSort([[2, 'desc']]);
+    dTables.fnFilter("current");
 
-      //tables.push("#codebooks");
     {% endif %}
     {% if collections %}
-      tables.push("#collections");
+      $("#collections").dataTable({
+         "oLanguage": {
+           "sLengthMenu": 'Show <select>'+
+             '<option value="10">10</option>'+
+             '<option value="20">25</option>'+
+             '<option value="50">50</option>'+
+             '<option value="-1">All</option>'+
+             '</select> records'
+         },
+         "bFilter": false,
+         "sDom": 't<"bottom"lips>',
+          "aoColumns": [
+          null,
+          {"sType": "title-numeric"},
+          null
+        ]
+       });
     {% endif %}
     {% if batches %}
-      tables.push("#batches");
+            $("#batches").dataTable({
+         "oLanguage": {
+           "sLengthMenu": 'Show <select>'+
+             '<option value="10">10</option>'+
+             '<option value="20">25</option>'+
+             '<option value="50">50</option>'+
+             '<option value="-1">All</option>'+
+             '</select> records'
+         },
+         "bFilter": false,
+         "sDom": 't<"bottom"lips>',
+          "aoColumns": [
+          null,
+          null,
+          null,
+          {"sType": "percent-numeric"}
+        ]
+       });
     {% endif %}
 
       $(tables.join(",")).dataTable({
@@ -105,7 +179,7 @@ $('input').change(function(){
 
 <h3>Codebooks</h3>
 <label class="checkbox rightside">
-<input type="checkbox" name="filter" value="current" id="filterBox" >Filter on current state</label>
+<input type="checkbox" name="filter" value="current" id="filterBox" checked>Filter on current state</label>
 <table id="codebooks" class="well wide">
   {% if codebooks %}
   <thead>
@@ -135,7 +209,7 @@ $('input').change(function(){
     <tr class="{% if not p.profile.children %}current{% endif %} {% if p.profile.batches %}batches{% endif %}" href="/codebook/{{ p|mongo_id }}">
       <td><a href="/codebook/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
       <td>{{ p.profile.version }}</td>
-      <td>{{ p.profile.created_at|date_diff }}</td>
+      <td ><span title ="{{p.profile.created_at|date:"m-d-y H:i"}}">{{ p.profile.created_at|date_diff }}</span></td>
       <td>
         {% if not p.profile.children %}<span class="badge badge-success">current</span>{% endif %}
         {% if p.profile.batches %}<span class="badge badge-success">batches</span>{% endif %}
@@ -174,7 +248,7 @@ $('input').change(function(){
   {% for p in collections %}
     <tr href="/collection/{{ p|mongo_id }}">
       <td><a href="/collection/{{ p|mongo_id }}">{{ p.profile.name }}</a></td>
-      <td>{{ p.profile.created_at|date_diff }}</td>
+      <td><span title ="{{p.profile.created_at|date:"m-d-y H:i"}}">{{ p.profile.created_at|date_diff }}</span></td>
       <!--<td>{{ p.profile.type }}</td> -->
       <td>{{ p.profile.size }}</td>
     </tr>
@@ -217,7 +291,7 @@ $('input').change(function(){
       <td><div class="progress progress-striped" style="margin:0px">
           <div class="bar" style="width: {{ p.reports.progress.summary.percent }}%;"></div>
       </div></td>
-      <td>{{ p.reports.progress.summary.percent }}</td>
+      <td>{{ p.reports.progress.summary.percent }}%</td>
     </tr>
   {% empty %}
     <tr>

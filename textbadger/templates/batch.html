@@ -23,8 +23,48 @@ $(function(){
     });
 });
 
+
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "percent-numeric-pre": function ( a ) {
+        var x = a.replace("%", "");
+        x = x.replace(".","");
+        return parseInt(x);
+    },
+
+    "percent-numeric-asc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+
+    "percent-numeric-desc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );
+
+
 $(document).ready(function() {
-     $('#assignments, #reliability').dataTable( {
+     $('#assignments').dataTable( {
+       "oLanguage": {
+         "sLengthMenu": 'Display <select>'+
+           '<option value="10">10</option>'+
+           '<option value="20">20</option>'+
+           '<option value="30">30</option>'+
+           '<option value="40">40</option>'+
+           '<option value="50">50</option>'+
+           '<option value="-1">All</option>'+
+           '</select> records'
+       },
+       "bFilter": false,
+       "sDom": 't<"bottom"ipls>',
+          "aoColumns": [
+          null,
+          null,
+          null,
+          {"sType": "percent-numeric"}
+        ]
+     } );
+
+      $('#reliability').dataTable( {
        "oLanguage": {
          "sLengthMenu": 'Display <select>'+
            '<option value="10">10</option>'+
