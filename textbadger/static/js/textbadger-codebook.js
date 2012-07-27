@@ -199,10 +199,10 @@ var CodebookManager = function(){
             {'id': codebook_id, 'csrfmiddlewaretoken': csrf_token },
             function(response){
                 if( response.status=="success" ){                
-                    codebookManager.loadQuestions(response.codebook.questions);
+                    //codebookManager.loadQuestions(response.codebook.questions);
 
                     //! For easy debugging:
-                    //codebookManager.initDefaultQuestions(response.codebook.questions);
+                    codebookManager.initDefaultQuestions(response.codebook.questions);
                 }else{
                     alert( response.msg );
                     //! Need error checking for failed responses.

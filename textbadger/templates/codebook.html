@@ -8,19 +8,17 @@
 
 var codebookManager = new CodebookManager()
 
-
-
-
-
 codebookManager.initControls = function(){
     var codebookManager = this;
-    var dirty;
 
     this.attachControlsToQuestion(0);
-  this.dirty = JSON.stringify(codebookManager.getCodebookJson());
-window.onbeforeunload = function(){
-
-        if (codebookManager.dirty != JSON.stringify(codebookManager.getCodebookJson())) {
+    
+    //Cache the codebook json to check for unsaved changes
+    this.unedited_codebook = JSON.stringify(codebookManager.getCodebookJson());
+    
+    //Check for unsaved changes
+    window.onbeforeunload = function(){
+        if (codebookManager.unedited_codebook != JSON.stringify(codebookManager.getCodebookJson())) {
             return "You have unsaved changes!";
         }
     };
@@ -41,9 +39,16 @@ window.onbeforeunload = function(){
                 'questions': codebookManager.getCodebookJson(),
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
-            function(response){
-                //! Need error checking for failed responses.
-                location.href = '/codebook/'+response._id;
+            function(data){
+                if( data.status == "success" ){
+                    //Update the cached version of the codebook
+                    codebookManager.unedited_codebook = JSON.stringify(codebookManager.getCodebookJson())
+                    
+                    //Reload the page
+                    location.href = '/codebook/'+data._id;
+                } else {
+                    alert( data.msg );
+                }
             }
         );
     });
