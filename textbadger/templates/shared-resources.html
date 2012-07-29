@@ -39,8 +39,9 @@ $(function(){
 */
 
 $(document).ready(function() {
-  var tables = [];
-  //could be better, alternatively need to look for #collections etc with a child th, this was quicker
+    //Define tables that need the datatables plugin.
+    //! Slightly hacky. Alternatively, we could look for #collections, etc. with a child th
+    var tables = [];
     {% if codebooks %}
       tables.push("#codebooks");
     {% endif %}
@@ -51,18 +52,18 @@ $(document).ready(function() {
       tables.push("#batches");
     {% endif %}
 
-      $(tables.join(",")).dataTable({
-         "oLanguage": {
-           "sLengthMenu": 'Show <select>'+
-             '<option value="10">10</option>'+
-             '<option value="20">25</option>'+
-             '<option value="50">50</option>'+
-             '<option value="-1">All</option>'+
-             '</select> records'
-         },
-         "bFilter": false,
-         "sDom": 't<"bottom"lips>'
-       });
+    (tables.join(",")).dataTable({
+        "oLanguage": {
+            "sLengthMenu": 'Show <select>'+
+            '<option value="10">10</option>'+
+            '<option value="25">25</option>'+
+            '<option value="50">50</option>'+
+            '<option value="-1">All</option>'+
+            '</select> records'
+        },
+        "bFilter": false,
+        "sDom": 't<"bottom"lips>'
+    });
 
  });
 

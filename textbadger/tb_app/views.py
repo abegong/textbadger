@@ -78,9 +78,10 @@ def my_account(request, mongo):
 @uses_mongo
 def shared_resources(request, mongo):
     codebooks = list(mongo.get_collection("tb_app_codebook").find(sort=[('profile.created_at', 1)]))
-    for c in codebooks:
-        c["variables"] = models.get_codebook_variables_from_questions(c["questions"])
-        mongo.get_collection("tb_app_codebook").save(c)
+    #! This is migration code to add 'variables' objects to all codebooks
+#    for c in codebooks:
+#        c["variables"] = models.get_codebook_variables_from_questions(c["questions"])
+#        mongo.get_collection("tb_app_codebook").save(c)
 
     batches = list(mongo.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('profile.created_at', 1)]))
 
