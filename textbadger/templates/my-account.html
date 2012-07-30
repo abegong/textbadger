@@ -9,6 +9,21 @@ $(function(){
     $('a[href*="/my-account/"]').parent().addClass("active");
 });
 
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "percent-numeric-pre": function ( a ) {
+        var x = a.replace("%", "");
+        x = x.replace(".","");
+        return parseInt(x);
+    },
+
+    "percent-numeric-asc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+
+    "percent-numeric-desc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );
 
 $(document).ready(function() {
     //Define tables that need the datatables plugin.  Slightly hacky.
@@ -27,9 +42,15 @@ $(document).ready(function() {
             '</select> records'
         },
         "bFilter": false,
-        "sDom": 't<"bottom"ipls>'
-    });
-} );
+        "sDom": 't<"bottom"ipls>',
+            "aoColumns": [
+            null,
+            null,
+            {"sType": "percent-numeric"},
+            null
+        ]
+     });
+});
 </script>
 {% endblock %}
 
@@ -54,7 +75,7 @@ $(document).ready(function() {
       <td><div class="progress progress-striped progress-success" style="margin:0px">
           <div class="bar" style="width: {% personal_report_field a.reports.progress user.username 'percent' %}%;"></div>
       </div></td>
-      <td>{% personal_report_field a.reports.progress user.username "percent" %}</td>
+      <td>{% personal_report_field a.reports.progress user.username "percent" %}%</td>
       <td>{% personal_report_field a.reports.progress user.username "complete" %}/{% personal_report_field a.reports.progress user.username "assigned" %}</td>
 
     </tr>
