@@ -419,7 +419,10 @@ def convert_batch_to_2d_arrays(batch, var_names, missing_val=None):
     coder_index = dict([(c,i) for i,c in enumerate(batch["profile"]["coders"])])
     
     #Create empty arrays
-    code_arrays = dict([ (n, [[0 for c in coder_index] for d in batch["documents"]]) for n in var_names])
+    #! The "None" here should be zero for CATA variables.
+    #! But I don't have a good way to detect CATA variables.
+    #! This code needs a refactor, but now is not the time.
+    code_arrays = dict([ (n, [[None for c in coder_index] for d in batch["documents"]]) for n in var_names])
     
     for i, doc in enumerate(batch["documents"]):
         for coder in doc["labels"]:
@@ -462,7 +465,7 @@ def update_batch_reliability(mongo, batch_id):
         
         if metric:
             alpha = kripp.alpha(data_arrays[v_name], metric)
-            
+        
         try:
             alpha_100 = 100*alpha
         except TypeError:
