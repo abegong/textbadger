@@ -443,6 +443,7 @@ def update_batch_reliability(mongo, batch_id):
     
     summary = {}
     for i, v in enumerate(variables):
+        print v
         v_name = v["variable_name"]
 #        print q, '\t', kripp.alpha(data_arrays[q], kripp.interval)
         #print v_name, '\t', v["variable_type"]

@@ -79,9 +79,9 @@ def my_account(request, mongo):
 def shared_resources(request, mongo):
     codebooks = list(mongo.get_collection("tb_app_codebook").find(sort=[('profile.created_at', 1)]))
     #! This is migration code to add 'variables' objects to all codebooks
-#    for c in codebooks:
-#        c["variables"] = models.get_codebook_variables_from_questions(c["questions"])
-#        mongo.get_collection("tb_app_codebook").save(c)
+    for c in codebooks:
+        c["variables"] = models.get_codebook_variables_from_questions(c["questions"])
+        mongo.get_collection("tb_app_codebook").save(c)
 
     batches = list(mongo.get_collection("tb_app_batch").find(fields={"profile": 1, "reports": 1}, sort=[('profile.created_at', 1)]))
 
@@ -170,7 +170,6 @@ def assignment(request, mongo, batch_index):#, username):
 
     #print batch["profile"]["shuffle"]
     if batch["profile"]["shuffle"]:
-        #print "bang!"
         random.shuffle( seq_list )
     #print doc_list
 
@@ -194,6 +193,8 @@ def review(request, mongo, batch_index):
 
     #print json.dumps(batch, cls=MongoEncoder, indent=2)
 
+    seq_list = [d["index"] for d in batch["documents"]]
+
     #Reshape label dictionaries for display
     #! This should go in models.py
     label_list = []
@@ -214,8 +215,9 @@ def review(request, mongo, batch_index):
     
     result = {
         'batch': batch,
+        'seq_list' : seq_list,
         'label_list': json.dumps(label_list, cls=MongoEncoder, indent=2),
-        'label_list_2': json.dumps(batch["documents"], cls=MongoEncoder, indent=2),
+#        'label_list_2': json.dumps(batch["documents"], cls=MongoEncoder, indent=2),
     }
     #print json.dumps(batch, cls=MongoEncoder, indent=2)
 

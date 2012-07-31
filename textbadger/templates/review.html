@@ -9,12 +9,13 @@
 var docManager = new DocumentManager();
 var codebookManager = new CodebookManager();
 var label_list = {{ label_list|safe }};
+var seq_list = {{seq_list}};
 
 docManager.initControls = docManager.initDefaultNavControls;
 docManager.updateControls = function(){
     this.updateDefaultNavControls();
     
-    var labels = label_list[this.doc_index];
+    var labels = label_list[this.seq_index];
     /*
     console.log("====================================================");
     console.log("label_list");
@@ -194,7 +195,7 @@ $(function(){
     //Highlight "my-account" in nav bar
     $('a[href*="/my-account/"]').parent().addClass("active");
 
-    docManager.init("{{ batch.profile.collection_id }}", "{{ csrf_token }}");
+    docManager.init("{{ batch.profile.collection_id }}", "{{ csrf_token }}", {{seq_list}});
     codebookManager.init("{{ batch.profile.codebook_id }}", "{{ csrf_token }}");
 });
 </script>

@@ -143,7 +143,7 @@ var DocumentManager = function(){
     };
 
     this.updateDefaultNavControls = function(){
-        $("#doc-index").val(this.doc_index+1);
+        $("#doc-index").val(this.seq_index+1);
 
         if( this.seq_index == 0 ){ $("#prev-doc-button").addClass("disabled"); }
         else{ $("#prev-doc-button").removeClass("disabled"); }
