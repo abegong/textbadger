@@ -43,9 +43,14 @@ var DocumentManager = function(){
 		this.seq_index = seq_index;
         this.doc_index = this.seq_list[seq_index];
 
-        //Show the document
-        $("#doc-box").html(this.doc_list[this.doc_index].content);
 
+        //Show the document
+        //$("#doc-box").html(this.doc_list[this.doc_index].content);
+        $("#doc-frame").attr("src", this.doc_list[this.doc_index].content);
+        //var self = this;
+        //$("#doc-frame").load(function(event){ self.autoResize("doc-frame") });
+        //$("#doc-frame").ready(function(event){ jQuery('iframe').iframeAutoHeight(); });
+        
         //Update navigation
         this.updateControls();
 
@@ -86,6 +91,21 @@ var DocumentManager = function(){
         
         //Otherwise, initialize the document list
         this.loadDocList( collection_id, csrf_token, seq_list );
+    };
+    
+    this.autoResize = function(id){
+        console.log("here");
+        console.log(id);
+        var newheight;
+        var newwidth;
+
+        if(document.getElementById){
+            newheight=document.getElementById(id).contentWindow.document.body.scrollHeight;
+            newwidth=document.getElementById(id).contentWindow.document.body.scrollWidth;
+        }
+
+        document.getElementById(id).height= (newheight) + "px";
+        document.getElementById(id).width= (newwidth) + "px";
     };
 
     //Overwrite these functions...

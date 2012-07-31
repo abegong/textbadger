@@ -41,9 +41,9 @@ $(function(){
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
     "title-numeric-pre": function ( a ) {
         var x = a.match(/title="(.*?)"/)[0].toString();
-        console.log(x);
+        //console.log(x);
         x = x.replace(/[^\d.]/g, "");
-        console.log(x);
+        //console.log(x);
         return parseInt(x);
     },
 
@@ -153,6 +153,7 @@ $(document).ready(function() {
        });
 {% endif %}
 
+/*
     (tables.join(",")).dataTable({
         "oLanguage": {
             "sLengthMenu": 'Show <select>'+
@@ -165,8 +166,8 @@ $(document).ready(function() {
         "bFilter": false,
         "sDom": 't<"bottom"lips>'
     });
-
- });
+*/
+});
 
 </script>
 

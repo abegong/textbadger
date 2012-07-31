@@ -12,13 +12,8 @@
 
 * Assignments page
     *** Add termination logic for empty batches.
-    *** Add loading logic for empty batches.
     * Add (optional) client-side validation
     * Streamline keyboard interface
-
-* Review page
-    *** Add answer details on rollover
-    *** Make shim-graphs work for text fields
 
 *** Technical debt ***
     * Document database code
@@ -27,7 +22,6 @@
     * Implement "has_batches" functionality in codebooks
 
 * Home page
-    * "Sign in" should be more prominent
     
 * Administration page
 * My account page
@@ -50,12 +44,16 @@
     ** Add krippendorff's alpha functions: ordinal
     ** Use variable types in reliability calculation
     * Change assignments table coder names to first_name.  (Will require modifying views.update_batch_progress.)
+
+* Review page
+
     
 
 === Punt ===
 * Suppress ?next= part of login_required decorator
 * Set off batches visually on shared-rez page
 * Add @admin_required decorator    
+* "Sign in" should be more prominent
 
 === Done ===
 * Get the welcome page up and running again
@@ -154,6 +152,7 @@
     ** Add cursor to rollover fields
     ** Add mouseover fields to InformalTemplate
     ** Make inputs withint table cells clickable.
+    *** Add loading logic for empty batches.
 
 * Batch page
     *** Get "export results" button working
@@ -165,6 +164,8 @@
 * Review page
     * Scaffold
     *** Clear shim-graphs on new doc load
+    *** Add answer details on rollover
+    *** Make shim-graphs work for text fields
 
 * Add @mongo_connection decorator
 * Add "profile" fields to codebooks, collections, and batches
