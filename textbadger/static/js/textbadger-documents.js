@@ -8,6 +8,7 @@ var DocumentManager = function(){
     this.seq_list = [];  //Array of document indexes, e.g. [8,5,3,2].  May be shuffled and incomplete.
     this.doc_index = 0;  //Index of the currently visible document
     this.seq_index = 0;  //Current index in the sequence array
+    this.url_regex = /^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i
 
     this.loadDocList = function( collection_id, csrf_token, seq_list ){
         var self = this;
@@ -44,23 +45,23 @@ var DocumentManager = function(){
         this.doc_index = this.seq_list[seq_index];
 
 
+        var content = this.doc_list[this.doc_index].content;
+        
         //Show the document
-        //$("#doc-box").html(this.doc_list[this.doc_index].content);
-        $("#doc-frame").attr("src", this.doc_list[this.doc_index].content);
-        //var self = this;
-        //$("#doc-frame").load(function(event){ self.autoResize("doc-frame") });
-        //$("#doc-frame").ready(function(event){ jQuery('iframe').iframeAutoHeight(); });
+        if(this.url_regex.test(content)) {
+            $("#doc-box").html('<iframe id="doc-frame" src="'+content+'"></iframe>');
+            $("#doc-frame").height($(window).height()-180);
+//            var self = this;
+//            $("#doc-frame").load(function(event){ self.autoResize("doc-frame") });
+//            $("#doc-frame").ready(function(event){ jQuery('iframe').iframeAutoHeight(); });
+        } else {
+            $("#doc-box").html(content);
+        }
         
         //Update navigation
         this.updateControls();
 
     };
-
-/*
-    this.showDocumentForm = function(index){
-		console.log(this.doc_list[this.doc_index]);
-	};
-*/
 
     this.loadPrevDoc = function(){
         if( this.seq_index > 0 ){
@@ -92,10 +93,10 @@ var DocumentManager = function(){
         //Otherwise, initialize the document list
         this.loadDocList( collection_id, csrf_token, seq_list );
     };
-    
+
+/*    
+    //Resize iframe to get rid of scroll bar
     this.autoResize = function(id){
-        console.log("here");
-        console.log(id);
         var newheight;
         var newwidth;
 
@@ -107,6 +108,7 @@ var DocumentManager = function(){
         document.getElementById(id).height= (newheight) + "px";
         document.getElementById(id).width= (newwidth) + "px";
     };
+*/
 
     //Overwrite these functions...
     this.initControls = function(){
