@@ -288,9 +288,12 @@ def gen_col_index_from_col_names(col_names):
 
 def gen_csv_column_from_batch_labels(labels, col_index):
     csv_col = [None for i in range(len(col_index))]
-    #print labels
+    print labels
     for q in labels:
-        csv_col[col_index[q]] = labels[q]
+        if type(labels[q]) == unicode:
+            csv_col[col_index[q]] = str(labels[q].encode("utf-8"))
+        else:
+            csv_col[col_index[q]] = labels[q]
     return csv_col
 
 ### Batches ###################################################################

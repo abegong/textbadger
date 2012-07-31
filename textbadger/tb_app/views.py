@@ -714,7 +714,9 @@ def export_batch(request, mongo, batch_id):
                 if include_doc_content:
                     row += [collection["documents"][i]["content"]]
                 row += models.gen_csv_column_from_batch_labels(answer_set, col_index)
+                print row
                 writer.writerow(row)
+
 
     return response
 
